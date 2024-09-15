@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Participant {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  password    String
+  phoneNumber String?
+  avatar      String?
+  eventId     String?
+  createDate  DateTime @default(now())
+  updateDate  DateTime @default(now())
+
+  Category Category[]
+}
+
+model Category {
+  id            String      @id @default(uuid())
+  name          String
+  description   String
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id])
+  createDate    DateTime    @default(now())
+  updateDate    DateTime    @default(now())
+
+  History History[]
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  createDate  DateTime @default(now())
+  updateDate  DateTime @default(now())
+
+  History  History[]
+  Payments Payments[]
+}
+
+model History {
+  id         String   @id @default(uuid())
+  value      Decimal
+  eventId    String
+  categoryId String
+  event      Event    @relation(fields: [eventId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+  createDate DateTime @default(now())
+  updateDate DateTime @default(now())
+}
+
+model Payments {
+  id         String   @id @default(uuid())
+  value      Decimal
+  eventId    String
+  event      Event    @relation(fields: [eventId], references: [id])
+  createDate DateTime @default(now())
+  updateDate DateTime @default(now())
+}
