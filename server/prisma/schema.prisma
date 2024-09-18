@@ -14,15 +14,15 @@ datasource db {
 }
 
 model Participant {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   email       String
   password    String
   phoneNumber String?
   avatar      String?
   eventId     String?
-  createDate  DateTime @default(now())
-  updateDate  DateTime @default(now())
+  createDate  DateTime? @default(now())
+  updateDate  DateTime? @default(now())
 
   Category Category[]
 }
@@ -33,39 +33,39 @@ model Category {
   description   String
   participantId String
   participant   Participant @relation(fields: [participantId], references: [id])
-  createDate    DateTime    @default(now())
-  updateDate    DateTime    @default(now())
+  createDate    DateTime?   @default(now())
+  updateDate    DateTime?   @default(now())
 
   History History[]
 }
 
 model Event {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String
-  createDate  DateTime @default(now())
-  updateDate  DateTime @default(now())
+  createDate  DateTime? @default(now())
+  updateDate  DateTime? @default(now())
 
   History  History[]
   Payments Payments[]
 }
 
 model History {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   value      Decimal
   eventId    String
   categoryId String
-  event      Event    @relation(fields: [eventId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-  createDate DateTime @default(now())
-  updateDate DateTime @default(now())
+  event      Event     @relation(fields: [eventId], references: [id])
+  category   Category  @relation(fields: [categoryId], references: [id])
+  createDate DateTime? @default(now())
+  updateDate DateTime? @default(now())
 }
 
 model Payments {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   value      Decimal
   eventId    String
-  event      Event    @relation(fields: [eventId], references: [id])
-  createDate DateTime @default(now())
-  updateDate DateTime @default(now())
+  event      Event     @relation(fields: [eventId], references: [id])
+  createDate DateTime? @default(now())
+  updateDate DateTime? @default(now())
 }
