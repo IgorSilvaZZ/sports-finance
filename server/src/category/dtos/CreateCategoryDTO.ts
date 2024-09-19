@@ -1,5 +1,5 @@
 export interface CreateCategoryDTO {
   name: string;
   description: string;
-  participantId: string;
+  responsibleId: string;
 }

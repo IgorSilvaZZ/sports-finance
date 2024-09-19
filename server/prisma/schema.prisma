@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Participant {
+model Responsible {
   id          String    @id @default(uuid())
   name        String
   email       String
@@ -24,17 +24,33 @@ model Participant {
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
 
+  event Event? @relation(fields: [eventId], references: [id])
+
   Category Category[]
 }
 
+model Participant {
+  id          String    @id @default(uuid())
+  name        String
+  email       String?
+  phoneNumber String?
+  avatar      String?
+  eventId     String
+  createDate  DateTime? @default(now())
+  updateDate  DateTime? @default(now())
+
+  event Event @relation(fields: [eventId], references: [id])
+}
+
 model Category {
-  id            String      @id @default(uuid())
+  id            String    @id @default(uuid())
   name          String
   description   String
-  participantId String
-  participant   Participant @relation(fields: [participantId], references: [id])
-  createDate    DateTime?   @default(now())
-  updateDate    DateTime?   @default(now())
+  responsibleId String
+  createDate    DateTime? @default(now())
+  updateDate    DateTime? @default(now())
+
+  responsible Responsible @relation(fields: [responsibleId], references: [id])
 
   History History[]
 }
@@ -46,17 +62,19 @@ model Event {
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
 
-  History  History[]
-  Payments Payments[]
+  Responsible Responsible[]
+  Participant Participant[]
+  History     History[]
+  Payments    Payments[]
 }
 
 model History {
   id         String    @id @default(uuid())
   value      Decimal
   eventId    String
-  categoryId String
+  categoryId String?
   event      Event     @relation(fields: [eventId], references: [id])
-  category   Category  @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
   createDate DateTime? @default(now())
   updateDate DateTime? @default(now())
 }
