@@ -1,3 +1,4 @@
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
 import { CreateParticipantDTO } from '../dtos/CreateParticipantDTO';
@@ -40,5 +41,61 @@ describe('Create Participant', () => {
 
     expect(newParticipant.name).toEqual(name);
     expect(newParticipant.eventId).toEqual(event.id);
+  });
+
+  it('should be able create multiples participants in event', async () => {
+    const event = await eventRepositoryInMemory.create({
+      name: 'Event Test',
+      description: 'Event Test',
+    });
+
+    await createParticipantUseCase.execute({
+      name: faker.person.fullName(),
+      eventId: event.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    await createParticipantUseCase.execute({
+      name: faker.person.fullName(),
+      eventId: event.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    expect(participantRepositoryInMemory.participants).toHaveLength(2);
+  });
+
+  it('should not be able create participant in event not exists', () => {
+    expect(async () => {
+      await createParticipantUseCase.execute({
+        name: faker.person.fullName(),
+        eventId: 'eventId-not-found',
+        phoneNumber: faker.phone.number(),
+      });
+    }).rejects.toEqual(new NotFoundException('Event not found!'));
+  });
+
+  it('should not be able create participant if name equals in event', async () => {
+    const event = await eventRepositoryInMemory.create({
+      name: 'Event Test',
+      description: 'Event Test',
+    });
+
+    const name = faker.person.fullName();
+
+    await createParticipantUseCase.execute({
+      name: name,
+      eventId: event.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    expect(async () => {
+      await createParticipantUseCase.execute({
+        name: name,
+        eventId: event.id,
+        phoneNumber: faker.phone.number(),
+      });
+    }).rejects.toEqual(
+      new BadRequestException('Participant already exists in event!'),
+    );
   });
 });
