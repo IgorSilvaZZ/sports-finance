@@ -11,7 +11,7 @@ export class CreateEventUseCase {
 
   async execute({ name, description, responsibleId }: CreateEventDTO) {
     const responsibleAlreadyExists =
-      await this.eventRepository.findById(responsibleId);
+      await this.responsibleRepository.findById(responsibleId);
 
     if (!responsibleAlreadyExists) {
       throw new NotFoundException('Responsible not found!');
