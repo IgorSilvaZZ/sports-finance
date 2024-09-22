@@ -20,13 +20,11 @@ model Responsible {
   password    String
   phoneNumber String?
   avatar      String?
-  eventId     String?
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
 
-  event Event? @relation(fields: [eventId], references: [id])
-
   Category Category[]
+  Event    Event[]
 }
 
 model Participant {
@@ -56,13 +54,15 @@ model Category {
 }
 
 model Event {
-  id          String    @id @default(uuid())
-  name        String
-  description String
-  createDate  DateTime? @default(now())
-  updateDate  DateTime? @default(now())
+  id            String    @id @default(uuid())
+  name          String
+  description   String
+  responsibleId String
+  createDate    DateTime? @default(now())
+  updateDate    DateTime? @default(now())
 
-  Responsible Responsible[]
+  responsible Responsible @relation(fields: [responsibleId], references: [id])
+
   Participant Participant[]
   History     History[]
   Payments    Payments[]

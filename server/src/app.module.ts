@@ -5,6 +5,7 @@ import { CategoryModule } from './category/category.module';
 import { EventModule } from './event/event.module';
 import { HistoryModule } from './history/history.module';
 import { PaymentModule } from './payment/payment.module';
+import { ResponsibleModule } from './responsible/responsible.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PaymentModule } from './payment/payment.module';
     EventModule,
     HistoryModule,
     PaymentModule,
+    ResponsibleModule,
   ],
   controllers: [],
   providers: [],
