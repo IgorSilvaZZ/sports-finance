@@ -1,8 +1,9 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { ParticipantRepository } from '../repositories/ParticipantRepository';
 import { UpdateParticipantDTO } from '../dtos/UpdateParticipantDTO';
 
+@Injectable()
 export class UpdateParticipantUseCase {
   constructor(private participantRepository: ParticipantRepository) {}
 

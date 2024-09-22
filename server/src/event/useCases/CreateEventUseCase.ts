@@ -1,8 +1,10 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { ResponsibleRepository } from '@/responsible/repositories/ResponsibleRepository';
 import { CreateEventDTO } from '../dtos/CreateEventDTO';
 import { EventRepository } from '../repositories/EventRepository';
-import { NotFoundException } from '@nestjs/common';
 
+@Injectable()
 export class CreateEventUseCase {
   constructor(
     private eventRepository: EventRepository,
