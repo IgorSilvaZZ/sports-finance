@@ -9,6 +9,9 @@ import { ResponsiblePrismaRepository } from './respositories/ResponsiblePrismaRe
 import { EventRepository } from '@/event/repositories/EventRepository';
 import { EventPrismaRepository } from './respositories/EventPrismaRepository';
 
+import { CategoryRepository } from '@/category/repositories/CategoryRepository';
+import { CategoryPrismaRepository } from './respositories/CategoryPrismaRepository';
+
 import { DatabaseService } from './database.service';
 
 @Module({
@@ -19,6 +22,10 @@ import { DatabaseService } from './database.service';
       useClass: ResponsiblePrismaRepository,
     },
     {
+      provide: CategoryRepository,
+      useClass: CategoryPrismaRepository,
+    },
+    {
       provide: ParticipantRepository,
       useClass: ParticipantPrismaRepository,
     },
@@ -27,6 +34,11 @@ import { DatabaseService } from './database.service';
       useClass: EventPrismaRepository,
     },
   ],
-  exports: [ResponsibleRepository, ParticipantRepository, EventRepository],
+  exports: [
+    ResponsibleRepository,
+    CategoryRepository,
+    ParticipantRepository,
+    EventRepository,
+  ],
 })
 export class DatabaseModule {}
