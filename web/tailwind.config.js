@@ -8,7 +8,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#09090A",
+        backgroundLogin: "#fff9ef",
+        skyLight: "#96cdef",
+        skyBold: "#346e93",
       },
     },
   },
