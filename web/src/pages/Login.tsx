@@ -1,17 +1,14 @@
-import { ArrowRight, SoccerBall } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "@phosphor-icons/react";
 
 import loginImage from "../assets/login-image.png";
+import { HeaderAuth } from "../components/HeaderAuth";
 
 export const Login = () => {
   return (
     <>
       <div className='w-1/3 h-full flex flex-col gap-11'>
-        <div className='flex items-center gap-4'>
-          <SoccerBall size={38} />
-          <p className='text-lg uppercase text-zinc-500 font-semibold'>
-            Sports Finance
-          </p>
-        </div>
+        <HeaderAuth />
 
         <div className='flex flex-col gap-2'>
           <p className='text-2xl font-semibold'>Bem vindo de volta!</p>
@@ -39,9 +36,12 @@ export const Login = () => {
         </form>
         <span className='mx-auto text-zinc-500'>
           Não possui um cadastro?{" "}
-          <span className='font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold'>
+          <Link
+            to='/register'
+            className='font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold'
+          >
             Crie a sua conta
-          </span>
+          </Link>
         </span>
       </div>
       <div className='w-2/4 h-full flex justify-center items-center'>
