@@ -4,7 +4,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 import loginImage from "../assets/login-image.png";
 import { HeaderAuth } from "../components/HeaderAuth";
 
-export const Login = () => {
+export default function Login() {
   return (
     <>
       <div className='w-1/3 h-full flex flex-col gap-11'>
@@ -53,4 +53,4 @@ export const Login = () => {
       </div>
     </>
   );
-};
+}
