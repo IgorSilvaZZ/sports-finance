@@ -29,6 +29,7 @@ describe('Update Participant', () => {
 
     const event = await eventRepositoryInMemory.create({
       name: 'Event Test',
+      type: 'Futebol',
       description: 'Event Test',
       responsibleId: responsible.id,
     });

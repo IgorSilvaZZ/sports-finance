@@ -57,6 +57,7 @@ model Event {
   id            String    @id @default(uuid())
   name          String
   description   String
+  type          String
   responsibleId String
   createDate    DateTime? @default(now())
   updateDate    DateTime? @default(now())

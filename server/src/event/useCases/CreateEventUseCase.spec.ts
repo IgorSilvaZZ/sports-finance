@@ -29,12 +29,14 @@ describe('Create a new event', () => {
 
     await createEventUseCase.execute({
       name: 'Event Test',
+      type: 'Futebol',
       description: 'Event test created',
       responsibleId: responsible.id,
     });
 
     await createEventUseCase.execute({
       name: 'Event Test 2',
+      type: 'Futebol',
       description: 'Event test 2 created',
       responsibleId: responsible.id,
     });
@@ -52,6 +54,7 @@ describe('Create a new event', () => {
     expect(async () => {
       await createEventUseCase.execute({
         name: 'Event Test',
+        type: 'Futebol',
         description: 'Event test created',
         responsibleId: 'responsibleId-not-found',
       });
