@@ -11,7 +11,7 @@ export class CreateEventUseCase {
     private responsibleRepository: ResponsibleRepository,
   ) {}
 
-  async execute({ name, description, responsibleId }: CreateEventDTO) {
+  async execute({ name, description, type, responsibleId }: CreateEventDTO) {
     const responsibleAlreadyExists =
       await this.responsibleRepository.findById(responsibleId);
 
@@ -21,6 +21,7 @@ export class CreateEventUseCase {
 
     const newEventData = {
       name,
+      type,
       description,
       responsibleId,
     };
