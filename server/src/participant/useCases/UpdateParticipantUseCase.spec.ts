@@ -1,8 +1,9 @@
+import { faker } from '@faker-js/faker/.';
+
 import { ParticipantRepositoryInMemory } from '../../../test/repositories/ParticipantRepositoryInMemory';
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { UpdateParticipantUseCase } from './UpdateParticipantUseCase';
-import { faker } from '@faker-js/faker/.';
 
 let participantRepositoryInMemory: ParticipantRepositoryInMemory;
 let eventRepositoryInMemory: EventRepositoryInMemory;

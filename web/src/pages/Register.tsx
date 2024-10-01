@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { InputMask } from "@react-input/mask";
 
@@ -5,7 +6,6 @@ import { TextInput } from "../components/TextInput";
 import { HeaderAuth } from "../components/HeaderAuth";
 
 import registerImage from "../assets/register-image.png";
-import { useState } from "react";
 
 export default function Register() {
   // Apenas pra demonstração

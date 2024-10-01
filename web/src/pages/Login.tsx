@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "@phosphor-icons/react";
 
-import loginImage from "../assets/login-image.png";
 import { HeaderAuth } from "../components/HeaderAuth";
+
+import loginImage from "../assets/login-image.png";
 
 export default function Login() {
   return (

@@ -13,6 +13,14 @@ export class EventRepositoryInMemory implements EventRepository {
     return event;
   }
 
+  async findByResponsibleId(responsibleId: string): Promise<EventPrisma[]> {
+    const events = this.events.filter(
+      (item) => item.responsibleId === responsibleId,
+    );
+
+    return events;
+  }
+
   async create(data: CreateEventDTO): Promise<EventPrisma> {
     const newEvent = {
       ...data,
