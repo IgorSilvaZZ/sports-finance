@@ -7,6 +7,14 @@ import { randomUUID } from 'crypto';
 export class CategoryRepositoryInMemory implements CategoryRepository {
   public categories: Category[] = [];
 
+  async findByResponsibleId(responsibleId: string): Promise<Category[]> {
+    const categories = await this.categories.filter(
+      (item) => item.responsibleId === responsibleId,
+    );
+
+    return categories;
+  }
+
   async create({
     name,
     description,

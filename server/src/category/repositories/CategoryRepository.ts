@@ -4,4 +4,7 @@ import { CreateCategoryDTO } from '@/category/dtos/CreateCategoryDTO';
 
 export abstract class CategoryRepository {
   abstract create(data: CreateCategoryDTO): Promise<CategoryPrisma>;
+  abstract findByResponsibleId(
+    responsibleId: string,
+  ): Promise<CategoryPrisma[]>;
 }
