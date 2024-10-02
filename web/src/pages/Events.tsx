@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus } from "@phosphor-icons/react";
 import Slider, { Settings } from "react-slick";
 
 import { Cards } from "../components/Cards";
+
+import { responsibleActions } from "../store/responsible/responsible.slice";
 
 import eventsImage from "../assets/events-image.png";
 import emptyImage from "../assets/list-event-empty.png";
@@ -31,19 +34,27 @@ const settingsSlider: Settings = {
 };
 
 export default function Events() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   /* Variavel pra teste - retirar posteriormente */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isEventsEmpty, setIsEventsEmpty] = useState(false);
 
+  function goToBack() {
+    dispatch(responsibleActions.clear());
+    navigate("/");
+  }
+
   return (
     <>
       <div className='h-full w-full py-10 flex flex-col gap-10'>
-        <Link
-          to='/'
-          className='flex gap-2 font-semibold text-zinc-500 text-sm transition-all hover:text-skyBold'
+        <span
+          className='flex gap-2 font-semibold text-zinc-500 text-sm cursor-pointer transition-all hover:text-skyBold'
+          onClick={goToBack}
         >
           <ArrowLeft size={22} /> Voltar para pagina de login
-        </Link>
+        </span>
         <div className='h-full w-full flex flex-col gap-5 items-center justify-center leading-tight'>
           <img src={eventsImage} alt='Events list image' className='w-[50px]' />
           <p className='text-4xl font-medium'>Meus Eventos</p>

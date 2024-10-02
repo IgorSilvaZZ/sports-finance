@@ -1,11 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Private } from "../../routes/private";
 
 export default function Main() {
   return (
     <>
       <div className='h-screen w-screen'>
         <main className='w-full px-12 h-full'>
-          <Outlet />
+          <Private />
         </main>
       </div>
     </>
