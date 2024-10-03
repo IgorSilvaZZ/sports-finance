@@ -1,22 +1,31 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Plus } from "@phosphor-icons/react";
 import Slider, { Settings } from "react-slick";
 
 import { Cards } from "../components/Cards";
 
-import { responsibleActions } from "../store/responsible/responsible.slice";
+import {
+  responsibleActions,
+  selectResponsible,
+} from "../store/responsible/responsible.slice";
 
 import eventsImage from "../assets/events-image.png";
 import emptyImage from "../assets/list-event-empty.png";
+import { api } from "../lib/axios";
+import { toast } from "sonner";
+import { Event } from "../interfaces/Event.interface";
 
 const settingsSlider: Settings = {
   dots: true,
   infinite: false,
   speed: 500,
   slidesToShow: 5,
-  slidesToScroll: 1,
+  arrows: false,
+  swipeToSlide: false,
+  swipe: false,
+  centerMode: false,
   responsive: [
     {
       breakpoint: 1024,
@@ -37,14 +46,30 @@ export default function Events() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  /* Variavel pra teste - retirar posteriormente */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isEventsEmpty, setIsEventsEmpty] = useState(false);
+  const responsible = useSelector(selectResponsible);
+
+  const [events, setEvents] = useState<Event[]>([]);
 
   function goToBack() {
     dispatch(responsibleActions.clear());
     navigate("/");
   }
+
+  async function getEvents() {
+    try {
+      const { data } = await api.get(`/events/responsible/${responsible.id}`);
+
+      setEvents(data);
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Ocorreu algum erro ao listar os eventos!");
+    }
+  }
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   return (
     <>
@@ -63,15 +88,14 @@ export default function Events() {
             Criar um novo evento
           </button>
 
-          {!isEventsEmpty ? (
+          {events.length > 0 ? (
             <div className='w-full flex flex-1 py-3 border-t border-zinc-300'>
-              <Slider className='w-full h-full px-5' {...settingsSlider}>
-                <Cards />
-                <Cards />
-                <Cards />
-                <Cards />
-                <Cards />
-                <Cards />
+              <Slider className='w-full h-full' {...settingsSlider}>
+                {events.map((eventItem) => (
+                  <>
+                    <Cards key={eventItem.id} event={eventItem} />
+                  </>
+                ))}
               </Slider>
             </div>
           ) : (

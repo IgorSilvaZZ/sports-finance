@@ -50,6 +50,8 @@ export default function Login() {
         token: responseData.token,
       };
 
+      api.defaults.headers.common.Authorization = `Bearer ${responsibleAuth.token}`;
+
       dispatch(responsibleActions.authenticate(responsibleAuth));
 
       toast.success("Login realizado com sucesso!");
