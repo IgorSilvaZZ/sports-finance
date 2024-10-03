@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus } from "@phosphor-icons/react";
+import { ArrowLeft } from "@phosphor-icons/react";
 import Slider, { Settings } from "react-slick";
+import { toast } from "sonner";
 
+import { Event } from "../interfaces/Event.interface";
+
+import { ModalCreateEvent } from "../components/ModalCreateEvent";
 import { Cards } from "../components/Cards";
 
 import {
@@ -11,11 +15,10 @@ import {
   selectResponsible,
 } from "../store/responsible/responsible.slice";
 
+import { api } from "../lib/axios";
+
 import eventsImage from "../assets/events-image.png";
 import emptyImage from "../assets/list-event-empty.png";
-import { api } from "../lib/axios";
-import { toast } from "sonner";
-import { Event } from "../interfaces/Event.interface";
 
 const settingsSlider: Settings = {
   dots: true,
@@ -83,10 +86,7 @@ export default function Events() {
         <div className='h-full w-full flex flex-col gap-5 items-center justify-center leading-tight'>
           <img src={eventsImage} alt='Events list image' className='w-[50px]' />
           <p className='text-4xl font-medium'>Meus Eventos</p>
-          <button className='flex gap-2 items-center font-semibold text-xs border-none outline-none rounded-md py-2 px-7 bg-red-500 text-white mb-4 transition-colors hover:bg-red-600'>
-            <Plus />
-            Criar um novo evento
-          </button>
+          <ModalCreateEvent />
 
           {events.length > 0 ? (
             <div className='w-full flex flex-1 py-3 border-t border-zinc-300'>
