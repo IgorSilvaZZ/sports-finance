@@ -25,6 +25,9 @@ export class EventPrismaRepository implements EventRepository {
       where: {
         responsibleId,
       },
+      orderBy: {
+        createDate: 'asc',
+      },
     });
 
     return events;
