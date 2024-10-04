@@ -1,12 +1,20 @@
-import { ArrowRight, Trash } from "@phosphor-icons/react";
+import {
+  ArrowRight,
+  Basketball,
+  PersonSimpleThrow,
+  Racquet,
+  SoccerBall,
+  TennisBall,
+  Trash,
+} from "@phosphor-icons/react";
 
 import { Event } from "../interfaces/Event.interface";
-
-import cardImage from "../assets/card-image.png";
 
 interface CardsProps {
   event: Event;
 }
+
+const sizeIconTypeEvent = 70;
 
 export const Cards = ({ event }: CardsProps) => {
   function handleDeletEvent(eventId: string) {
@@ -24,7 +32,13 @@ export const Cards = ({ event }: CardsProps) => {
             />
           </button>
         </section>
-        <img src={cardImage} alt='Icon card image' className='w-[60px]' />
+        {event.type === "soccer" && <SoccerBall size={sizeIconTypeEvent} />}
+        {event.type === "volleyball" && (
+          <PersonSimpleThrow size={sizeIconTypeEvent} />
+        )}
+        {event.type === "volleyball" && <Basketball size={sizeIconTypeEvent} />}
+        {event.type === "tennis" && <TennisBall size={sizeIconTypeEvent} />}
+        {event.type === "table_tennis" && <Racquet size={sizeIconTypeEvent} />}
         <section className='w-full flex gap-2 items-center'>
           <span className='h-5 w-5 flex justify-center items-center text-xs text-white rounded-full bg-skyBold'>
             <p>3</p>

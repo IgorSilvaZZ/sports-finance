@@ -7,7 +7,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { TextInput } from "../components/ui/TextInput";
+import { Button } from "../components/ui/Button";
 import { HeaderAuth } from "../components/HeaderAuth";
+
+import { handleErrors } from "../utils/handleErrorsZod";
 
 import { api } from "../lib/axios";
 
@@ -31,7 +34,7 @@ export default function Register() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerResponsibleForm),
   });
@@ -51,14 +54,6 @@ export default function Register() {
       toast.error("Ocorreu um erro ao criar um novo responsável!");
     }
   }
-
-  const handleErrors = () => {
-    const firstError = Object.values(errors)[0];
-
-    if (firstError?.message) {
-      toast.error(firstError.message, { duration: 1500 });
-    }
-  };
 
   return (
     <>
@@ -93,31 +88,13 @@ export default function Register() {
             component={TextInput}
             {...register("phoneNumber")}
           />
-          <button
-            className='
-              flex 
-              items-center 
-              justify-center 
-              gap-2 
-              px-4 
-              py-4 
-              w-full 
-              mt-3 
-              bg-red-500 
-              text-white 
-              font-semibold 
-              transition-colors 
-              hover:bg-red-600
-              disabled:bg-zinc-100
-            '
-            disabled={isSubmitting}
-          >
+          <Button>
             {isSubmitting ? (
               <ClipLoader color='white' size={20} />
             ) : (
               "Criar Conta"
             )}
-          </button>
+          </Button>
         </form>
       </div>
       <div className='w-2/5 h-full flex justify-center items-center'>

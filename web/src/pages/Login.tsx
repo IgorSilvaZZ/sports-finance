@@ -8,13 +8,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
 import { HeaderAuth } from "../components/HeaderAuth";
+import { Button } from "../components/ui/Button";
+import { TextInput } from "../components/ui/TextInput";
 
 import { handleErrors } from "../utils/handleErrorsZod";
+
+import { responsibleActions } from "../store/responsible/responsible.slice";
 
 import { api } from "../lib/axios";
 
 import loginImage from "../assets/login-image.png";
-import { responsibleActions } from "../store/responsible/responsible.slice";
 
 const loginResponsibleForm = z.object({
   email: z
@@ -82,25 +85,23 @@ export default function Login() {
           className='flex flex-col gap-7'
           onSubmit={handleSubmit(handleLogin, handleErrors)}
         >
-          <div className='flex flex-col gap-2'>
-            <span className='text-sm font-semibold'>Email</span>
-            <input
-              className='w-full px-4 py-4 outline-none bg-zinc-100 font-semibold'
-              {...register("email")}
-            />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <span className='text-sm font-semibold'>Senha</span>
-            <input
-              type='password'
-              className='w-full px-4 py-4 outline-none bg-zinc-100 font-semibold'
-              {...register("password")}
-            />
-          </div>
-          <button className='flex items-center justify-center gap-2 px-4 py-4 w-full bg-red-500 text-white font-semibold transition-colors hover:bg-red-600'>
-            {isSubmitting ? <ClipLoader color='white' size={20} /> : "Entrar"}
-            <ArrowRight size={22} />
-          </button>
+          <TextInput label='Email' {...register("email")} />
+          <TextInput
+            label='Senha'
+            type='password'
+            className='w-full px-4 py-4 outline-none bg-zinc-100 font-semibold'
+            {...register("password")}
+          />
+          <Button>
+            {isSubmitting ? (
+              <ClipLoader color='white' size={20} />
+            ) : (
+              <>
+                <ArrowRight size={22} />
+                Entrar
+              </>
+            )}
+          </Button>
         </form>
         <span className='mx-auto text-zinc-500'>
           Não possui um cadastro?{" "}
