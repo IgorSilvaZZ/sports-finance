@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { Plus, X } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
+
 import { FormEvent } from "./forms/FormEvent";
 
-export const ModalCreateEvent = () => {
+interface ModalCreateEventProps {
+  getEvents: () => void;
+}
+
+export const ModalCreateEvent = ({ getEvents }: ModalCreateEventProps) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   function handleOpenModal() {
@@ -33,7 +38,10 @@ export const ModalCreateEvent = () => {
             Adicionar um novo evento
           </Dialog.Title>
 
-          <FormEvent />
+          <FormEvent
+            getEvents={getEvents}
+            handleCloseModal={() => setModalOpen(false)}
+          />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

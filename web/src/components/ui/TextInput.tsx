@@ -1,11 +1,13 @@
 import { forwardRef, InputHTMLAttributes } from "react";
 
+import { cn } from "../../lib/mergeClasses";
+
 interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-  ({ label, ...props }, forwardedRef) => {
+  ({ label, className, ...props }, forwardedRef) => {
     return (
       <>
         <div className='w-full flex flex-col gap-2'>
@@ -13,7 +15,10 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           <input
             {...props}
             ref={forwardedRef}
-            className='w-full px-4 py-4 outline-none bg-zinc-100 font-semibold'
+            className={cn(
+              "w-full px-4 py-4 outline-none bg-zinc-100 font-semibold",
+              className
+            )}
           />
         </div>
       </>
