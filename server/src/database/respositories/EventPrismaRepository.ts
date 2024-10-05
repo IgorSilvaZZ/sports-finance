@@ -20,7 +20,9 @@ export class EventPrismaRepository implements EventRepository {
     return event;
   }
 
-  async findByResponsibleId(responsibleId: string): Promise<Event[]> {
+  async findByResponsibleId(
+    responsibleId: string,
+  ): Promise<(Event & { participants: number })[]> {
     const events = await this.prismaService.event.findMany({
       where: {
         responsibleId,
@@ -28,9 +30,25 @@ export class EventPrismaRepository implements EventRepository {
       orderBy: {
         createDate: 'asc',
       },
+      include: {
+        _count: {
+          select: {
+            Participant: true,
+          },
+        },
+      },
     });
 
-    return events;
+    return events.map((event) => {
+      const participants = event._count.Participant;
+
+      delete event._count;
+
+      return {
+        ...event,
+        participants,
+      };
+    });
   }
 
   async findOneEventByResponsibleId(
