@@ -44,9 +44,9 @@ export const Cards = ({ event, deleteEvent }: CardsProps) => {
         {event.type === "table_tennis" && <Racquet size={sizeIconTypeEvent} />}
         <section className='w-full flex gap-2 items-center'>
           <span className='h-5 w-5 flex justify-center items-center text-xs text-white rounded-full bg-skyBold'>
-            <p>3</p>
+            <p>{event.participants}</p>
           </span>
-          <p className='text-sm text-skyLight'>Participantes</p>
+          <p className='text-sm text-skyLight'>Participante(s)</p>
         </section>
         <section className='w-full flex h-52 flex-col justify-between'>
           <div>

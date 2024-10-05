@@ -4,6 +4,7 @@ export interface Event {
   description: string;
   type: string;
   responsibleId: string;
+  participants: number;
   createDate: string;
   updateDate: string;
 }
