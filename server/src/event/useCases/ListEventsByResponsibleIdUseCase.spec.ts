@@ -1,5 +1,7 @@
 import { faker } from '@faker-js/faker/.';
 
+import { TypeEvent } from '../enums/typeEvent.enums';
+
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ListEventsByResponsibleIdUseCase } from './ListEventsByResponsibleIdUseCase';
@@ -27,7 +29,7 @@ describe('List Events By Responsible', () => {
 
     await eventRepositoryInMemory.create({
       name: 'Event Test',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
     });

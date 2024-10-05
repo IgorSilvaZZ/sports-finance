@@ -7,6 +7,7 @@ import { EventController } from './event.controller';
 import { CreateEventUseCase } from './useCases/CreateEventUseCase';
 import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByResponsibleIdUseCase';
 import { ListEventByIdUseCase } from './useCases/ListEventByIdUseCase';
+import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
 
 @Module({
   imports: [DatabaseModule],
@@ -15,6 +16,7 @@ import { ListEventByIdUseCase } from './useCases/ListEventByIdUseCase';
     CreateEventUseCase,
     ListEventsByResponsibleIdUseCase,
     ListEventByIdUseCase,
+    DeleteEventResponsibleByIdUseCase,
   ],
 })
 export class EventModule {}

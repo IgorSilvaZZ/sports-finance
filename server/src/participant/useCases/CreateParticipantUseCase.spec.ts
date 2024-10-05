@@ -1,6 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 
+import { TypeEvent } from '@/event/enums/typeEvent.enums';
 import { CreateParticipantDTO } from '../dtos/CreateParticipantDTO';
 
 import { ParticipantRepositoryInMemory } from '../../../test/repositories/ParticipantRepositoryInMemory';
@@ -35,7 +36,7 @@ describe('Create Participant', () => {
 
     const event = await eventRepositoryInMemory.create({
       name: 'Event Test',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
     });
@@ -65,7 +66,7 @@ describe('Create Participant', () => {
 
     const event = await eventRepositoryInMemory.create({
       name: 'Event Test',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
     });
@@ -105,7 +106,7 @@ describe('Create Participant', () => {
 
     const event = await eventRepositoryInMemory.create({
       name: 'Event Test',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
     });

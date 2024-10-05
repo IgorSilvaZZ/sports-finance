@@ -33,11 +33,37 @@ export class EventPrismaRepository implements EventRepository {
     return events;
   }
 
+  async findOneEventByResponsibleId(
+    id: string,
+    responsibleId: string,
+  ): Promise<Event | null> {
+    const event = await this.prismaService.event.findFirst({
+      where: {
+        id,
+        responsibleId,
+      },
+    });
+
+    return event;
+  }
+
   async create(data: CreateEventDTO): Promise<Event> {
     const newEvent = await this.prismaService.event.create({
       data,
     });
 
     return newEvent;
+  }
+
+  async deleteEventResponsibleById(
+    id: string,
+    responsibleId: string,
+  ): Promise<void> {
+    await this.prismaService.event.delete({
+      where: {
+        id,
+        responsibleId,
+      },
+    });
   }
 }

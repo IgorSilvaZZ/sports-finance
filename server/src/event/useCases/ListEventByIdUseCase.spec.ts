@@ -1,6 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker/.';
 
+import { TypeEvent } from '../enums/typeEvent.enums';
+
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 
@@ -29,7 +31,7 @@ describe('List event by id', () => {
 
     const event = await eventRepositoryInMemory.create({
       name: nameEvent,
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
     });
