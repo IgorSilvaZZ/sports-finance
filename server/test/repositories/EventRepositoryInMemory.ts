@@ -21,6 +21,17 @@ export class EventRepositoryInMemory implements EventRepository {
     return events;
   }
 
+  async findOneEventByResponsibleId(
+    id: string,
+    responsibleId: string,
+  ): Promise<EventPrisma | null> {
+    const event = this.events.find(
+      (item) => item.id === id && item.responsibleId === responsibleId,
+    );
+
+    return event;
+  }
+
   async create(data: CreateEventDTO): Promise<EventPrisma> {
     const newEvent = {
       ...data,
@@ -32,5 +43,18 @@ export class EventRepositoryInMemory implements EventRepository {
     this.events.push(newEvent);
 
     return newEvent;
+  }
+
+  async deleteEventResponsibleById(
+    id: string,
+    responsibleId: string,
+  ): Promise<void> {
+    const eventIndex = this.events.findIndex(
+      (item) => item.id === id && item.responsibleId === responsibleId,
+    );
+
+    if (eventIndex >= 0) {
+      this.events.splice(eventIndex, 1);
+    }
   }
 }

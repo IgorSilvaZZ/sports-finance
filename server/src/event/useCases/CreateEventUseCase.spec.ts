@@ -1,6 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker/.';
 
+import { TypeEvent } from '../enums/typeEvent.enums';
+
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { CreateEventUseCase } from './CreateEventUseCase';
@@ -29,14 +31,14 @@ describe('Create a new event', () => {
 
     await createEventUseCase.execute({
       name: 'Event Test',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
     });
 
     await createEventUseCase.execute({
       name: 'Event Test 2',
-      type: 'Futebol',
+      type: TypeEvent.SOCCER,
       description: 'Event test 2 created',
       responsibleId: responsible.id,
     });
@@ -54,7 +56,7 @@ describe('Create a new event', () => {
     expect(async () => {
       await createEventUseCase.execute({
         name: 'Event Test',
-        type: 'Futebol',
+        type: TypeEvent.SOCCER,
         description: 'Event test created',
         responsibleId: 'responsibleId-not-found',
       });
