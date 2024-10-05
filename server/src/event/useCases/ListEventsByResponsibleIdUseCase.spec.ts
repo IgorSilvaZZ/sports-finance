@@ -58,4 +58,45 @@ describe('List Events By Responsible', () => {
 
     expect(eventsResponsible).toHaveLength(0);
   });
+
+  it('should be able list count participants with events', async () => {
+    const responsible = await responsibleRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      phoneNumber: faker.phone.number(),
+      password: '123',
+    });
+
+    const event = await eventRepositoryInMemory.create({
+      name: 'Event Test',
+      type: TypeEvent.SOCCER,
+      description: 'Event test created',
+      responsibleId: responsible.id,
+    });
+
+    await Promise.all([
+      eventRepositoryInMemory.createParticipantEvent({
+        name: faker.person.fullName(),
+        eventId: event.id,
+        phoneNumber: faker.phone.number(),
+      }),
+      eventRepositoryInMemory.createParticipantEvent({
+        name: faker.person.fullName(),
+        eventId: event.id,
+        phoneNumber: faker.phone.number(),
+      }),
+      eventRepositoryInMemory.createParticipantEvent({
+        name: faker.person.fullName(),
+        eventId: event.id,
+        phoneNumber: faker.phone.number(),
+      }),
+    ]);
+
+    const [firstEvent] = await listEventsByResponsibleIdUseCase.execute(
+      responsible.id,
+    );
+
+    expect(firstEvent).toHaveProperty('participants');
+    expect(firstEvent.participants).toEqual(3);
+  });
 });

@@ -1,11 +1,15 @@
+import { randomUUID } from 'crypto';
 import { Event as EventPrisma } from '@prisma/client';
+import { Participant as ParticipantPrisma } from '@prisma/client';
 
 import { EventRepository } from '@/event/repositories/EventRepository';
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
-import { randomUUID } from 'crypto';
+import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
 
 export class EventRepositoryInMemory implements EventRepository {
   public events: EventPrisma[] = [];
+
+  public participants: ParticipantPrisma[] = [];
 
   async findById(id: string): Promise<EventPrisma | null> {
     const event = this.events.find((item) => item.id === id);
@@ -13,12 +17,25 @@ export class EventRepositoryInMemory implements EventRepository {
     return event;
   }
 
-  async findByResponsibleId(responsibleId: string): Promise<EventPrisma[]> {
-    const events = this.events.filter(
+  async findByResponsibleId(
+    responsibleId: string,
+  ): Promise<(EventPrisma & { participants: number })[]> {
+    const filteredEvents = this.events.filter(
       (item) => item.responsibleId === responsibleId,
     );
 
-    return events;
+    const eventsWithParticipantsCount = filteredEvents.map((event) => {
+      const participantsCount = this.participants.filter(
+        (participant) => participant.eventId === event.id,
+      ).length;
+
+      return {
+        ...event,
+        participants: participantsCount,
+      };
+    });
+
+    return eventsWithParticipantsCount;
   }
 
   async findOneEventByResponsibleId(
@@ -43,6 +60,29 @@ export class EventRepositoryInMemory implements EventRepository {
     this.events.push(newEvent);
 
     return newEvent;
+  }
+
+  async createParticipantEvent({
+    name,
+    email,
+    phoneNumber,
+    avatar,
+    eventId,
+  }: CreateParticipantDTO) {
+    const newParticipantEvent = {
+      id: randomUUID(),
+      name,
+      email,
+      phoneNumber,
+      avatar,
+      eventId,
+      createDate: new Date(),
+      updateDate: new Date(),
+    };
+
+    this.participants.push(newParticipantEvent);
+
+    return newParticipantEvent;
   }
 
   async deleteEventResponsibleById(
