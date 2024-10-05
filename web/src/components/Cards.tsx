@@ -9,23 +9,26 @@ import {
 } from "@phosphor-icons/react";
 
 import { Event } from "../interfaces/Event.interface";
-
 interface CardsProps {
   event: Event;
+  deleteEvent: (eventId: string, responsibleId: string) => void;
 }
 
 const sizeIconTypeEvent = 70;
 
-export const Cards = ({ event }: CardsProps) => {
-  function handleDeletEvent(eventId: string) {
-    console.log(eventId);
+export const Cards = ({ event, deleteEvent }: CardsProps) => {
+  function handleDeletEvent(eventId: string, responsibleId: string) {
+    deleteEvent(eventId, responsibleId);
   }
 
   return (
     <>
       <div className='flex flex-col px-5 gap-5 items-center w-64 h-[400px] border border-gray-200 rounded-lg shadow-md'>
         <section className='w-full flex justify-end py-3'>
-          <button title='Remover' onClick={() => handleDeletEvent(event.id)}>
+          <button
+            title='Remover'
+            onClick={() => handleDeletEvent(event.id, event.responsibleId)}
+          >
             <Trash
               size={20}
               className='text-red-500 opacity-50 transition-all hover:opacity-100'

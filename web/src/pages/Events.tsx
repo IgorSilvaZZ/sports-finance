@@ -76,6 +76,20 @@ export default function Events() {
     }
   }
 
+  async function deleteEvent(eventId: string, responsibleId: string) {
+    try {
+      await api.delete(`/events/${eventId}/responsible/${responsibleId}`);
+
+      toast.success("Evento deletado com sucesso!");
+
+      getEvents();
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Ocorreu algum tentar excluir o evento!");
+    }
+  }
+
   useEffect(() => {
     getEvents();
   }, []);
@@ -102,7 +116,11 @@ export default function Events() {
                   <Slider className='w-full h-full' {...settingsSlider}>
                     {events.map((eventItem) => (
                       <>
-                        <Cards key={eventItem.id} event={eventItem} />
+                        <Cards
+                          key={eventItem.id}
+                          event={eventItem}
+                          deleteEvent={deleteEvent}
+                        />
                       </>
                     ))}
                   </Slider>
