@@ -49,7 +49,7 @@ export class CreateHistoryUseCase {
       );
     }
 
-    if (value < 0) {
+    if (value <= 0) {
       throw new BadRequestException('The value cannot be less than zero!');
     }
 
@@ -61,7 +61,7 @@ export class CreateHistoryUseCase {
       const monthFormatted = month < 10 ? `0${month}` : month;
       const date = today.getDate();
 
-      name = `Nova transação - ${date}/${monthFormatted}/${year}`;
+      name = `Nova Transação - ${date}/${monthFormatted}/${year}`;
     }
 
     const newHistory = {
