@@ -15,7 +15,10 @@ export const MainDashboard = () => {
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3'>
         <div className=' w-full flex items-center justify-between'>
-          <span className='font-semibold text-xl'>Meu evento</span>
+          <div className='flex gap-2 items-center'>
+            <span className='font-semibold text-xl'>Meu evento</span>
+            <span className='text-zinc-700'>Outubro</span>
+          </div>
           <div className='flex gap-5'>
             <ModalCreateHistory />
             <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
@@ -23,34 +26,36 @@ export const MainDashboard = () => {
             </Button>
           </div>
         </div>
-        <div className='w-full h-40 flex gap-3 items-center'>
-          <DashCard label='Valor Arrecadado' value={"R$ 100,00"} />
-          <DashCard label='Dia de pagamento' value={"04"} />
-          <DashCard label='Valor mensalidade' value={"R$ 300,00"} />
-          <DashCard label='Valor caixa' value={"R$ 50,00"} />
+        <div className='w-full h-[12%] flex items-center justify-around gap-4 py-2 px-2 shadow-md mb-4'>
+          <input
+            className='w-2/6 h-full outline-none'
+            placeholder='Nome ou email do participante'
+          />
+          <select className='w-36 h-full outline-none'>
+            <option value='all'>Status</option>
+          </select>
+          <select className='w-36 h-full outline-none'>
+            <option value='all'>Tipo</option>
+          </select>
+          <select className='w-36 h-full outline-none'>
+            <option value='all'>Mês</option>
+          </select>
+          <select className='w-36 h-full outline-none'>
+            <option value='all'>Ano</option>
+          </select>
+          <button>
+            <MagnifyingGlass size={25} />
+          </button>
         </div>
+
         <div className='h-full w-full flex flex-col'>
-          <div className='w-full h-[12%] flex items-center justify-around gap-4 py-2 px-2 shadow-md mb-4'>
-            <input
-              className='w-2/6 h-full outline-none'
-              placeholder='Nome ou email do participante'
-            />
-            <select className='w-36 h-full outline-none'>
-              <option value='all'>Status</option>
-            </select>
-            <select className='w-36 h-full outline-none'>
-              <option value='all'>Tipo</option>
-            </select>
-            <select className='w-36 h-full outline-none'>
-              <option value='all'>Mês</option>
-            </select>
-            <select className='w-36 h-full outline-none'>
-              <option value='all'>Ano</option>
-            </select>
-            <button>
-              <MagnifyingGlass size={25} />
-            </button>
+          <div className='w-full h-40 flex gap-3 items-center'>
+            <DashCard label='Valor Arrecadado' value={"R$ 100,00"} />
+            <DashCard label='Dia de pagamento' value={"04"} />
+            <DashCard label='Valor mensalidade' value={"R$ 300,00"} />
+            <DashCard label='Valor caixa' value={"R$ 50,00"} />
           </div>
+
           {!isEventListEmpty ? (
             <>
               <div className='w-full h-96 max-h-[700px] flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
