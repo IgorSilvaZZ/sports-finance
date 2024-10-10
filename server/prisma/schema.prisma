@@ -34,10 +34,11 @@ model Participant {
   phoneNumber String?
   avatar      String?
   eventId     String
+  event       Event     @relation(fields: [eventId], references: [id])
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
 
-  event Event @relation(fields: [eventId], references: [id])
+  History History[]
 }
 
 model Category {
@@ -49,8 +50,6 @@ model Category {
   updateDate    DateTime? @default(now())
 
   responsible Responsible @relation(fields: [responsibleId], references: [id])
-
-  History History[]
 }
 
 model Event {
@@ -70,21 +69,26 @@ model Event {
 }
 
 model History {
-  id         String    @id @default(uuid())
-  value      Decimal
-  eventId    String
-  categoryId String?
-  event      Event     @relation(fields: [eventId], references: [id])
-  category   Category? @relation(fields: [categoryId], references: [id])
-  createDate DateTime? @default(now())
-  updateDate DateTime? @default(now())
+  id            String      @id @default(uuid())
+  name          String
+  value         Decimal
+  type          String
+  participantId String
+  eventId       String
+  event         Event       @relation(fields: [eventId], references: [id])
+  participant   Participant @relation(fields: [participantId], references: [id])
+  createDate    DateTime?   @default(now())
+  updateDate    DateTime?   @default(now())
 }
 
 model Payments {
-  id         String    @id @default(uuid())
-  value      Decimal
-  eventId    String
-  event      Event     @relation(fields: [eventId], references: [id])
-  createDate DateTime? @default(now())
-  updateDate DateTime? @default(now())
+  id          String    @id @default(uuid())
+  name        String
+  value       Decimal
+  eventId     String
+  status      Boolean
+  datePayment DateTime
+  event       Event     @relation(fields: [eventId], references: [id])
+  createDate  DateTime? @default(now())
+  updateDate  DateTime? @default(now())
 }
