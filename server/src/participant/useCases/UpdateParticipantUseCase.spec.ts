@@ -35,6 +35,8 @@ describe('Update Participant', () => {
       type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
+      dayMonthly: '08',
+      valueMonthly: 450,
     });
 
     eventId = event.id;

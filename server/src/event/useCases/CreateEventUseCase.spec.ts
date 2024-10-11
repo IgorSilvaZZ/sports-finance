@@ -34,6 +34,8 @@ describe('Create a new event', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     await createEventUseCase.execute({
@@ -41,6 +43,8 @@ describe('Create a new event', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test 2 created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     expect(eventRepositoryInMemory.events).toHaveLength(2);
@@ -59,6 +63,8 @@ describe('Create a new event', () => {
         type: TypeEvent.SOCCER,
         description: 'Event test created',
         responsibleId: 'responsibleId-not-found',
+        dayMonthly: '04',
+        valueMonthly: 300,
       });
     }).rejects.toEqual(new NotFoundException('Responsible not found!'));
   });

@@ -32,6 +32,8 @@ describe('List Events By Responsible', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 700,
     });
 
     const eventsResponsible = await listEventsByResponsibleIdUseCase.execute(
@@ -72,6 +74,8 @@ describe('List Events By Responsible', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 700,
     });
 
     await Promise.all([

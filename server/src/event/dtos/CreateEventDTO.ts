@@ -3,4 +3,6 @@ export interface CreateEventDTO {
   description: string;
   type: string;
   responsibleId: string;
+  valueMonthly: number;
+  dayMonthly: string;
 }

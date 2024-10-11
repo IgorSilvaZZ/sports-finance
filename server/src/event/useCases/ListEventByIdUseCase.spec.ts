@@ -34,6 +34,8 @@ describe('List event by id', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 600,
     });
 
     const events = await listEventByIdUseCase.execute(event.id);

@@ -33,6 +33,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.SOCCER,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     const participant = await participantRepositoryInMemory.create({
@@ -60,6 +62,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.SOCCER,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     const participant = await participantRepositoryInMemory.create({
@@ -97,6 +101,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.SOCCER,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     expect(async () => {
@@ -116,6 +122,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.SOCCER,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     const event2 = await eventRespositoryInMemory.create({
@@ -123,6 +131,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.BASKETBALL,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     const participantNotEventOne = await participantRepositoryInMemory.create({
@@ -150,6 +160,8 @@ describe('Create history', () => {
       description: 'Event Test',
       responsibleId: 'responsible-id',
       type: TypeEvent.SOCCER,
+      dayMonthly: '06',
+      valueMonthly: 800,
     });
 
     const participant = await participantRepositoryInMemory.create({

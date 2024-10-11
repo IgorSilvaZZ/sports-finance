@@ -39,6 +39,8 @@ describe('Create Participant', () => {
       type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
+      dayMonthly: '07',
+      valueMonthly: 450,
     });
 
     const name = faker.person.fullName();
@@ -69,6 +71,8 @@ describe('Create Participant', () => {
       type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
+      dayMonthly: '07',
+      valueMonthly: 450,
     });
 
     await createParticipantUseCase.execute({
@@ -109,6 +113,8 @@ describe('Create Participant', () => {
       type: TypeEvent.SOCCER,
       description: 'Event Test',
       responsibleId: responsible.id,
+      dayMonthly: '07',
+      valueMonthly: 450,
     });
 
     const name = faker.person.fullName();
