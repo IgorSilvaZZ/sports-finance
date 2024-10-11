@@ -57,6 +57,8 @@ model Event {
   name          String
   description   String
   type          String
+  valueMonthly  Float
+  dayMonthly    String
   responsibleId String
   createDate    DateTime? @default(now())
   updateDate    DateTime? @default(now())

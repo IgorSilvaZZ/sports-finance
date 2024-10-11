@@ -34,6 +34,8 @@ describe('Delete Event by id', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     await eventRepositoryInMemory.create({
@@ -41,6 +43,8 @@ describe('Delete Event by id', () => {
       type: TypeEvent.BASKETBALL,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     await deleteEventResponsibleByIdUseCase.execute(event1.id, responsible.id);
@@ -58,6 +62,8 @@ describe('Delete Event by id', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: 'responsible-id',
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     expect(async () => {
@@ -97,6 +103,8 @@ describe('Delete Event by id', () => {
       type: TypeEvent.SOCCER,
       description: 'Event test created',
       responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     const responsible2 = await responsibleRepositoryInMemory.create({
@@ -111,6 +119,8 @@ describe('Delete Event by id', () => {
       type: TypeEvent.BASKETBALL,
       description: 'Event test 2 created',
       responsibleId: responsible2.id,
+      dayMonthly: '04',
+      valueMonthly: 300,
     });
 
     expect(async () => {
