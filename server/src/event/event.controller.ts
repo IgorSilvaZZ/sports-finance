@@ -26,6 +26,7 @@ export class EventController {
     private deleteEventResponsibleByIdUseCase: DeleteEventResponsibleByIdUseCase,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('/:eventId')
   async getById(@Param('eventId') eventId: string) {
     const event = await this.listEventByIdUseCase.execute(eventId);
@@ -33,6 +34,7 @@ export class EventController {
     return event;
   }
 
+  @UseGuards(AuthGuard)
   @Get('/responsible/:responsibleId')
   async getEventsByResponsible(@Param('responsibleId') responsibleId: string) {
     const events =
@@ -41,6 +43,7 @@ export class EventController {
     return events;
   }
 
+  @UseGuards(AuthGuard)
   @Post('/')
   async create(@Body() createEventDTO: CreateEventDTO) {
     const event = await this.createEventUseCase.execute(createEventDTO);

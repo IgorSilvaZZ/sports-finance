@@ -45,6 +45,41 @@ describe('List event by id', () => {
     expect(events.name).toEqual(nameEvent);
   });
 
+  it('should be able list even with participants', async () => {
+    const responsible = await responsibleRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      phoneNumber: faker.phone.number(),
+      password: '123',
+    });
+
+    const newEvent = await eventRepositoryInMemory.create({
+      name: 'Event Test',
+      type: TypeEvent.SOCCER,
+      description: 'Event test created',
+      responsibleId: responsible.id,
+      dayMonthly: '04',
+      valueMonthly: 600,
+    });
+
+    eventRepositoryInMemory.createParticipantEvent({
+      name: faker.person.fullName(),
+      eventId: newEvent.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    eventRepositoryInMemory.createParticipantEvent({
+      name: faker.person.fullName(),
+      eventId: newEvent.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    const event = await listEventByIdUseCase.execute(newEvent.id);
+
+    expect(event).toHaveProperty('participants');
+    expect(event.participants).toHaveLength(2);
+  });
+
   it('should not be able list event by id not found', () => {
     expect(async () => {
       return listEventByIdUseCase.execute('event-id-not-found');

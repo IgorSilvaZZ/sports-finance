@@ -1,12 +1,20 @@
-import { Event as EventPrisma } from '@prisma/client';
+import {
+  Event as EventPrisma,
+  Participant as ParticipantPrisma,
+} from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 
 export abstract class EventRepository {
-  abstract findById(id: string): Promise<EventPrisma | null>;
-  abstract findByResponsibleId(
-    responsibleId: string,
-  ): Promise<(EventPrisma & { participants: number })[]>;
+  abstract findById(
+    id: string,
+  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null>;
+  abstract findByResponsibleId(responsibleId: string): Promise<
+    (EventPrisma & {
+      participantsCount: number;
+      participants: ParticipantPrisma[];
+    })[]
+  >;
   abstract findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
