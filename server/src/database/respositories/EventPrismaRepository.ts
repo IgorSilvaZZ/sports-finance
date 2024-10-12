@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Event } from '@prisma/client';
+import { Event, Participant } from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 import { EventRepository } from '@/event/repositories/EventRepository';
@@ -10,19 +10,37 @@ import { DatabaseService } from '../database.service';
 export class EventPrismaRepository implements EventRepository {
   constructor(private prismaService: DatabaseService) {}
 
-  async findById(id: string): Promise<Event | null> {
+  async findById(
+    id: string,
+  ): Promise<(Event & { participants: Participant[] }) | null> {
     const event = await this.prismaService.event.findFirst({
       where: {
         id,
       },
+      include: {
+        Participant: true,
+      },
     });
 
-    return event;
+    if (event) {
+      const participants = event.Participant;
+
+      delete event.Participant;
+
+      return {
+        ...event,
+        participants,
+      };
+    }
+
+    return null;
   }
 
   async findByResponsibleId(
     responsibleId: string,
-  ): Promise<(Event & { participants: number })[]> {
+  ): Promise<
+    (Event & { participantsCount: number; participants: Participant[] })[]
+  > {
     const events = await this.prismaService.event.findMany({
       where: {
         responsibleId,
@@ -31,6 +49,7 @@ export class EventPrismaRepository implements EventRepository {
         createDate: 'asc',
       },
       include: {
+        Participant: true,
         _count: {
           select: {
             Participant: true,
@@ -40,13 +59,16 @@ export class EventPrismaRepository implements EventRepository {
     });
 
     return events.map((event) => {
-      const participants = event._count.Participant;
+      const participantsCount = event._count.Participant;
+      const participants = event.Participant;
 
       delete event._count;
+      delete event.Participant;
 
       return {
         ...event,
         participants,
+        participantsCount,
       };
     });
   }

@@ -1,6 +1,8 @@
 import { randomUUID } from 'crypto';
-import { Event as EventPrisma } from '@prisma/client';
-import { Participant as ParticipantPrisma } from '@prisma/client';
+import {
+  Event as EventPrisma,
+  Participant as ParticipantPrisma,
+} from '@prisma/client';
 
 import { EventRepository } from '@/event/repositories/EventRepository';
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
@@ -11,27 +13,44 @@ export class EventRepositoryInMemory implements EventRepository {
 
   public participants: ParticipantPrisma[] = [];
 
-  async findById(id: string): Promise<EventPrisma | null> {
+  async findById(
+    id: string,
+  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null> {
     const event = this.events.find((item) => item.id === id);
 
-    return event;
+    if (event) {
+      const participants = this.participants.filter(
+        (participant) => participant.eventId === event.id,
+      );
+
+      return {
+        ...event,
+        participants,
+      };
+    }
+
+    return null;
   }
 
-  async findByResponsibleId(
-    responsibleId: string,
-  ): Promise<(EventPrisma & { participants: number })[]> {
+  async findByResponsibleId(responsibleId: string): Promise<
+    (EventPrisma & {
+      participantsCount: number;
+      participants: ParticipantPrisma[];
+    })[]
+  > {
     const filteredEvents = this.events.filter(
       (item) => item.responsibleId === responsibleId,
     );
 
     const eventsWithParticipantsCount = filteredEvents.map((event) => {
-      const participantsCount = this.participants.filter(
+      const participants = this.participants.filter(
         (participant) => participant.eventId === event.id,
-      ).length;
+      );
 
       return {
         ...event,
-        participants: participantsCount,
+        participants,
+        participantsCount: participants.length,
       };
     });
 

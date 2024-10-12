@@ -61,7 +61,7 @@ describe('List Events By Responsible', () => {
     expect(eventsResponsible).toHaveLength(0);
   });
 
-  it('should be able list count participants with events', async () => {
+  it('should be able list count participants and participants with events', async () => {
     const responsible = await responsibleRepositoryInMemory.create({
       name: faker.person.fullName(),
       email: faker.internet.email(),
@@ -100,7 +100,9 @@ describe('List Events By Responsible', () => {
       responsible.id,
     );
 
+    expect(firstEvent).toHaveProperty('participantsCount');
     expect(firstEvent).toHaveProperty('participants');
-    expect(firstEvent.participants).toEqual(3);
+    expect(firstEvent.participantsCount).toEqual(3);
+    expect(firstEvent.participants).toHaveLength(3);
   });
 });
