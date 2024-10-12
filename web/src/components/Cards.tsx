@@ -4,6 +4,7 @@ import {
   PersonSimpleThrow,
   Racquet,
   SoccerBall,
+  Strategy,
   TennisBall,
   Trash,
 } from "@phosphor-icons/react";
@@ -36,12 +37,13 @@ export const Cards = ({ event, deleteEvent }: CardsProps) => {
           </button>
         </section>
         {event.type === "soccer" && <SoccerBall size={sizeIconTypeEvent} />}
+        {event.type === "basketball" && <Basketball size={sizeIconTypeEvent} />}
         {event.type === "volleyball" && (
           <PersonSimpleThrow size={sizeIconTypeEvent} />
         )}
-        {event.type === "volleyball" && <Basketball size={sizeIconTypeEvent} />}
         {event.type === "tennis" && <TennisBall size={sizeIconTypeEvent} />}
         {event.type === "table_tennis" && <Racquet size={sizeIconTypeEvent} />}
+        {event.type === "other" && <Strategy size={sizeIconTypeEvent} />}
         <section className='w-full flex gap-2 items-center'>
           <span className='h-5 w-5 flex justify-center items-center text-xs text-white rounded-full bg-skyBold'>
             <p>{event.participants}</p>
@@ -55,7 +57,7 @@ export const Cards = ({ event, deleteEvent }: CardsProps) => {
               <p className='text-zinc-500 text-sm'>{event.description}</p>
             </div>
           </div>
-          <div className='flex justify-end'>
+          <div className='flex justify-end py-2'>
             <button className='py-2 px-3 rounded-xl bg-skyBold font-semibold text-white border-none outline-none'>
               <ArrowRight size={20} />
             </button>
