@@ -16,6 +16,7 @@ import { CreateEventUseCase } from './useCases/CreateEventUseCase';
 import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByResponsibleIdUseCase';
 import { ListEventByIdUseCase } from './useCases/ListEventByIdUseCase';
 import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
+import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListParticipantsByEventResponsibleIdUseCase';
 
 @Controller('/events')
 export class EventController {
@@ -23,6 +24,7 @@ export class EventController {
     private createEventUseCase: CreateEventUseCase,
     private listEventsByResponsibleIdUseCase: ListEventsByResponsibleIdUseCase,
     private listEventByIdUseCase: ListEventByIdUseCase,
+    private listParticipantsByEventResponsibleIdUseCase: ListParticipantsByEventResponsibleIdUseCase,
     private deleteEventResponsibleByIdUseCase: DeleteEventResponsibleByIdUseCase,
   ) {}
 
@@ -41,6 +43,21 @@ export class EventController {
       await this.listEventsByResponsibleIdUseCase.execute(responsibleId);
 
     return events;
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/:eventId/responsible/:responsibleId/participants')
+  async getParticipantsEventByResponsible(
+    @Param('eventId') eventId: string,
+    @Param('responsibleId') responsibleId: string,
+  ) {
+    const participants =
+      await this.listParticipantsByEventResponsibleIdUseCase.execute(
+        eventId,
+        responsibleId,
+      );
+
+    return participants;
   }
 
   @UseGuards(AuthGuard)
