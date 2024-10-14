@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 
 import responsibleSlice from "./responsible/responsible.slice";
+import eventSlice from "./events/event.slice";
 
 const persistConfig = {
   key: "my-finances",
@@ -11,6 +12,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   responsible: responsibleSlice,
+  event: eventSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
