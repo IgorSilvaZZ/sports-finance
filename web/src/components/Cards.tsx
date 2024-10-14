@@ -12,12 +12,17 @@ import {
 import { Event } from "../interfaces/Event.interface";
 interface CardsProps {
   event: Event;
+  selectEvent: (eventId: string) => void;
   deleteEvent: (eventId: string, responsibleId: string) => void;
 }
 
 const sizeIconTypeEvent = 70;
 
-export const Cards = ({ event, deleteEvent }: CardsProps) => {
+export const Cards = ({ event, selectEvent, deleteEvent }: CardsProps) => {
+  function handleSelectEvent(eventId: string) {
+    selectEvent(eventId);
+  }
+
   function handleDeletEvent(eventId: string, responsibleId: string) {
     deleteEvent(eventId, responsibleId);
   }
@@ -46,7 +51,7 @@ export const Cards = ({ event, deleteEvent }: CardsProps) => {
         {event.type === "other" && <Strategy size={sizeIconTypeEvent} />}
         <section className='w-full flex gap-2 items-center'>
           <span className='h-5 w-5 flex justify-center items-center text-xs text-white rounded-full bg-skyBold'>
-            <p>{event.participants}</p>
+            <p>{event.participantsCount}</p>
           </span>
           <p className='text-sm text-skyLight'>Participante(s)</p>
         </section>
@@ -58,7 +63,10 @@ export const Cards = ({ event, deleteEvent }: CardsProps) => {
             </div>
           </div>
           <div className='flex justify-end py-2'>
-            <button className='py-2 px-3 rounded-xl bg-skyBold font-semibold text-white border-none outline-none'>
+            <button
+              className='py-2 px-3 rounded-xl bg-skyBold font-semibold text-white border-none outline-none'
+              onClick={() => handleSelectEvent(event.id)}
+            >
               <ArrowRight size={20} />
             </button>
           </div>

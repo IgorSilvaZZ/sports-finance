@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { OptionsNavBar } from "../enums/OptionsNavBar.enum";
 
-import { NavBar } from "../components/Dashboard/NavBar";
-import { MainDashboard } from "../components/Dashboard/Main";
-import { Participants } from "../components/Dashboard/Participants";
+import { NavBar } from "../components/dashboard/NavBar";
+import { MainDashboard } from "../components/dashboard/Main";
+import { Participants } from "../components/dashboard/Participants";
 
 export default function Dashboard() {
   const [optionSelected, setOptionSelected] = useState<OptionsNavBar>(
