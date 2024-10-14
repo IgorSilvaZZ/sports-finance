@@ -60,12 +60,23 @@ export class EventRepositoryInMemory implements EventRepository {
   async findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<EventPrisma | null> {
+  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null> {
     const event = this.events.find(
       (item) => item.id === id && item.responsibleId === responsibleId,
     );
 
-    return event;
+    if (event) {
+      const participants = this.participants.filter(
+        (participant) => participant.eventId === event.id,
+      );
+
+      return {
+        ...event,
+        participants,
+      };
+    }
+
+    return null;
   }
 
   async create(data: CreateEventDTO): Promise<EventPrisma> {

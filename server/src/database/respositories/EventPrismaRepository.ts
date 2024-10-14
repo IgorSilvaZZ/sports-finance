@@ -76,15 +76,29 @@ export class EventPrismaRepository implements EventRepository {
   async findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<Event | null> {
+  ): Promise<(Event & { participants: Participant[] }) | null> {
     const event = await this.prismaService.event.findFirst({
       where: {
         id,
         responsibleId,
       },
+      include: {
+        Participant: true,
+      },
     });
 
-    return event;
+    if (event) {
+      const participants = event.Participant;
+
+      delete event.Participant;
+
+      return {
+        ...event,
+        participants,
+      };
+    }
+
+    return null;
   }
 
   async create(data: CreateEventDTO): Promise<Event> {

@@ -18,7 +18,7 @@ export abstract class EventRepository {
   abstract findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<EventPrisma | null>;
+  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null>;
   abstract create(data: CreateEventDTO): Promise<EventPrisma>;
   abstract deleteEventResponsibleById(
     id: string,
