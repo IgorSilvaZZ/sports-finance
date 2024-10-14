@@ -5,6 +5,8 @@ export interface Event {
   name: string;
   description: string;
   type: string;
+  valueMonthly: number;
+  dayMonthly: number;
   responsibleId: string;
   participantsCount: number;
   participants: Participant[];
