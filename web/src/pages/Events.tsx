@@ -60,6 +60,10 @@ export default function Events() {
     navigate("/");
   }
 
+  function selectEvent(eventId: string) {
+    console.log(eventId);
+  }
+
   async function getEvents() {
     setLoading(true);
 
@@ -119,6 +123,7 @@ export default function Events() {
                         <Cards
                           key={eventItem.id}
                           event={eventItem}
+                          selectEvent={selectEvent}
                           deleteEvent={deleteEvent}
                         />
                       </>
