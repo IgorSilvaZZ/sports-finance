@@ -48,7 +48,6 @@ export class HistoryPrismaRepository implements HistoryRepository {
       };
     }
 
-    // Teste Insomnia parou aqui (Voltar o teste a partir daqui)
     if (month) {
       const startDate = new Date(`${yearFilter}-${month}-02T00:00:00Z`);
       const endDateYear =
