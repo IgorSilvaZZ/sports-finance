@@ -14,24 +14,30 @@ import { AuthGuard } from '@/guards/auth.guards';
 
 import { CreateEventUseCase } from './useCases/CreateEventUseCase';
 import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByResponsibleIdUseCase';
-import { ListEventByIdUseCase } from './useCases/ListEventByIdUseCase';
 import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
 import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListParticipantsByEventResponsibleIdUseCase';
+import { FindEventByResponsibleIdUseCase } from './useCases/FindEventByResponsibleIdUseCase';
 
 @Controller('/events')
 export class EventController {
   constructor(
     private createEventUseCase: CreateEventUseCase,
     private listEventsByResponsibleIdUseCase: ListEventsByResponsibleIdUseCase,
-    private listEventByIdUseCase: ListEventByIdUseCase,
     private listParticipantsByEventResponsibleIdUseCase: ListParticipantsByEventResponsibleIdUseCase,
+    private findEventByResponsibleIdUseCase: FindEventByResponsibleIdUseCase,
     private deleteEventResponsibleByIdUseCase: DeleteEventResponsibleByIdUseCase,
   ) {}
 
   @UseGuards(AuthGuard)
-  @Get('/:eventId')
-  async getById(@Param('eventId') eventId: string) {
-    const event = await this.listEventByIdUseCase.execute(eventId);
+  @Get('/:eventId/responsible/:responsibleId')
+  async getEventByResponsible(
+    @Param('eventId') eventId: string,
+    @Param('responsibleId') responsibleId: string,
+  ) {
+    const event = await this.findEventByResponsibleIdUseCase.execute(
+      eventId,
+      responsibleId,
+    );
 
     return event;
   }
