@@ -76,6 +76,7 @@ model History {
   value         Decimal
   type          String
   participantId String
+  status        Boolean
   eventId       String
   event         Event       @relation(fields: [eventId], references: [id])
   participant   Participant @relation(fields: [participantId], references: [id])

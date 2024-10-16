@@ -1,13 +1,27 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 
 import { AuthGuard } from '@/guards/auth.guards';
 
 import { CreateHistoryDTO } from './dtos/CreateHistoryDTO';
+import { FilterHistoryDTO } from './dtos/FilterHistoryDTO';
+import { ListHistoryByFiltersUseCase } from './useCases/ListHistoryByFiltersUseCase';
 import { CreateHistoryUseCase } from './useCases/CreateHistoryUseCase';
 
 @Controller('/history')
 export class HistoryController {
-  constructor(private readonly createHistoryUseCase: CreateHistoryUseCase) {}
+  constructor(
+    private readonly listHistoryByFiltersUseCase: ListHistoryByFiltersUseCase,
+    private readonly createHistoryUseCase: CreateHistoryUseCase,
+  ) {}
+
+  @UseGuards(AuthGuard)
+  @Get('/')
+  async listHistoryByFilters(@Query() queryParams: FilterHistoryDTO) {
+    const histories =
+      await this.listHistoryByFiltersUseCase.execute(queryParams);
+
+    return histories;
+  }
 
   @UseGuards(AuthGuard)
   @Post('/')
