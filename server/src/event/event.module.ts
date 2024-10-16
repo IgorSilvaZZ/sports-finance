@@ -6,9 +6,9 @@ import { EventController } from './event.controller';
 
 import { CreateEventUseCase } from './useCases/CreateEventUseCase';
 import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByResponsibleIdUseCase';
-import { ListEventByIdUseCase } from './useCases/ListEventByIdUseCase';
 import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
 import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListParticipantsByEventResponsibleIdUseCase';
+import { FindEventByResponsibleIdUseCase } from './useCases/FindEventByResponsibleIdUseCase';
 
 @Module({
   imports: [DatabaseModule],
@@ -16,8 +16,8 @@ import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListPart
   providers: [
     CreateEventUseCase,
     ListEventsByResponsibleIdUseCase,
-    ListEventByIdUseCase,
     ListParticipantsByEventResponsibleIdUseCase,
+    FindEventByResponsibleIdUseCase,
     DeleteEventResponsibleByIdUseCase,
   ],
 })
