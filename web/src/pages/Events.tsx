@@ -62,6 +62,8 @@ export default function Events() {
 
   function selectEvent(eventId: string) {
     console.log(eventId);
+
+    navigate(`/event/${eventId}`);
   }
 
   async function getEvents() {

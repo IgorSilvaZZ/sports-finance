@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "react-query";
+import { toast } from "sonner";
 
 import { MagnifyingGlass, UserCircle } from "@phosphor-icons/react";
 
@@ -7,7 +11,61 @@ import { EmptyList } from "../EmptyList";
 import { ModalCreateHistory } from "../ModalCreateHistory";
 import { Button } from "../ui/Button";
 
+import { History } from "../../interfaces/History.interface";
+
+import { selectResponsible } from "../../store/responsible/responsible.slice";
+import { eventActions } from "../../store/events/event.slice";
+
+import { api } from "../../lib/axios";
+
 export const MainDashboard = () => {
+  const { eventId } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { id: responsibleId } = useSelector(selectResponsible);
+
+  async function getEvent() {
+    try {
+      const { data } = await api.get(
+        `/events/${eventId}/responsible/${responsibleId}`
+      );
+
+      dispatch(eventActions.setEvent(data));
+    } catch (error) {
+      toast.error("Erro ao carregar informações de eventos!");
+      console.log(error);
+
+      dispatch(eventActions.clear());
+      navigate("/events");
+    }
+  }
+
+  async function getHistories(): Promise<History[]> {
+    try {
+      const { data } = await api.get("/history", { params: { eventId } });
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao coletar o historico!");
+
+      return [];
+    }
+  }
+
+  const { data: allHistories } = useQuery<History[]>(
+    ["getHistories"],
+    () => getHistories(),
+    { refetchOnWindowFocus: false }
+  );
+
+  useEffect(() => {
+    if (eventId) {
+      getEvent();
+    }
+  }, []);
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isEventListEmpty, setIsEventListEmpty] = useState<boolean>(false);
 
@@ -50,13 +108,13 @@ export const MainDashboard = () => {
 
         <div className='h-full w-full flex flex-col'>
           <div className='w-full h-40 flex gap-3 items-center'>
-            <DashCard label='Valor Arrecadado' value={"R$ 100,00"} />
             <DashCard label='Dia de pagamento' value={"04"} />
+            <DashCard label='Valor Arrecadado' value={"R$ 100,00"} />
             <DashCard label='Valor mensalidade' value={"R$ 300,00"} />
             <DashCard label='Valor caixa' value={"R$ 50,00"} />
           </div>
 
-          {!isEventListEmpty ? (
+          {allHistories && allHistories?.length > 0 ? (
             <>
               <div className='w-full h-96 max-h-[700px] flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
                 <div className='w-full h-16 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
@@ -68,32 +126,30 @@ export const MainDashboard = () => {
                     Data de pagamento
                   </span>
                 </div>
-                <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                  <div className='flex gap-3 items-center w-2/6'>
-                    <UserCircle size={25} />
-                    <span className='text-sm font-semibold'>Nome</span>
-                  </div>
-                  <select className='text-sm w-36 text-zinc-500 border-2 border-zinc-200 outline-none rounded-md py-1'>
-                    <option value='sim'>Pago</option>
-                    <option value='nao'>Não pago</option>
-                  </select>
-                  <span className='text-sm w-36 text-zinc-500'>Mensalista</span>
-                  <span className='text-sm w-32'>R$ 30,00</span>
-                  <span className='text-sm w-40'>04/10/2024</span>
-                </div>
-                <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                  <div className='flex gap-3 items-center w-2/6'>
-                    <UserCircle size={25} />
-                    <span className='text-sm font-semibold'>Nome</span>
-                  </div>
-                  <select className='text-sm w-36 text-zinc-500 border-2 border-zinc-200 outline-none rounded-md py-1'>
-                    <option value='sim'>Pago</option>
-                    <option value='nao'>Não pago</option>
-                  </select>
-                  <span className='text-sm w-36 text-zinc-500'>Agregado</span>
-                  <span className='text-sm w-32'>R$ 10,00</span>
-                  <span className='text-sm w-40'>05/10/2024</span>
-                </div>
+                {allHistories.map((history) => (
+                  <>
+                    <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
+                      <div className='flex gap-3 items-center w-2/6'>
+                        <UserCircle size={25} />
+                        <span className='text-sm font-semibold'>
+                          {history.participant.name}
+                        </span>
+                      </div>
+                      <select
+                        className='text-sm w-36 text-zinc-500 border-2 border-zinc-200 outline-none rounded-md py-1'
+                        value={history.status ? "sim" : "nao"}
+                      >
+                        <option value='sim'>Pago</option>
+                        <option value='nao'>Não pago</option>
+                      </select>
+                      <span className='text-sm w-36 text-zinc-500'>
+                        {history.type}
+                      </span>
+                      <span className='text-sm w-32'>{history.value}</span>
+                      <span className='text-sm w-40'>{history.updateDate}</span>
+                    </div>
+                  </>
+                ))}
               </div>
             </>
           ) : (
