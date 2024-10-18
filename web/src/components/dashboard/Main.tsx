@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
@@ -14,16 +14,58 @@ import { Button } from "../ui/Button";
 import { History } from "../../interfaces/History.interface";
 
 import { selectResponsible } from "../../store/responsible/responsible.slice";
-import { eventActions } from "../../store/events/event.slice";
+import { eventActions, selectEvent } from "../../store/events/event.slice";
+
+import {
+  getValueCurrencyFormatted,
+  getYears,
+  typeTranslate,
+} from "../../utils/history";
 
 import { api } from "../../lib/axios";
+import { format } from "date-fns";
+import { TypeHistory } from "../../enums/TypeHistory.enum";
 
 export const MainDashboard = () => {
   const { eventId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const event = useSelector(selectEvent);
   const { id: responsibleId } = useSelector(selectResponsible);
+
+  const { data: allHistories } = useQuery<History[]>(
+    ["getHistories"],
+    () => getHistories(),
+    { refetchOnWindowFocus: false }
+  );
+
+  const paidHistories = allHistories?.filter((history) => history.status);
+
+  const years = getYears();
+
+  // Valor total do historico
+  const totalValue = paidHistories?.reduce((acc, history) => {
+    return acc + Number(history.value);
+  }, 0);
+
+  const getAmountCollected = (
+    totalValueHistory: number,
+    valueMonthly: number
+  ) => {
+    const result = totalValueHistory - valueMonthly;
+
+    if (result < 0) {
+      return 0;
+    }
+
+    return result;
+  };
+
+  const amountCollected = getAmountCollected(
+    Number(totalValue),
+    event.valueMonthly
+  );
 
   async function getEvent() {
     try {
@@ -54,20 +96,11 @@ export const MainDashboard = () => {
     }
   }
 
-  const { data: allHistories } = useQuery<History[]>(
-    ["getHistories"],
-    () => getHistories(),
-    { refetchOnWindowFocus: false }
-  );
-
   useEffect(() => {
     if (eventId) {
       getEvent();
     }
   }, []);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isEventListEmpty, setIsEventListEmpty] = useState<boolean>(false);
 
   return (
     <>
@@ -91,15 +124,22 @@ export const MainDashboard = () => {
           />
           <select className='w-36 h-full outline-none'>
             <option value='all'>Status</option>
+            <option value='paid'>Pago</option>
+            <option value='not-paid'>Não Pago</option>
           </select>
           <select className='w-36 h-full outline-none'>
             <option value='all'>Tipo</option>
+            <option value={TypeHistory.MONTHLY}>Mensalista</option>
+            <option value={TypeHistory.AGGREGATE}>Agregado</option>
           </select>
           <select className='w-36 h-full outline-none'>
             <option value='all'>Mês</option>
           </select>
+          {/* Colocar a lib react-calendar */}
           <select className='w-36 h-full outline-none'>
-            <option value='all'>Ano</option>
+            {years.map((year) => (
+              <option value={year}>{year}</option>
+            ))}
           </select>
           <button>
             <MagnifyingGlass size={25} />
@@ -108,10 +148,22 @@ export const MainDashboard = () => {
 
         <div className='h-full w-full flex flex-col'>
           <div className='w-full h-40 flex gap-3 items-center'>
-            <DashCard label='Dia de pagamento' value={"04"} />
-            <DashCard label='Valor Arrecadado' value={"R$ 100,00"} />
-            <DashCard label='Valor mensalidade' value={"R$ 300,00"} />
-            <DashCard label='Valor caixa' value={"R$ 50,00"} />
+            <DashCard
+              label='Dia de pagamento'
+              value={String(event?.dayMonthly).padStart(2, "0")}
+            />
+            <DashCard
+              label='Valor Arrecadado'
+              value={getValueCurrencyFormatted(Number(totalValue))}
+            />
+            <DashCard
+              label='Valor mensalidade'
+              value={getValueCurrencyFormatted(event?.valueMonthly)}
+            />
+            <DashCard
+              label='Valor caixa'
+              value={getValueCurrencyFormatted(amountCollected)}
+            />
           </div>
 
           {allHistories && allHistories?.length > 0 ? (
@@ -137,16 +189,23 @@ export const MainDashboard = () => {
                       </div>
                       <select
                         className='text-sm w-36 text-zinc-500 border-2 border-zinc-200 outline-none rounded-md py-1'
-                        value={history.status ? "sim" : "nao"}
+                        value={history.status ? "paid" : "not-paid"}
                       >
-                        <option value='sim'>Pago</option>
-                        <option value='nao'>Não pago</option>
+                        <option value='paid'>Pago</option>
+                        <option value='not-paid'>Não pago</option>
                       </select>
                       <span className='text-sm w-36 text-zinc-500'>
-                        {history.type}
+                        {typeTranslate[history.type]}
                       </span>
-                      <span className='text-sm w-32'>{history.value}</span>
-                      <span className='text-sm w-40'>{history.updateDate}</span>
+                      <span className='text-sm w-32'>
+                        {getValueCurrencyFormatted(Number(history.value))}
+                      </span>
+                      <span className='text-sm w-40'>
+                        {format(
+                          new Date(history.updateDate),
+                          "dd/MM/yyyy HH:mm"
+                        )}
+                      </span>
                     </div>
                   </>
                 ))}
