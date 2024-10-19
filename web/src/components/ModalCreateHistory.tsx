@@ -1,8 +1,12 @@
+import { format } from "date-fns";
+
 import { ModalBase } from "./ui/ModalBase";
 import { Button } from "./ui/Button";
 import { FormModalBase } from "./ui/FormModalBase";
 import { TextInput } from "./ui/TextInput";
 import { Select } from "./ui/Select";
+
+import { TypeHistory } from "../enums/TypeHistory.enum";
 
 export const ModalCreateHistory = () => {
   return (
@@ -21,11 +25,16 @@ export const ModalCreateHistory = () => {
         <TextInput label='Valor' className='text-sm py-3 px-3' />
         <Select
           label='Tipo'
-          options={[{ label: "Mensalista", value: "mensalista" }]}
+          options={[
+            { label: "Mensalista", value: TypeHistory.MONTHLY },
+            { label: "Agregado", value: TypeHistory.AGGREGATE },
+          ]}
         />
-        <Select
-          label='Tipo'
-          options={[{ label: "Agregado", value: "agregado" }]}
+        <TextInput
+          label='Data da Transação'
+          className='text-sm py-3 px-3'
+          type='date'
+          max={format(new Date(), "yyyy-MM-dd")}
         />
         <Button className='py-3 px-3'>Criar</Button>
       </FormModalBase>
