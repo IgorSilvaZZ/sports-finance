@@ -4,4 +4,5 @@ export interface CreateHistoryDTO {
   type: string;
   participantId: string;
   eventId: string;
+  createDate?: string | Date;
 }

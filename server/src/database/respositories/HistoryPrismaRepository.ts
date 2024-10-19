@@ -93,6 +93,7 @@ export class HistoryPrismaRepository implements HistoryRepository {
     type,
     eventId,
     participantId,
+    createDate,
   }: CreateHistoryDTO): Promise<HistoryPrisma> {
     const historyData = {
       name,
@@ -101,6 +102,7 @@ export class HistoryPrismaRepository implements HistoryRepository {
       eventId,
       participantId,
       status: true,
+      createDate,
     };
 
     const history = await this.prismaService.history.create({
