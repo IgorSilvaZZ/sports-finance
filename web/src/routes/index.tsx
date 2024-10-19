@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
     element: <Main />,
     children: [
       { path: "/events", element: <Events /> },
-      { path: "/event", element: <Dashboard /> },
+      { path: "/event/:eventId", element: <Dashboard /> },
     ],
   },
 ]);

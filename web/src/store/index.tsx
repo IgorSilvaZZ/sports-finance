@@ -4,6 +4,7 @@ import { persistStore, persistReducer } from "redux-persist";
 
 import responsibleSlice from "./responsible/responsible.slice";
 import eventSlice from "./events/event.slice";
+import dashboardSlice from "./dashboard/dashboard.slice";
 
 const persistConfig = {
   key: "my-finances",
@@ -13,6 +14,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   responsible: responsibleSlice,
   event: eventSlice,
+  dashboard: dashboardSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

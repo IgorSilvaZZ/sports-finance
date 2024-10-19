@@ -1,14 +1,28 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { SoccerBall, UserCircle } from "@phosphor-icons/react";
 
 import { OptionsNavBar } from "../../enums/OptionsNavBar.enum";
 
 import { ItemNavBar } from "./ItemNavBar";
 
+import { eventActions } from "../../store/events/event.slice";
+import { dashboardActions } from "../../store/dashboard/dashboard.slice";
+
 interface NavBarProps {
   handleOption: (option: OptionsNavBar) => void;
 }
 
 export const NavBar = ({ handleOption }: NavBarProps) => {
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(dashboardActions.clearFilters());
+    dispatch(eventActions.clear());
+    navigation("/events");
+  }
+
   return (
     <>
       <div className='w-[14%] h-full flex flex-col gap-5 border-1 border-r border-zinc-300 px-3 py-3'>
@@ -33,9 +47,7 @@ export const NavBar = ({ handleOption }: NavBarProps) => {
           >
             Editar evento
           </ItemNavBar>
-          <ItemNavBar handleClick={() => console.log("logout")}>
-            Sair
-          </ItemNavBar>
+          <ItemNavBar handleClick={handleLogout}>Sair</ItemNavBar>
         </div>
 
         <div className='flex items-center gap-2 cursor-pointer'>

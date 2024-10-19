@@ -15,6 +15,7 @@ import {
   responsibleActions,
   selectResponsible,
 } from "../store/responsible/responsible.slice";
+import { dashboardActions } from "../store/dashboard/dashboard.slice";
 
 import { api } from "../lib/axios";
 
@@ -56,12 +57,15 @@ export default function Events() {
   const [loading, setLoading] = useState<boolean>();
 
   function goToBack() {
+    dispatch(dashboardActions.clearFilters());
     dispatch(responsibleActions.clear());
     navigate("/");
   }
 
   function selectEvent(eventId: string) {
     console.log(eventId);
+
+    navigate(`/event/${eventId}`);
   }
 
   async function getEvents() {
