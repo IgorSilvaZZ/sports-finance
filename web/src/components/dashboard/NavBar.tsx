@@ -7,6 +7,7 @@ import { OptionsNavBar } from "../../enums/OptionsNavBar.enum";
 import { ItemNavBar } from "./ItemNavBar";
 
 import { eventActions } from "../../store/events/event.slice";
+import { dashboardActions } from "../../store/dashboard/dashboard.slice";
 
 interface NavBarProps {
   handleOption: (option: OptionsNavBar) => void;
@@ -17,6 +18,7 @@ export const NavBar = ({ handleOption }: NavBarProps) => {
   const dispatch = useDispatch();
 
   function handleLogout() {
+    dispatch(dashboardActions.clearFilters());
     dispatch(eventActions.clear());
     navigation("/events");
   }
