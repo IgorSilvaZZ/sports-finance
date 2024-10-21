@@ -3,5 +3,6 @@ export interface CreatePaymentDTO {
   value: number;
   eventId: string;
   status?: boolean;
+  paymentRef: string;
   datePayment: string;
 }

@@ -3,12 +3,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { isAfter, isValid, parseISO, startOfDay } from 'date-fns';
 
 import { CreatePaymentDTO } from '../dtos/CreatePaymentDTO';
 
 import { PaymentRepository } from '../repositories/PaymentRepository';
 import { EventRepository } from '@/event/repositories/EventRepository';
-import { isAfter, isValid, parseISO, startOfDay } from 'date-fns';
 
 @Injectable()
 export class CreatePaymentUseCase {
@@ -22,6 +22,7 @@ export class CreatePaymentUseCase {
     eventId,
     value,
     status,
+    paymentRef,
     datePayment,
   }: CreatePaymentDTO) {
     let namePayment = name;
@@ -29,10 +30,6 @@ export class CreatePaymentUseCase {
 
     const currentDate = startOfDay(new Date());
     const datePaymentToDate = parseISO(datePayment);
-
-    if (!namePayment) {
-      namePayment = `Pagamento-${new Date()}`;
-    }
 
     if (!isValid(datePaymentToDate)) {
       throw new BadRequestException('Date for payment is invalid!');
@@ -42,10 +39,24 @@ export class CreatePaymentUseCase {
       throw new BadRequestException('The payment date cannot be a future date');
     }
 
+    if (!namePayment) {
+      const [, monthRef] = paymentRef.split('-');
+
+      namePayment = `Pagamento referente ao mês: ${monthRef}`;
+    }
+
     const event = await this.eventRepository.findById(eventId);
 
     if (!event) {
       throw new NotFoundException('Event not found!');
+    }
+
+    // Verificando se existe um pagamento no mesmo mes do ano
+    const paymentExists =
+      await this.paymentRepository.findByMonthAndYear(paymentRef);
+
+    if (paymentExists) {
+      throw new BadRequestException(`Payment of ${paymentRef} already exists!`);
     }
 
     const newPayment = {
@@ -53,6 +64,7 @@ export class CreatePaymentUseCase {
       eventId,
       value,
       datePayment,
+      paymentRef,
       status: statusPayment,
     };
 
