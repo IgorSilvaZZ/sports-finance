@@ -94,6 +94,53 @@ describe('Find event by responsible id', () => {
     expect(findEventResponsible.participants).toHaveLength(3);
   });
 
+  it('should be able get event by responsible with payments', async () => {
+    const responsible = await responsibleRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      phoneNumber: faker.phone.number(),
+      password: '123',
+    });
+
+    const event = await eventRepositoryInMemory.create({
+      name: 'Event Test',
+      type: TypeEvent.BASKETBALL,
+      description: 'Event test created',
+      responsibleId: responsible.id,
+      dayMonthly: '02',
+      valueMonthly: 1500,
+    });
+
+    await eventRepositoryInMemory.createParticipantEvent({
+      name: faker.person.fullName(),
+      eventId: event.id,
+      phoneNumber: faker.phone.number(),
+    });
+
+    await eventRepositoryInMemory.createPaymentEvent({
+      value: event.valueMonthly,
+      datePayment: '2024-09-02',
+      eventId: event.id,
+      paymentRef: '2024-09',
+    });
+
+    await eventRepositoryInMemory.createPaymentEvent({
+      value: event.valueMonthly,
+      datePayment: '2024-10-02',
+      eventId: event.id,
+      paymentRef: '2024-10',
+    });
+
+    const findEventResponsible = await findEventByResponsibleIdUseCase.execute(
+      event.id,
+      responsible.id,
+    );
+
+    expect(findEventResponsible.responsibleId).toEqual(responsible.id);
+    expect(findEventResponsible).toHaveProperty('payments');
+    expect(findEventResponsible.payments).toHaveLength(2);
+  });
+
   it('should not be able list a event responsible not exists', async () => {
     const event1 = await eventRepositoryInMemory.create({
       name: 'Event Test',

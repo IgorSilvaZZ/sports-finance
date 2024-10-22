@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Event, Participant } from '@prisma/client';
+import { Event, Participant, Payments } from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 import { EventRepository } from '@/event/repositories/EventRepository';
@@ -76,7 +76,9 @@ export class EventPrismaRepository implements EventRepository {
   async findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<(Event & { participants: Participant[] }) | null> {
+  ): Promise<
+    (Event & { participants: Participant[]; payments: Payments[] }) | null
+  > {
     const event = await this.prismaService.event.findFirst({
       where: {
         id,
@@ -84,17 +86,21 @@ export class EventPrismaRepository implements EventRepository {
       },
       include: {
         Participant: true,
+        Payments: true,
       },
     });
 
     if (event) {
       const participants = event.Participant;
+      const payments = event.Payments;
 
       delete event.Participant;
+      delete event.Payments;
 
       return {
         ...event,
         participants,
+        payments,
       };
     }
 
