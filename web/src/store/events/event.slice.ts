@@ -14,6 +14,7 @@ const initialState: Event = {
   valueMonthly: 0,
   responsibleId: "",
   participants: [],
+  payments: [],
   createDate: "",
   updateDate: "",
 };
@@ -31,6 +32,7 @@ const slice = createSlice({
       state.valueMonthly = payload.valueMonthly;
       state.responsibleId = payload.responsibleId;
       state.participants = payload.participants;
+      state.payments = payload.payments;
       state.createDate = payload.createDate;
       state.updateDate = payload.updateDate;
     },
@@ -44,6 +46,7 @@ const slice = createSlice({
       state.valueMonthly = 0;
       state.responsibleId = "";
       state.participants = [];
+      state.payments = [];
       state.createDate = "";
       state.updateDate = "";
     },

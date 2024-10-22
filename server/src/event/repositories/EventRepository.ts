@@ -1,6 +1,7 @@
 import {
   Event as EventPrisma,
   Participant as ParticipantPrisma,
+  Payments as PaymentsPrisma,
 } from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
@@ -18,7 +19,13 @@ export abstract class EventRepository {
   abstract findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null>;
+  ): Promise<
+    | (EventPrisma & {
+        participants: ParticipantPrisma[];
+        payments: PaymentsPrisma[];
+      })
+    | null
+  >;
   abstract create(data: CreateEventDTO): Promise<EventPrisma>;
   abstract deleteEventResponsibleById(
     id: string,

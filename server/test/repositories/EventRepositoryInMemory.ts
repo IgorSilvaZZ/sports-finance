@@ -1,17 +1,24 @@
 import { randomUUID } from 'crypto';
+import { parseISO } from 'date-fns';
 import {
   Event as EventPrisma,
   Participant as ParticipantPrisma,
+  Payments as PaymentsPrisma,
+  Prisma,
 } from '@prisma/client';
 
-import { EventRepository } from '@/event/repositories/EventRepository';
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
+import { CreatePaymentDTO } from '@/payment/dtos/CreatePaymentDTO';
+
+import { EventRepository } from '@/event/repositories/EventRepository';
 
 export class EventRepositoryInMemory implements EventRepository {
   public events: EventPrisma[] = [];
 
   public participants: ParticipantPrisma[] = [];
+
+  public payments: PaymentsPrisma[] = [];
 
   async findById(
     id: string,
@@ -60,7 +67,13 @@ export class EventRepositoryInMemory implements EventRepository {
   async findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<(EventPrisma & { participants: ParticipantPrisma[] }) | null> {
+  ): Promise<
+    | (EventPrisma & {
+        participants: ParticipantPrisma[];
+        payments: PaymentsPrisma[];
+      })
+    | null
+  > {
     const event = this.events.find(
       (item) => item.id === id && item.responsibleId === responsibleId,
     );
@@ -70,8 +83,13 @@ export class EventRepositoryInMemory implements EventRepository {
         (participant) => participant.eventId === event.id,
       );
 
+      const payments = this.payments.filter(
+        (payment) => payment.eventId === event.id,
+      );
+
       return {
         ...event,
+        payments,
         participants,
       };
     }
@@ -113,6 +131,31 @@ export class EventRepositoryInMemory implements EventRepository {
     this.participants.push(newParticipantEvent);
 
     return newParticipantEvent;
+  }
+
+  async createPaymentEvent({
+    name,
+    datePayment,
+    eventId,
+    value,
+    status,
+    paymentRef,
+  }: CreatePaymentDTO): Promise<PaymentsPrisma> {
+    const newPayment = {
+      id: randomUUID(),
+      name,
+      datePayment: parseISO(datePayment),
+      value: new Prisma.Decimal(value),
+      eventId,
+      paymentRef,
+      status: status ?? true,
+      createDate: parseISO(datePayment) ?? new Date(),
+      updateDate: new Date(),
+    };
+
+    this.payments.push(newPayment);
+
+    return newPayment;
   }
 
   async deleteEventResponsibleById(
