@@ -91,6 +91,7 @@ model Payments {
   eventId     String
   status      Boolean
   datePayment DateTime
+  paymentRef  String // yyyy-mm (2024-10) (Ano e Mês de referencia)
   event       Event     @relation(fields: [eventId], references: [id])
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
