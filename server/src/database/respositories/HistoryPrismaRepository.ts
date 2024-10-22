@@ -7,10 +7,11 @@ import {
 } from '@prisma/client';
 
 import { CreateHistoryDTO } from '@/history/dtos/CreateHistoryDTO';
+import { FilterHistoryDTO } from '@/history/dtos/FilterHistoryDTO';
+
 import { HistoryRepository } from '@/history/repositories/HistoryRepository';
 
 import { DatabaseService } from '../database.service';
-import { FilterHistoryDTO } from '@/history/dtos/FilterHistoryDTO';
 
 @Injectable()
 export class HistoryPrismaRepository implements HistoryRepository {

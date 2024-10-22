@@ -8,7 +8,7 @@ import { PaymentRepository } from '@/payment/repositories/PaymentRepository';
 export class PaymentRepositoryInMemory implements PaymentRepository {
   public payments: PaymentsPrisma[] = [];
 
-  async findByMonthAndYear(valueRef: string): Promise<PaymentsPrisma | null> {
+  async findByPaymentRef(valueRef: string): Promise<PaymentsPrisma | null> {
     const payment = this.payments.find(
       (item) => item.status && item.paymentRef === valueRef,
     );

@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { isAfter, isValid, parseISO, startOfDay } from 'date-fns';
+import { format, isAfter, isValid, parseISO, startOfDay } from 'date-fns';
 
 import { CreatePaymentDTO } from '../dtos/CreatePaymentDTO';
 
@@ -53,7 +53,7 @@ export class CreatePaymentUseCase {
 
     // Verificando se existe um pagamento no mesmo mes do ano
     const paymentExists =
-      await this.paymentRepository.findByMonthAndYear(paymentRef);
+      await this.paymentRepository.findByPaymentRef(paymentRef);
 
     if (paymentExists) {
       throw new BadRequestException(`Payment of ${paymentRef} already exists!`);
@@ -63,7 +63,7 @@ export class CreatePaymentUseCase {
       name: namePayment,
       eventId,
       value,
-      datePayment,
+      datePayment: format(datePayment, 'yyyy-MM-dd'),
       paymentRef,
       status: statusPayment,
     };

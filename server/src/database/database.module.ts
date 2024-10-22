@@ -15,6 +15,9 @@ import { CategoryPrismaRepository } from './respositories/CategoryPrismaReposito
 import { HistoryRepository } from '@/history/repositories/HistoryRepository';
 import { HistoryPrismaRepository } from './respositories/HistoryPrismaRepository';
 
+import { PaymentRepository } from '@/payment/repositories/PaymentRepository';
+import { PaymentPrismaRepository } from './respositories/PaymentPrismaRepository';
+
 import { DatabaseService } from './database.service';
 
 @Module({
@@ -40,6 +43,10 @@ import { DatabaseService } from './database.service';
       provide: HistoryRepository,
       useClass: HistoryPrismaRepository,
     },
+    {
+      provide: PaymentRepository,
+      useClass: PaymentPrismaRepository,
+    },
   ],
   exports: [
     ResponsibleRepository,
@@ -47,6 +54,7 @@ import { DatabaseService } from './database.service';
     ParticipantRepository,
     EventRepository,
     HistoryRepository,
+    PaymentRepository,
   ],
 })
 export class DatabaseModule {}
