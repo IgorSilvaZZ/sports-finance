@@ -22,6 +22,16 @@ export class PaymentPrismaRepository implements PaymentRepository {
     return payment;
   }
 
+  async findByEventId(eventId: string): Promise<Payments[]> {
+    const payments = await this.prismaService.payments.findMany({
+      where: {
+        eventId,
+      },
+    });
+
+    return payments;
+  }
+
   async create({
     name,
     datePayment,

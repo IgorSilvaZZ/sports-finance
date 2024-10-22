@@ -16,6 +16,12 @@ export class PaymentRepositoryInMemory implements PaymentRepository {
     return payment;
   }
 
+  async findByEventId(eventId: string): Promise<PaymentsPrisma[]> {
+    const payments = this.payments.filter((item) => item.eventId === eventId);
+
+    return payments;
+  }
+
   async create({
     name,
     datePayment,
