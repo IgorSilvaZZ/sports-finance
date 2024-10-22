@@ -4,6 +4,7 @@ export interface Payment {
   value: string;
   eventId: string;
   status: boolean;
+  paymentRef: string;
   datePayment: string;
   createDate: string;
   updateDate: string;

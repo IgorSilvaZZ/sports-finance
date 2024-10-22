@@ -37,9 +37,7 @@ export const NavBar = ({ handleOption }: NavBarProps) => {
           >
             Participantes
           </ItemNavBar>
-          <ItemNavBar
-            handleClick={() => handleOption(OptionsNavBar.PARTICIPANTS)}
-          >
+          <ItemNavBar handleClick={() => handleOption(OptionsNavBar.PAYMENTS)}>
             Pagamentos
           </ItemNavBar>
           <ItemNavBar

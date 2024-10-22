@@ -32,6 +32,7 @@ import {
   statusTranslate,
   typeTranslate,
 } from "../../utils/history";
+import { getCurrentStatusEvent } from "../../utils/event";
 
 import { api } from "../../lib/axios";
 import { StatusHistory } from "../../enums/StatusHistory.enum";
@@ -83,6 +84,16 @@ export const MainDashboard = () => {
     Number(event.valueMonthly),
     Number(totalValue)
   );
+
+  const currentPaymentStatus = getCurrentStatusEvent(
+    filters.year,
+    String(filters.month).padStart(2, "0"),
+    event.payments
+  );
+
+  const colorStatusPayment = currentPaymentStatus
+    ? "text-green-500"
+    : "text-red-500";
 
   function getQueryParams(filtersSearch: DashBoardFilters) {
     const queryParams: { [key: string]: string | number | boolean } = {
@@ -173,13 +184,19 @@ export const MainDashboard = () => {
               )}
               {" - "}
             </span>
-            <span className='font-semibold text-yellow-400'>EM ANDAMENTO</span>
+            <span className={`font-semibold ${colorStatusPayment}`}>
+              {currentPaymentStatus
+                ? "Pagamento efetuado"
+                : "Pagamento pendente"}
+            </span>
           </div>
           <div className='flex gap-5'>
             <ModalCreateHistory />
-            <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
-              Novo pagamento
-            </Button>
+            {!currentPaymentStatus && (
+              <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
+                Novo pagamento
+              </Button>
+            )}
           </div>
         </div>
         <form
