@@ -1,17 +1,30 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 
 import { AuthGuard } from '@/guards/auth.guards';
 
 import { CreateHistoryDTO } from './dtos/CreateHistoryDTO';
 import { FilterHistoryDTO } from './dtos/FilterHistoryDTO';
+import { UpdateHistoryDTO } from './dtos/UpdateHistoryDTO';
+
 import { ListHistoryByFiltersUseCase } from './useCases/ListHistoryByFiltersUseCase';
 import { CreateHistoryUseCase } from './useCases/CreateHistoryUseCase';
+import { UpdateHistoryByEventIdUseCase } from './useCases/UpdateHistoryByEventIdUseCase';
 
 @Controller('/history')
 export class HistoryController {
   constructor(
     private readonly listHistoryByFiltersUseCase: ListHistoryByFiltersUseCase,
     private readonly createHistoryUseCase: CreateHistoryUseCase,
+    private readonly updateHistoryByEventIdUseCase: UpdateHistoryByEventIdUseCase,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -29,5 +42,21 @@ export class HistoryController {
     const history = await this.createHistoryUseCase.execute(createHistoryDTO);
 
     return history;
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/:historyId/event/:eventId')
+  async updateByEventId(
+    @Param('historyId') historyId: string,
+    @Param('eventId') eventId: string,
+    @Body() updateHistoryDTO: UpdateHistoryDTO,
+  ) {
+    const historyUpdated = await this.updateHistoryByEventIdUseCase.execute(
+      historyId,
+      eventId,
+      updateHistoryDTO,
+    );
+
+    return historyUpdated;
   }
 }

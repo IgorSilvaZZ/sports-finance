@@ -10,6 +10,7 @@ import { CreateHistoryDTO } from '@/history/dtos/CreateHistoryDTO';
 import { FilterHistoryDTO } from '@/history/dtos/FilterHistoryDTO';
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
+import { UpdateHistoryDTO } from '@/history/dtos/UpdateHistoryDTO';
 
 import { HistoryRepository } from '@/history/repositories/HistoryRepository';
 
@@ -18,6 +19,17 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
 
   public events: EventPrisma[] = [];
   public participants: ParticipantPrisma[] = [];
+
+  async findByEventId(
+    historyId: string,
+    eventId: string,
+  ): Promise<HistoryPrisma | null> {
+    const history = await this.histories.find(
+      (history) => history.id === historyId && history.eventId === eventId,
+    );
+
+    return history;
+  }
 
   async listByFilters({
     eventId,
@@ -155,5 +167,36 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
     this.participants.push(newParticipantEvent);
 
     return newParticipantEvent;
+  }
+
+  async updateById(
+    id: string,
+    data: UpdateHistoryDTO,
+  ): Promise<HistoryPrisma | null> {
+    const historyIndex = this.histories.findIndex(
+      (history) => history.id === id,
+    );
+
+    if (historyIndex >= 0) {
+      const currentHistory = this.histories[historyIndex];
+
+      if (data.name) {
+        currentHistory.name = data.name;
+      }
+
+      if (data.status !== undefined) {
+        currentHistory.status = data.status;
+      }
+
+      if (data.value) {
+        currentHistory.value = new Prisma.Decimal(data.value);
+      }
+
+      this.histories[historyIndex] = currentHistory;
+
+      return currentHistory;
+    }
+
+    return null;
   }
 }
