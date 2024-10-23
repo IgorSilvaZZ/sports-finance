@@ -1,4 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { addDays, addMonths, addYears, format } from 'date-fns';
 import { faker } from '@faker-js/faker/.';
 
 import { TypeEvent } from '@/event/enums/typeEvent.enums';
@@ -9,7 +10,6 @@ import { ParticipantRepositoryInMemory } from '../../../test/repositories/Partic
 
 import { CreateHistoryUseCase } from './CreateHistoryUseCase';
 import { TypeHistory } from '../enums/typeHistory.enum';
-import { addDays, addMonths, addYears, format } from 'date-fns';
 
 let historyRepositoryInMemory: HistoryRepositoryInMemory;
 let eventRespositoryInMemory: EventRepositoryInMemory;

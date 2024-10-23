@@ -12,10 +12,25 @@ import { FilterHistoryDTO } from '@/history/dtos/FilterHistoryDTO';
 import { HistoryRepository } from '@/history/repositories/HistoryRepository';
 
 import { DatabaseService } from '../database.service';
+import { UpdateHistoryDTO } from '@/history/dtos/UpdateHistoryDTO';
 
 @Injectable()
 export class HistoryPrismaRepository implements HistoryRepository {
   constructor(private prismaService: DatabaseService) {}
+
+  async findByEventId(
+    historyId: string,
+    eventId: string,
+  ): Promise<HistoryPrisma | null> {
+    const history = await this.prismaService.history.findFirst({
+      where: {
+        id: historyId,
+        eventId,
+      },
+    });
+
+    return history;
+  }
 
   async listByFilters({
     eventId,
@@ -111,5 +126,19 @@ export class HistoryPrismaRepository implements HistoryRepository {
     });
 
     return history;
+  }
+
+  async updateById(
+    id: string,
+    data: UpdateHistoryDTO,
+  ): Promise<HistoryPrisma | null> {
+    const historyUpdated = await this.prismaService.history.update({
+      where: {
+        id,
+      },
+      data,
+    });
+
+    return historyUpdated;
   }
 }
