@@ -49,10 +49,10 @@ export const Participants = () => {
                     </span>
                   </div>
                   <span className='text-sm w-36 text-zinc-500'>
-                    {participant.email}
+                    {participant.email ?? "-"}
                   </span>
                   <span className='text-sm w-36 text-zinc-500'>
-                    {participant.phoneNumber}
+                    {participant.phoneNumber ?? "-"}
                   </span>
                   <div className='text-sm flex items-center w-40 gap-5 font-semibold'>
                     <button title='Excluir'>

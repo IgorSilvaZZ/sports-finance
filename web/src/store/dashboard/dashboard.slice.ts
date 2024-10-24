@@ -3,8 +3,16 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Dashboard } from "../../interfaces/Dashboard.interface";
 import { AppState } from "..";
 
+// Criar estado para guardar o filtro de pesquisa
 const initialState: Dashboard = {
-  filters: {
+  appliedFilters: {
+    textParticipant: "",
+    month: new Date().getMonth() + 1,
+    status: "select",
+    type: "select",
+    year: String(new Date().getFullYear()),
+  },
+  editingFilters: {
     textParticipant: "",
     month: new Date().getMonth() + 1,
     status: "select",
@@ -22,20 +30,21 @@ const slice = createSlice({
   name: "dashboard",
   initialState,
   reducers: {
-    changeFilters(state, { payload }: PayloadAction<Dashboard>): void {
-      state.filters = payload.filters;
-    },
-    changeFilterByField(
+    changeEditingFilters(
       state,
       { payload }: PayloadAction<TypeFieldFilters>
     ): void {
-      state.filters = {
-        ...state.filters,
+      state.editingFilters = {
+        ...state.editingFilters,
         [payload.key]: payload.value,
       };
     },
+    applyFilters(state) {
+      state.appliedFilters = { ...state.editingFilters };
+    },
     clearFilters(state): void {
-      state.filters = initialState.filters;
+      state.appliedFilters = initialState.appliedFilters;
+      state.editingFilters = initialState.editingFilters;
     },
   },
 });

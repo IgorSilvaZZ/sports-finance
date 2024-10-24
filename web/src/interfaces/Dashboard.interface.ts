@@ -7,5 +7,6 @@ export interface DashBoardFilters {
 }
 
 export interface Dashboard {
-  filters: DashBoardFilters;
+  appliedFilters: DashBoardFilters;
+  editingFilters: DashBoardFilters;
 }
