@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Event } from "../../interfaces/Event.interface";
 
 import { AppState } from "..";
+import { Payment } from "../../interfaces/Payment.interface";
 
 const initialState: Event = {
   id: "",
@@ -35,6 +36,9 @@ const slice = createSlice({
       state.payments = payload.payments;
       state.createDate = payload.createDate;
       state.updateDate = payload.updateDate;
+    },
+    setPayments(state, { payload }: PayloadAction<Payment[]>) {
+      state.payments = payload;
     },
     clear(state) {
       state.id = "";

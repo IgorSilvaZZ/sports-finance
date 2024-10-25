@@ -11,9 +11,11 @@ import { ClipLoader } from "react-spinners";
 import { DashCard } from "./DashCard";
 import { EmptyList } from "../EmptyList";
 import { ModalCreateHistory } from "../ModalCreateHistory";
-import { Button } from "../ui/Button";
+import { ModalCreatePayment } from "../ModalCreatePayment";
+import { ModalUndoPayment } from "../ModalUndoPayment";
 
 import { TypeHistory } from "../../enums/TypeHistory.enum";
+import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 import { History } from "../../interfaces/History.interface";
 import { DashBoardFilters } from "../../interfaces/Dashboard.interface";
@@ -35,7 +37,6 @@ import {
 import { getCurrentStatusEvent } from "../../utils/event";
 
 import { api } from "../../lib/axios";
-import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 export const MainDashboard = () => {
   const { eventId } = useParams();
@@ -85,13 +86,13 @@ export const MainDashboard = () => {
     Number(totalValue)
   );
 
-  const currentPaymentStatus = getCurrentStatusEvent(
+  const currentPaymentEvent = getCurrentStatusEvent(
     appliedFilters.year,
     String(appliedFilters.month).padStart(2, "0"),
     event.payments
   );
 
-  const colorStatusPayment = currentPaymentStatus
+  const colorStatusPayment = currentPaymentEvent
     ? "text-green-500"
     : "text-red-500";
 
@@ -154,6 +155,20 @@ export const MainDashboard = () => {
     }
   }
 
+  async function getPaymentsEvent(eventId: string) {
+    try {
+      const { data: paymentsEvent } = await api.get(
+        `/payments/event/${eventId}`
+      );
+
+      dispatch(eventActions.setPayments(paymentsEvent));
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Erro ao coletar pagamentos de um evento");
+    }
+  }
+
   function handleFilters(key: string, value: string | number) {
     dispatch(dashboardActions.changeEditingFilters({ key, value }));
   }
@@ -172,7 +187,7 @@ export const MainDashboard = () => {
         status: newStatus,
       });
 
-      toast.success("Status atualizado com sucesso!");
+      // toast.success("Status atualizado com sucesso!");
 
       refetch();
     } catch (error) {
@@ -207,17 +222,20 @@ export const MainDashboard = () => {
               {" - "}
             </span>
             <span className={`font-semibold ${colorStatusPayment}`}>
-              {currentPaymentStatus
+              {currentPaymentEvent
                 ? "Pagamento Efetuado"
                 : "Pagamento Pendente"}
             </span>
           </div>
           <div className='flex gap-5'>
             <ModalCreateHistory />
-            {!currentPaymentStatus && (
-              <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
-                Novo pagamento
-              </Button>
+            {currentPaymentEvent ? (
+              <ModalUndoPayment payment={currentPaymentEvent} />
+            ) : (
+              <ModalCreatePayment
+                remainingValue={remaining}
+                getPaymentsEvent={getPaymentsEvent}
+              />
             )}
           </div>
         </div>

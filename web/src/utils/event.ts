@@ -11,5 +11,5 @@ export const getCurrentStatusEvent = (
     (item) => item.paymentRef === paymentRefSearch
   );
 
-  return !!payment;
+  return payment;
 };

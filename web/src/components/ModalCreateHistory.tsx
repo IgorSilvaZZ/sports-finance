@@ -44,6 +44,8 @@ export const ModalCreateHistory = () => {
 
   const queryClient = useQueryClient();
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
   const [valueParsed, setValueParsed] = useState<number>(0);
 
   const optionsParticipants = participants.map((item) => ({
@@ -89,7 +91,11 @@ export const ModalCreateHistory = () => {
 
       handleRefetch();
 
-      reset();
+      setTimeout(() => {
+        setModalOpen(true);
+
+        reset();
+      }, 2000);
     } catch (error) {
       console.log(error);
 
@@ -100,6 +106,9 @@ export const ModalCreateHistory = () => {
   return (
     <ModalBase
       title='Criar nova transação'
+      isOpen={modalOpen}
+      handleOpen={() => setModalOpen(!modalOpen)}
+      handleClose={() => setModalOpen(false)}
       trigger={() => (
         <Button className='py-1 px-1 w-40 rounded-md'>Nova transação</Button>
       )}

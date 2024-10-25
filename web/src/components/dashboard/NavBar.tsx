@@ -40,11 +40,11 @@ export const NavBar = ({ handleOption }: NavBarProps) => {
           <ItemNavBar handleClick={() => handleOption(OptionsNavBar.PAYMENTS)}>
             Pagamentos
           </ItemNavBar>
-          <ItemNavBar
+          {/* <ItemNavBar
             handleClick={() => handleOption(OptionsNavBar.EDIT_EVENT)}
           >
             Editar evento
-          </ItemNavBar>
+          </ItemNavBar> */}
           <ItemNavBar handleClick={handleLogout}>Sair</ItemNavBar>
         </div>
 
