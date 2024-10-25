@@ -1,16 +1,31 @@
 import { Injectable } from '@nestjs/common';
 import { Payments, Prisma } from '@prisma/client';
+import { parseISO } from 'date-fns';
 
 import { CreatePaymentDTO } from '@/payment/dtos/CreatePaymentDTO';
+import { UpdatePaymentDTO } from '@/payment/dtos/UpdatePaymentDTO';
 
 import { PaymentRepository } from '@/payment/repositories/PaymentRepository';
 
 import { DatabaseService } from '../database.service';
-import { parseISO } from 'date-fns';
 
 @Injectable()
 export class PaymentPrismaRepository implements PaymentRepository {
   constructor(private prismaService: DatabaseService) {}
+
+  async findPaymentByEvent(
+    paymentId: string,
+    eventId: string,
+  ): Promise<Payments | null> {
+    const payment = await this.prismaService.payments.findFirst({
+      where: {
+        id: paymentId,
+        eventId,
+      },
+    });
+
+    return payment;
+  }
 
   async findByPaymentRef(valueRef: string): Promise<Payments | null> {
     const payment = this.prismaService.payments.findFirst({
@@ -54,5 +69,19 @@ export class PaymentPrismaRepository implements PaymentRepository {
     });
 
     return payment;
+  }
+
+  async updateById(
+    paymentId: string,
+    data: UpdatePaymentDTO,
+  ): Promise<Payments | null> {
+    const updatePayment = await this.prismaService.payments.update({
+      where: {
+        id: paymentId,
+      },
+      data,
+    });
+
+    return updatePayment;
   }
 }
