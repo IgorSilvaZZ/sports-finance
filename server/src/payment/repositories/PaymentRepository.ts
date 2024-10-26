@@ -15,4 +15,5 @@ export abstract class PaymentRepository {
     paymentId: string,
     data: UpdatePaymentDTO,
   ): Promise<PaymentsPrisma | null>;
+  abstract deleteById(id: string): Promise<void>;
 }

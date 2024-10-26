@@ -81,4 +81,12 @@ export class PaymentRepositoryInMemory implements PaymentRepository {
 
     return null;
   }
+
+  async deleteById(id: string): Promise<void> {
+    const eventIndex = this.payments.findIndex((item) => item.id === id);
+
+    if (eventIndex >= 0) {
+      this.payments.splice(eventIndex, 1);
+    }
+  }
 }

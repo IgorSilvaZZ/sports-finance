@@ -84,4 +84,12 @@ export class PaymentPrismaRepository implements PaymentRepository {
 
     return updatePayment;
   }
+
+  async deleteById(id: string): Promise<void> {
+    await this.prismaService.payments.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

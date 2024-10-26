@@ -1,4 +1,4 @@
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
@@ -48,22 +48,41 @@ export const MainDashboard = () => {
   const { id: responsibleId } = useSelector(selectResponsible);
   const { editingFilters, appliedFilters } = useSelector(selectDashboard);
 
+  const [isUpdating, setIsUpdating] = useState<boolean>(false); // Flag de controle de atualização dos valores abaixo
+  const [initialTotalPaid, setInitialTotalPaid] = useState<number>(0); // Valor pago (Sem filtros)
+  const [initialRemaining, setInitialRemaining] = useState<number>(0); // Valor restate (Sem filtros)
+
   const {
     data: allHistories,
     isLoading,
     refetch,
   } = useQuery<History[]>(["getHistories"], () => getHistories(), {
     refetchOnWindowFocus: false,
+    onSuccess: (data) => {
+      const paidHistories = data?.filter((history) => history.status);
+
+      // Valor total do historico (Apenas pagos)
+      const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
+        return acc + Number(history.value);
+      }, 0);
+
+      const remaining = getDifferenceValue(
+        Number(event.valueMonthly),
+        calculatedTotalPaid
+      );
+
+      if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
+      if (!initialRemaining) setInitialRemaining(remaining);
+
+      if (isUpdating) {
+        setInitialTotalPaid(calculatedTotalPaid);
+        setInitialRemaining(remaining);
+        setIsUpdating(false);
+      }
+    },
   });
 
-  const paidHistories = allHistories?.filter((history) => history.status);
-
   const years = getYears();
-
-  // Valor total do historico (Apenas pagos)
-  const totalValue = paidHistories?.reduce((acc, history) => {
-    return acc + Number(history.value);
-  }, 0);
 
   const getDifferenceValue = (primaryValue: number, subValue: number) => {
     const result = primaryValue - subValue;
@@ -77,13 +96,8 @@ export const MainDashboard = () => {
 
   // Valor arrecadado
   const amountCollected = getDifferenceValue(
-    Number(totalValue),
+    initialTotalPaid,
     event.valueMonthly
-  );
-
-  const remaining = getDifferenceValue(
-    Number(event.valueMonthly),
-    Number(totalValue)
   );
 
   const currentPaymentEvent = getCurrentStatusEvent(
@@ -189,6 +203,8 @@ export const MainDashboard = () => {
 
       // toast.success("Status atualizado com sucesso!");
 
+      setIsUpdating(true);
+
       refetch();
     } catch (error) {
       console.log(error);
@@ -228,12 +244,12 @@ export const MainDashboard = () => {
             </span>
           </div>
           <div className='flex gap-5'>
-            <ModalCreateHistory />
+            <ModalCreateHistory handleUpdating={() => setIsUpdating(true)} />
             {currentPaymentEvent ? (
               <ModalUndoPayment payment={currentPaymentEvent} />
             ) : (
               <ModalCreatePayment
-                remainingValue={remaining}
+                remainingValue={initialRemaining}
                 getPaymentsEvent={getPaymentsEvent}
               />
             )}
@@ -307,7 +323,7 @@ export const MainDashboard = () => {
             <DashCard
               label='Total Pago'
               subTitle='(Pagamentos feitos)'
-              value={getValueCurrencyFormatted(Number(totalValue))}
+              value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
             <DashCard
               label='Mensalidade'
@@ -317,7 +333,7 @@ export const MainDashboard = () => {
             <DashCard
               label='Restante'
               subTitle='(Falta pagar)'
-              value={getValueCurrencyFormatted(remaining)}
+              value={getValueCurrencyFormatted(initialRemaining)}
             />
             <DashCard
               label='Saldo'

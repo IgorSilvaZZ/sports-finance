@@ -24,6 +24,10 @@ import { selectDashboard } from "../store/dashboard/dashboard.slice";
 
 import { api } from "../lib/axios";
 
+interface ModalCreateHistoryProps {
+  handleUpdating: () => void;
+}
+
 const createHistoryForm = z.object({
   name: z.optional(z.string()),
   value: z
@@ -38,7 +42,9 @@ const createHistoryForm = z.object({
 
 type HistoryForm = z.infer<typeof createHistoryForm>;
 
-export const ModalCreateHistory = () => {
+export const ModalCreateHistory = ({
+  handleUpdating,
+}: ModalCreateHistoryProps) => {
   const { id: eventId, participants } = useSelector(selectEvent);
   const { appliedFilters } = useSelector(selectDashboard);
 
@@ -74,6 +80,8 @@ export const ModalCreateHistory = () => {
   });
 
   function handleRefetch() {
+    handleUpdating();
+
     queryClient.invalidateQueries("getHistories");
   }
 
@@ -92,14 +100,14 @@ export const ModalCreateHistory = () => {
       handleRefetch();
 
       setTimeout(() => {
-        setModalOpen(true);
+        setModalOpen(false);
 
         reset();
       }, 2000);
     } catch (error) {
       console.log(error);
 
-      toast.error("Erro ao cadastrar novo evento! Tente novamente!");
+      toast.error("Erro ao cadastrar nova transação! Tente novamente!");
     }
   }
 

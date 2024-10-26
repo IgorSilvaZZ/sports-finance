@@ -7,6 +7,7 @@ import { PaymentController } from './payment.controller';
 import { CreatePaymentUseCase } from './useCases/CreatePaymentUseCase';
 import { ListPaymentsByEventIdUseCase } from './useCases/ListPaymentsByEventIdUseCase';
 import { UpdatePaymentEventByIdUseCase } from './useCases/UpdatePaymentEventByIdUseCase';
+import { DeletePaymentEventByIdUseCase } from './useCases/DeletePaymentEventByIdUseCase';
 
 @Module({
   imports: [DatabaseModule],
@@ -15,6 +16,7 @@ import { UpdatePaymentEventByIdUseCase } from './useCases/UpdatePaymentEventById
     CreatePaymentUseCase,
     ListPaymentsByEventIdUseCase,
     UpdatePaymentEventByIdUseCase,
+    DeletePaymentEventByIdUseCase,
   ],
 })
 export class PaymentModule {}

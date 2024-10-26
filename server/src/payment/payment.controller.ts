@@ -2,6 +2,7 @@ import { AuthGuard } from '@/guards/auth.guards';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -10,11 +11,12 @@ import {
 } from '@nestjs/common';
 
 import { CreatePaymentDTO } from './dtos/CreatePaymentDTO';
+import { UpdatePaymentDTO } from './dtos/UpdatePaymentDTO';
 
 import { ListPaymentsByEventIdUseCase } from './useCases/ListPaymentsByEventIdUseCase';
 import { CreatePaymentUseCase } from './useCases/CreatePaymentUseCase';
 import { UpdatePaymentEventByIdUseCase } from './useCases/UpdatePaymentEventByIdUseCase';
-import { UpdatePaymentDTO } from './dtos/UpdatePaymentDTO';
+import { DeletePaymentEventByIdUseCase } from './useCases/DeletePaymentEventByIdUseCase';
 
 @Controller('payments')
 export class PaymentController {
@@ -22,6 +24,7 @@ export class PaymentController {
     private listPaymentsByEventIdUseCase: ListPaymentsByEventIdUseCase,
     private createPaymentUseCase: CreatePaymentUseCase,
     private updatePaymentEventByIdUseCase: UpdatePaymentEventByIdUseCase,
+    private deletePaymentEventByIdUseCase: DeletePaymentEventByIdUseCase,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -54,5 +57,14 @@ export class PaymentController {
     );
 
     return updatePayment;
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('/:paymentId/event/:eventId')
+  async deletePaymentByEvent(
+    @Param('paymentId') paymentId: string,
+    @Param('eventId') eventId: string,
+  ) {
+    await this.deletePaymentEventByIdUseCase.execute(paymentId, eventId);
   }
 }
