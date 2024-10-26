@@ -53,7 +53,7 @@ export const ModalCreatePayment = ({
 
       setTimeout(() => {
         setModalOpen(false);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.log(error);
 
@@ -97,9 +97,17 @@ export const ModalCreatePayment = ({
             </span>
           )}
           <div className='w-full flex gap-2 items-center justify-between'>
-            <Button className='py-1 px-1 w-40 rounded-md'>Cancelar</Button>
+            <Button
+              className='py-1 px-1 w-40 rounded-md'
+              onClick={() => setModalOpen(false)}
+            >
+              Cancelar
+            </Button>
 
-            <Button className='py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-700'>
+            <Button
+              type='submit'
+              className='py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-700'
+            >
               Confirmar
             </Button>
           </div>

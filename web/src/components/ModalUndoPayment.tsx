@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { parseISO } from "date-fns";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
 
 import { Payment } from "../interfaces/Payment.interface";
 
@@ -14,16 +15,42 @@ import { getValueCurrencyFormatted } from "../utils/history";
 
 import { selectEvent } from "../store/events/event.slice";
 
+import { api } from "../lib/axios";
+
 interface ModalUndoPaymentProps {
   payment: Payment;
+  getPaymentsEvent: (eventId: string) => void;
 }
 
-export const ModalUndoPayment = ({ payment }: ModalUndoPaymentProps) => {
-  const { name } = useSelector(selectEvent);
+export const ModalUndoPayment = ({
+  payment,
+  getPaymentsEvent,
+}: ModalUndoPaymentProps) => {
+  const { id: eventId, name } = useSelector(selectEvent);
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const datePaymentParsed = parseISO(payment.datePayment);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    try {
+      await api.delete(`/payments/${payment.id}/event/${eventId}`);
+
+      toast.success("Pagamento removido com sucesso!");
+
+      getPaymentsEvent(eventId);
+
+      setTimeout(() => {
+        setModalOpen(false);
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Erro ao desfazer pagamento!");
+    }
+  }
 
   return (
     <>
@@ -38,7 +65,7 @@ export const ModalUndoPayment = ({ payment }: ModalUndoPaymentProps) => {
           </Button>
         )}
       >
-        <FormModalBase>
+        <FormModalBase onSubmit={handleSubmit}>
           <h3>
             Pagamento referente:{" "}
             <strong>{getMonthPaymentRef(payment.paymentRef)}</strong>
@@ -56,9 +83,17 @@ export const ModalUndoPayment = ({ payment }: ModalUndoPaymentProps) => {
           </span>
 
           <div className='w-full flex gap-2 items-center justify-between'>
-            <Button className='py-1 px-1 w-40 rounded-md'>Cancelar</Button>
+            <Button
+              className='py-1 px-1 w-40 rounded-md'
+              onClick={() => setModalOpen(false)}
+            >
+              Cancelar
+            </Button>
 
-            <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
+            <Button
+              type='submit'
+              className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'
+            >
               Desfazer
             </Button>
           </div>

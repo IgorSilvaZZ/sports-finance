@@ -58,6 +58,7 @@ export const MainDashboard = () => {
     refetch,
   } = useQuery<History[]>(["getHistories"], () => getHistories(), {
     refetchOnWindowFocus: false,
+    enabled: event.id !== "",
     onSuccess: (data) => {
       const paidHistories = data?.filter((history) => history.status);
 
@@ -67,7 +68,7 @@ export const MainDashboard = () => {
       }, 0);
 
       const remaining = getDifferenceValue(
-        Number(event.valueMonthly),
+        Number(event?.valueMonthly),
         calculatedTotalPaid
       );
 
@@ -246,7 +247,10 @@ export const MainDashboard = () => {
           <div className='flex gap-5'>
             <ModalCreateHistory handleUpdating={() => setIsUpdating(true)} />
             {currentPaymentEvent ? (
-              <ModalUndoPayment payment={currentPaymentEvent} />
+              <ModalUndoPayment
+                getPaymentsEvent={getPaymentsEvent}
+                payment={currentPaymentEvent}
+              />
             ) : (
               <ModalCreatePayment
                 remainingValue={initialRemaining}
