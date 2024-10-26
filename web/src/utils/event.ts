@@ -8,8 +8,8 @@ export const getCurrentStatusEvent = (
   const paymentRefSearch = `${year}-${month}`;
 
   const payment = paymentsEvent.find(
-    (item) => item.paymentRef === paymentRefSearch
+    (item) => item.status && item.paymentRef === paymentRefSearch
   );
 
-  return !!payment;
+  return payment;
 };

@@ -1,8 +1,11 @@
+import { NotFoundException } from '@nestjs/common';
+
 import { TypeEvent } from '@/event/enums/typeEvent.enums';
+
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { PaymentRepositoryInMemory } from '../../../test/repositories/PaymentRepositoryInMemory';
+
 import { ListPaymentsByEventIdUseCase } from './ListPaymentsByEventIdUseCase';
-import { NotFoundException } from '@nestjs/common';
 
 let eventRespositoryInMemory: EventRepositoryInMemory;
 let paymentRepositoryInMemory: PaymentRepositoryInMemory;

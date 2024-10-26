@@ -43,7 +43,7 @@ export const Payments = () => {
           ) : (
             <EmptyList>
               <span className='text-zinc-500 text-lg'>
-                O evento não contem nenhum participante
+                O evento não contem nenhum pagamento
               </span>
             </EmptyList>
           )}

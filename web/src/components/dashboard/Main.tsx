@@ -1,8 +1,8 @@
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { MagnifyingGlass, UserCircle } from "@phosphor-icons/react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -11,9 +11,11 @@ import { ClipLoader } from "react-spinners";
 import { DashCard } from "./DashCard";
 import { EmptyList } from "../EmptyList";
 import { ModalCreateHistory } from "../ModalCreateHistory";
-import { Button } from "../ui/Button";
+import { ModalCreatePayment } from "../ModalCreatePayment";
+import { ModalUndoPayment } from "../ModalUndoPayment";
 
 import { TypeHistory } from "../../enums/TypeHistory.enum";
+import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 import { History } from "../../interfaces/History.interface";
 import { DashBoardFilters } from "../../interfaces/Dashboard.interface";
@@ -35,7 +37,6 @@ import {
 import { getCurrentStatusEvent } from "../../utils/event";
 
 import { api } from "../../lib/axios";
-import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 export const MainDashboard = () => {
   const { eventId } = useParams();
@@ -45,7 +46,11 @@ export const MainDashboard = () => {
 
   const event = useSelector(selectEvent);
   const { id: responsibleId } = useSelector(selectResponsible);
-  const { filters } = useSelector(selectDashboard);
+  const { editingFilters, appliedFilters } = useSelector(selectDashboard);
+
+  const [isUpdating, setIsUpdating] = useState<boolean>(false); // Flag de controle de atualização dos valores abaixo
+  const [initialTotalPaid, setInitialTotalPaid] = useState<number>(0); // Valor pago (Sem filtros)
+  const [initialRemaining, setInitialRemaining] = useState<number>(0); // Valor restate (Sem filtros)
 
   const {
     data: allHistories,
@@ -53,16 +58,32 @@ export const MainDashboard = () => {
     refetch,
   } = useQuery<History[]>(["getHistories"], () => getHistories(), {
     refetchOnWindowFocus: false,
+    enabled: event.id !== "",
+    onSuccess: (data) => {
+      const paidHistories = data?.filter((history) => history.status);
+
+      // Valor total do historico (Apenas pagos)
+      const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
+        return acc + Number(history.value);
+      }, 0);
+
+      const remaining = getDifferenceValue(
+        Number(event?.valueMonthly),
+        calculatedTotalPaid
+      );
+
+      if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
+      if (!initialRemaining) setInitialRemaining(remaining);
+
+      if (isUpdating) {
+        setInitialTotalPaid(calculatedTotalPaid);
+        setInitialRemaining(remaining);
+        setIsUpdating(false);
+      }
+    },
   });
 
-  const paidHistories = allHistories?.filter((history) => history.status);
-
   const years = getYears();
-
-  // Valor total do historico (Apenas pagos)
-  const totalValue = paidHistories?.reduce((acc, history) => {
-    return acc + Number(history.value);
-  }, 0);
 
   const getDifferenceValue = (primaryValue: number, subValue: number) => {
     const result = primaryValue - subValue;
@@ -76,22 +97,17 @@ export const MainDashboard = () => {
 
   // Valor arrecadado
   const amountCollected = getDifferenceValue(
-    Number(totalValue),
+    initialTotalPaid,
     event.valueMonthly
   );
 
-  const remaining = getDifferenceValue(
-    Number(event.valueMonthly),
-    Number(totalValue)
-  );
-
-  const currentPaymentStatus = getCurrentStatusEvent(
-    filters.year,
-    String(filters.month).padStart(2, "0"),
+  const currentPaymentEvent = getCurrentStatusEvent(
+    appliedFilters.year,
+    String(appliedFilters.month).padStart(2, "0"),
     event.payments
   );
 
-  const colorStatusPayment = currentPaymentStatus
+  const colorStatusPayment = currentPaymentEvent
     ? "text-green-500"
     : "text-red-500";
 
@@ -139,8 +155,10 @@ export const MainDashboard = () => {
 
   async function getHistories(): Promise<History[]> {
     try {
+      dispatch(dashboardActions.applyFilters());
+
       const { data } = await api.get("/history", {
-        params: { ...getQueryParams(filters), eventId },
+        params: { ...getQueryParams(editingFilters), eventId },
       });
 
       return data;
@@ -152,14 +170,48 @@ export const MainDashboard = () => {
     }
   }
 
+  async function getPaymentsEvent(eventId: string) {
+    try {
+      const { data: paymentsEvent } = await api.get(
+        `/payments/event/${eventId}`
+      );
+
+      dispatch(eventActions.setPayments(paymentsEvent));
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Erro ao coletar pagamentos de um evento");
+    }
+  }
+
   function handleFilters(key: string, value: string | number) {
-    dispatch(dashboardActions.changeFilterByField({ key, value }));
+    dispatch(dashboardActions.changeEditingFilters({ key, value }));
   }
 
   function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     refetch();
+  }
+
+  async function handleStatusHistory(historyId: string, status: string) {
+    const newStatus = status === StatusHistory.PAID ? true : false;
+
+    try {
+      await api.put(`/history/${historyId}/event/${event.id}`, {
+        status: newStatus,
+      });
+
+      // toast.success("Status atualizado com sucesso!");
+
+      setIsUpdating(true);
+
+      refetch();
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Erro ao atualizar status! Tente novamente!");
+    }
   }
 
   useEffect(() => {
@@ -176,7 +228,9 @@ export const MainDashboard = () => {
             <span className='font-semibold text-xl'>{event.name}</span>
             <span className='text-zinc-700'>
               {format(
-                new Date(`${filters.year}-${filters.month + 1}-01`),
+                new Date(
+                  `${appliedFilters.year}-${appliedFilters.month + 1}-01`
+                ),
                 "LLLL",
                 {
                   locale: ptBR,
@@ -185,17 +239,23 @@ export const MainDashboard = () => {
               {" - "}
             </span>
             <span className={`font-semibold ${colorStatusPayment}`}>
-              {currentPaymentStatus
-                ? "Pagamento efetuado"
-                : "Pagamento pendente"}
+              {currentPaymentEvent
+                ? "Pagamento Efetuado"
+                : "Pagamento Pendente"}
             </span>
           </div>
           <div className='flex gap-5'>
-            <ModalCreateHistory />
-            {!currentPaymentStatus && (
-              <Button className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'>
-                Novo pagamento
-              </Button>
+            <ModalCreateHistory handleUpdating={() => setIsUpdating(true)} />
+            {currentPaymentEvent ? (
+              <ModalUndoPayment
+                getPaymentsEvent={getPaymentsEvent}
+                payment={currentPaymentEvent}
+              />
+            ) : (
+              <ModalCreatePayment
+                remainingValue={initialRemaining}
+                getPaymentsEvent={getPaymentsEvent}
+              />
             )}
           </div>
         </div>
@@ -206,12 +266,12 @@ export const MainDashboard = () => {
           <input
             className='w-2/6 h-full outline-none'
             placeholder='Nome ou email do participante'
-            value={filters.textParticipant}
+            value={editingFilters.textParticipant}
             onChange={(e) => handleFilters("textParticipant", e.target.value)}
           />
           <select
             className='w-36 h-full outline-none'
-            value={filters.status}
+            value={editingFilters.status}
             defaultValue='select'
             onChange={(e) => handleFilters("status", e.target.value)}
           >
@@ -222,7 +282,7 @@ export const MainDashboard = () => {
           </select>
           <select
             className='w-36 h-full outline-none'
-            value={filters.type}
+            value={editingFilters.type}
             defaultValue='select'
             onChange={(e) => handleFilters("type", e.target.value)}
           >
@@ -233,8 +293,8 @@ export const MainDashboard = () => {
           </select>
           <select
             className='w-36 h-full outline-none'
-            value={filters.month}
-            defaultValue={filters.month}
+            value={editingFilters.month}
+            defaultValue={editingFilters.month}
             onChange={(e) => handleFilters("month", Number(e.target.value))}
           >
             <option value='all'>Mês</option>
@@ -244,8 +304,8 @@ export const MainDashboard = () => {
           </select>
           <select
             className='w-36 h-full outline-none'
-            value={filters.year}
-            defaultValue={filters.year}
+            value={editingFilters.year}
+            defaultValue={editingFilters.year}
             onChange={(e) => handleFilters("year", e.target.value)}
           >
             {years.map((year) => (
@@ -267,7 +327,7 @@ export const MainDashboard = () => {
             <DashCard
               label='Total Pago'
               subTitle='(Pagamentos feitos)'
-              value={getValueCurrencyFormatted(Number(totalValue))}
+              value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
             <DashCard
               label='Mensalidade'
@@ -277,7 +337,7 @@ export const MainDashboard = () => {
             <DashCard
               label='Restante'
               subTitle='(Falta pagar)'
-              value={getValueCurrencyFormatted(remaining)}
+              value={getValueCurrencyFormatted(initialRemaining)}
             />
             <DashCard
               label='Saldo'
@@ -291,8 +351,13 @@ export const MainDashboard = () => {
               {allHistories && allHistories?.length > 0 ? (
                 <>
                   <div className='w-full h-96 max-h-[700px] flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
-                    <div className='w-full h-16 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                      <span className='text-sm font-semibold w-2/6'>Nome</span>
+                    <div className='w-full h-16 flex gap-2 py-2 items-center justify-around border-b border-zinc-200'>
+                      <span className='text-sm font-semibold w-36'>
+                        Descrição
+                      </span>
+                      <span className='text-sm font-semibold w-36'>
+                        Participante
+                      </span>
                       <span className='text-sm w-36 font-semibold'>Status</span>
                       <span className='text-sm w-36 font-semibold'>Tipo</span>
                       <span className='text-sm w-32 font-semibold'>Valor</span>
@@ -302,19 +367,31 @@ export const MainDashboard = () => {
                     </div>
                     {allHistories.map((history) => (
                       <>
-                        <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                          <div className='flex gap-3 items-center w-2/6'>
-                            <UserCircle size={25} />
-                            <span className='text-sm font-semibold'>
-                              {history.participant.name}
-                            </span>
-                          </div>
+                        <div
+                          className='w-full h-10 flex gap-2 py-2 items-center justify-around border-b border-zinc-200'
+                          key={history.id}
+                        >
+                          <span className='text-sm font-semibold w-36'>
+                            {history.name}
+                          </span>
+                          <span className='text-sm font-semibold w-36'>
+                            {history.participant.name}
+                          </span>
                           <select
                             className='text-sm w-36 text-zinc-500 border-2 border-zinc-200 outline-none rounded-md py-1'
-                            value={history.status ? "paid" : "not-paid"}
+                            value={
+                              history.status
+                                ? StatusHistory.PAID
+                                : StatusHistory.NOT_PAID
+                            }
+                            onChange={(e) =>
+                              handleStatusHistory(history.id, e.target.value)
+                            }
                           >
-                            <option value='paid'>Pago</option>
-                            <option value='not-paid'>Não pago</option>
+                            <option value={StatusHistory.PAID}>Pago</option>
+                            <option value={StatusHistory.NOT_PAID}>
+                              Não pago
+                            </option>
                           </select>
                           <span className='text-sm w-36 text-zinc-500'>
                             {typeTranslate[history.type]}
