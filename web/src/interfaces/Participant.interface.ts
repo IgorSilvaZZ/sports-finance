@@ -5,6 +5,7 @@ export interface Participant {
   phoneNumber: string;
   avatar: string;
   eventId: string;
+  status: boolean;
   createDate: string;
   updateDate: string;
 }

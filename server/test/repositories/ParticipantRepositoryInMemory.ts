@@ -20,12 +20,15 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
     return participant;
   }
 
-  async findByEventId(
+  async findActiveByEventId(
     nameParticipant: string,
     eventId: string,
   ): Promise<ParticipantPrisma | null> {
     const participant = this.participants.find(
-      (item) => item.name === nameParticipant && item.eventId === eventId,
+      (item) =>
+        item.status &&
+        item.name === nameParticipant &&
+        item.eventId === eventId,
     );
 
     return participant;
@@ -37,6 +40,7 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
     phoneNumber,
     avatar,
     eventId,
+    status,
   }: CreateParticipantDTO): Promise<ParticipantPrisma> {
     const dataParticipant = {
       id: randomUUID(),
@@ -45,6 +49,7 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
       phoneNumber,
       avatar,
       eventId,
+      status: status ?? true,
       createDate: new Date(),
       updateDate: new Date(),
     };
@@ -79,6 +84,10 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
 
       if (data.avatar) {
         currentParticipant.avatar = data.avatar;
+      }
+
+      if (data.status !== undefined) {
+        currentParticipant.status = data.status;
       }
 
       this.participants[participantIndex] = currentParticipant;

@@ -152,4 +152,39 @@ describe('Update Participant', () => {
       participantAfterUpdate.name,
     );
   });
+
+  it('should be able update status a participant', async () => {
+    const participantOne = await participantRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      eventId: eventId,
+      phoneNumber: faker.phone.number(),
+      email: faker.internet.email(),
+    });
+
+    const participantTwo = await participantRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      eventId: eventId,
+      phoneNumber: faker.phone.number(),
+      email: faker.internet.email(),
+    });
+
+    await updateParticipantUseCase.execute(participantTwo.id, {
+      status: false,
+    });
+
+    const participantTwoAfterUpdated =
+      await participantRepositoryInMemory.findById(participantTwo.id);
+
+    const participantStatus = participantRepositoryInMemory.participants.filter(
+      (item) => item.status,
+    );
+
+    expect(participantTwoAfterUpdated.status).toEqual(false);
+    expect(participantRepositoryInMemory.participants).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: participantOne.id, status: true }),
+      ]),
+    );
+    expect(participantStatus).toHaveLength(1);
+  });
 });

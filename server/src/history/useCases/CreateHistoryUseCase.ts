@@ -57,14 +57,15 @@ export class CreateHistoryUseCase {
       throw new NotFoundException('Participant not found!');
     }
 
-    const participantInEvent = await this.participantRepository.findByEventId(
-      participant.name,
-      eventId,
-    );
+    const participantActiveInEvent =
+      await this.participantRepository.findActiveByEventId(
+        participant.name,
+        eventId,
+      );
 
-    if (!participantInEvent) {
+    if (!participantActiveInEvent) {
       throw new NotFoundException(
-        'The participant is not present at the event!',
+        'The participant is not active at the event!',
       );
     }
 

@@ -4,4 +4,5 @@ export interface CreateParticipantDTO {
   phoneNumber: string;
   avatar?: string;
   eventId: string;
+  status?: boolean;
 }

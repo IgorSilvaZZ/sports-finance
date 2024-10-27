@@ -18,7 +18,7 @@ export class ParticipantPrismaRepository implements ParticipantRepository {
 
     return participant;
   }
-  async findByEventId(
+  async findActiveByEventId(
     nameParticipant: string,
     eventId: string,
   ): Promise<Participant | null> {
@@ -27,6 +27,7 @@ export class ParticipantPrismaRepository implements ParticipantRepository {
         AND: [
           {
             name: nameParticipant,
+            status: true,
           },
           {
             eventId,

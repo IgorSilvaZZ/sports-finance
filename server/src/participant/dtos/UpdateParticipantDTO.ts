@@ -3,4 +3,5 @@ export interface UpdateParticipantDTO {
   phoneNumber?: string;
   email?: string;
   avatar?: string;
+  status?: boolean;
 }
