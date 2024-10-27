@@ -27,9 +27,13 @@ export class PaymentPrismaRepository implements PaymentRepository {
     return payment;
   }
 
-  async findByPaymentRef(valueRef: string): Promise<Payments | null> {
+  async findByPaymentRefEvent(
+    eventId: string,
+    valueRef: string,
+  ): Promise<Payments | null> {
     const payment = this.prismaService.payments.findFirst({
       where: {
+        eventId,
         paymentRef: valueRef,
       },
     });

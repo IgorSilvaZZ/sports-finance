@@ -20,9 +20,13 @@ export class PaymentRepositoryInMemory implements PaymentRepository {
     return payment;
   }
 
-  async findByPaymentRef(valueRef: string): Promise<PaymentsPrisma | null> {
+  async findByPaymentRefEvent(
+    eventId: string,
+    valueRef: string,
+  ): Promise<PaymentsPrisma | null> {
     const payment = this.payments.find(
-      (item) => item.status && item.paymentRef === valueRef,
+      (item) =>
+        item.status && item.eventId === eventId && item.paymentRef === valueRef,
     );
 
     return payment;
