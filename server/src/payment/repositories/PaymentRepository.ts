@@ -9,7 +9,10 @@ export abstract class PaymentRepository {
     eventId: string,
   ): Promise<PaymentsPrisma | null>;
   abstract create(data: CreatePaymentDTO): Promise<PaymentsPrisma>;
-  abstract findByPaymentRef(valueRef: string): Promise<PaymentsPrisma | null>;
+  abstract findByPaymentRefEvent(
+    eventId: string,
+    valueRef: string,
+  ): Promise<PaymentsPrisma | null>;
   abstract findByEventId(eventId: string): Promise<PaymentsPrisma[]>;
   abstract updateById(
     paymentId: string,

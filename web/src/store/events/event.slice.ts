@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { Payment } from "../../interfaces/Payment.interface";
+import { Participant } from "../../interfaces/Participant.interface";
 import { Event } from "../../interfaces/Event.interface";
 
 import { AppState } from "..";
-import { Payment } from "../../interfaces/Payment.interface";
 
 const initialState: Event = {
   id: "",
@@ -39,6 +40,9 @@ const slice = createSlice({
     },
     setPayments(state, { payload }: PayloadAction<Payment[]>) {
       state.payments = payload;
+    },
+    setParticipants(state, { payload }: PayloadAction<Participant[]>) {
+      state.participants = payload;
     },
     clear(state) {
       state.id = "";

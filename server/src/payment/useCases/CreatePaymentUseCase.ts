@@ -52,8 +52,10 @@ export class CreatePaymentUseCase {
     }
 
     // Verificando se existe um pagamento no mesmo mes do ano
-    const paymentExists =
-      await this.paymentRepository.findByPaymentRef(paymentRef);
+    const paymentExists = await this.paymentRepository.findByPaymentRefEvent(
+      eventId,
+      paymentRef,
+    );
 
     if (paymentExists) {
       throw new BadRequestException(`Payment of ${paymentRef} already exists!`);
