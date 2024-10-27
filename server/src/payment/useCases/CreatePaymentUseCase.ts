@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { format, isAfter, isValid, parseISO, startOfDay } from 'date-fns';
+import { isAfter, isValid, parseISO, startOfDay } from 'date-fns';
 
 import { CreatePaymentDTO } from '../dtos/CreatePaymentDTO';
 
@@ -63,7 +63,7 @@ export class CreatePaymentUseCase {
       name: namePayment,
       eventId,
       value,
-      datePayment: format(datePayment, 'yyyy-MM-dd'),
+      datePayment,
       paymentRef,
       status: statusPayment,
     };
