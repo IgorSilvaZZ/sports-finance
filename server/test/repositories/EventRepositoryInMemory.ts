@@ -116,6 +116,7 @@ export class EventRepositoryInMemory implements EventRepository {
     phoneNumber,
     avatar,
     eventId,
+    status,
   }: CreateParticipantDTO) {
     const newParticipantEvent = {
       id: randomUUID(),
@@ -124,6 +125,7 @@ export class EventRepositoryInMemory implements EventRepository {
       phoneNumber,
       avatar,
       eventId,
+      status: status ?? true,
       createDate: new Date(),
       updateDate: new Date(),
     };

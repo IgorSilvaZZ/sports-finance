@@ -151,6 +151,7 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
     email,
     phoneNumber,
     avatar,
+    status,
     eventId,
   }: CreateParticipantDTO) {
     const newParticipantEvent = {
@@ -159,6 +160,7 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
       email,
       phoneNumber,
       avatar,
+      status: status ?? true,
       eventId,
       createDate: new Date(),
       updateDate: new Date(),

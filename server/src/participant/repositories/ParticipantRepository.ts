@@ -5,7 +5,7 @@ import { UpdateParticipantDTO } from '@/participant/dtos/UpdateParticipantDTO';
 
 export abstract class ParticipantRepository {
   abstract findById(id: string): Promise<ParticipantPrisma>;
-  abstract findByEventId(
+  abstract findActiveByEventId(
     nameParticipant: string,
     eventId: string,
   ): Promise<ParticipantPrisma | null>;

@@ -15,23 +15,35 @@ export class CreateParticipantUseCase {
     private eventRepository: EventRepository,
   ) {}
 
-  async execute(data: CreateParticipantDTO) {
-    const eventAlreadyExists = await this.eventRepository.findById(
-      data.eventId,
-    );
+  async execute({
+    name,
+    eventId,
+    phoneNumber,
+    avatar,
+    email,
+    status,
+  }: CreateParticipantDTO) {
+    const eventAlreadyExists = await this.eventRepository.findById(eventId);
 
     if (!eventAlreadyExists) {
       throw new NotFoundException('Event not found!');
     }
 
-    const participantAlreadyExists =
-      await this.participantRepository.findByEventId(data.name, data.eventId);
+    const participantActiveInEvent =
+      await this.participantRepository.findActiveByEventId(name, eventId);
 
-    if (participantAlreadyExists) {
+    if (participantActiveInEvent) {
       throw new BadRequestException('Participant already exists in event!');
     }
 
-    const participant = await this.participantRepository.create(data);
+    const participant = await this.participantRepository.create({
+      name,
+      eventId,
+      phoneNumber,
+      avatar,
+      email,
+      status: status ?? true,
+    });
 
     return participant;
   }

@@ -151,7 +151,7 @@ describe('Create history', () => {
         type: TypeHistory.MONTHLY,
       });
     }).rejects.toEqual(
-      new NotFoundException('The participant is not present at the event!'),
+      new NotFoundException('The participant is not active at the event!'),
     );
   });
 

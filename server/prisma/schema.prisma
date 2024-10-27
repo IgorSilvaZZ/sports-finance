@@ -34,6 +34,7 @@ model Participant {
   phoneNumber String?
   avatar      String?
   eventId     String
+  status      Boolean?  @default(true)
   event       Event     @relation(fields: [eventId], references: [id])
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())

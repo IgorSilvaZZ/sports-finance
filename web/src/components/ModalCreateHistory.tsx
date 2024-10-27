@@ -54,7 +54,9 @@ export const ModalCreateHistory = ({
 
   const [valueParsed, setValueParsed] = useState<number>(0);
 
-  const optionsParticipants = participants.map((item) => ({
+  const participantsActive = participants.filter((item) => item.status);
+
+  const optionsParticipants = participantsActive.map((item) => ({
     label: item.name,
     value: item.id,
   }));
@@ -116,7 +118,11 @@ export const ModalCreateHistory = ({
       title='Criar nova transação'
       isOpen={modalOpen}
       handleOpen={() => setModalOpen(!modalOpen)}
-      handleClose={() => setModalOpen(false)}
+      handleClose={() => {
+        reset();
+
+        setModalOpen(false);
+      }}
       trigger={() => (
         <Button className='py-1 px-1 w-40 rounded-md'>Nova transação</Button>
       )}
