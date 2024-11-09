@@ -87,19 +87,19 @@ export const Participants = () => {
           />
         </div>
 
-        <div className='h-full w-full flex flex-col'>
-          {!isParticipantsEmpty ? (
+        {!isParticipantsEmpty ? (
+          <>
             <div className='w-full h-full flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
               <div className='w-full h-16 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                <span className='text-sm font-semibold w-36'>Nome</span>
+                <span className='text-sm font-semibold w-44'>Nome</span>
                 <span className='text-sm w-36 font-semibold'>Email</span>
-                <span className='text-sm w-36 font-semibold'>Status</span>
+                <span className='text-sm w-32 font-semibold'>Status</span>
                 <span className='text-sm w-36 font-semibold'>Telefone</span>
                 <span className='text-sm w-40 font-semibold'>Ações</span>
               </div>
               {participants.map((participant) => (
                 <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                  <div className='flex gap-3 items-center w-36'>
+                  <div className='flex gap-3 items-center w-44'>
                     <UserCircle size={25} />
                     <span className='text-sm font-semibold'>
                       {participant.name}
@@ -108,7 +108,7 @@ export const Participants = () => {
                   <span className='text-sm w-36 text-zinc-500'>
                     {participant.email ?? "-"}
                   </span>
-                  <span className='text-sm w-36 text-zinc-500'>
+                  <span className='text-sm w-32 text-zinc-500'>
                     {participant.status ? "Ativo" : "Inativo"}
                   </span>
                   <span className='text-sm w-36 text-zinc-500'>
@@ -146,16 +146,21 @@ export const Participants = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <>
-              <EmptyList>
-                <span className='text-zinc-500 text-lg'>
-                  O evento não contem nenhum participante
-                </span>
-              </EmptyList>
-            </>
-          )}
-        </div>
+            <div className='w-full flex justify-end px-1'>
+              <span className='text-sm text-zinc-500 font-semibold'>
+                Total de Participantes: {participants.length}
+              </span>
+            </div>
+          </>
+        ) : (
+          <>
+            <EmptyList>
+              <span className='text-zinc-500 text-lg'>
+                O evento não contem nenhum participante
+              </span>
+            </EmptyList>
+          </>
+        )}
       </div>
     </>
   );

@@ -87,12 +87,12 @@ export const ModalCreatePayment = ({
             <strong>{getValueCurrencyFormatted(valueMonthly)}</strong>
           </span>
           {remainingValue > 0 ? (
-            <span className='text-xs text-red-400'>
-              Faltam R$ {getValueCurrencyFormatted(remainingValue)}, para o
+            <span className='text-xs text-red-400 font-bold'>
+              Faltam {getValueCurrencyFormatted(remainingValue)}, para o
               pagamento ser realizado corretamente
             </span>
           ) : (
-            <span className='text-xs text-green-400'>
+            <span className='text-xs text-green-400 font-bold'>
               Todo o valor foi arrecadado corretamente!
             </span>
           )}

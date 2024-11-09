@@ -60,12 +60,12 @@ export class HistoryPrismaRepository implements HistoryRepository {
     if (year) {
       where.createDate = {
         gte: new Date(`${year}-01-02T00:00:00Z`),
-        lt: new Date(`${Number(year) + 1}-01-02T00:00:00Z`),
+        lt: new Date(`${Number(year) + 1}-01-01T00:00:00Z`),
       };
     }
 
     if (month) {
-      const startDate = new Date(`${yearFilter}-${month}-02T00:00:00Z`);
+      const startDate = new Date(`${yearFilter}-${month}-01T00:00:00Z`);
       const endDateYear =
         Number(month) === 12 ? Number(yearFilter) + 1 : yearFilter;
 
@@ -97,6 +97,9 @@ export class HistoryPrismaRepository implements HistoryRepository {
       include: {
         event: true,
         participant: true,
+      },
+      orderBy: {
+        createDate: 'desc',
       },
     });
 

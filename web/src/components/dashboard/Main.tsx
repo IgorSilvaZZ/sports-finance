@@ -50,7 +50,7 @@ export const MainDashboard = () => {
 
   const [isUpdating, setIsUpdating] = useState<boolean>(false); // Flag de controle de atualização dos valores abaixo
   const [initialTotalPaid, setInitialTotalPaid] = useState<number>(0); // Valor pago (Sem filtros)
-  const [initialRemaining, setInitialRemaining] = useState<number>(0); // Valor restate (Sem filtros)
+  const [initialRemaining, setInitialRemaining] = useState<number>(0); // Valor restante (Sem filtros)
 
   const {
     data: allHistories,
@@ -68,12 +68,14 @@ export const MainDashboard = () => {
       }, 0);
 
       const remaining = getDifferenceValue(
-        Number(event?.valueMonthly),
+        Number(event.valueMonthly),
         calculatedTotalPaid
       );
 
       if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
       if (!initialRemaining) setInitialRemaining(remaining);
+
+      console.log("isUpdating", isUpdating);
 
       if (isUpdating) {
         setInitialTotalPaid(calculatedTotalPaid);
@@ -190,6 +192,13 @@ export const MainDashboard = () => {
 
   function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    if (
+      editingFilters.month !== appliedFilters.month ||
+      editingFilters.year !== appliedFilters.year
+    ) {
+      setIsUpdating(true);
+    }
 
     refetch();
   }
@@ -350,9 +359,9 @@ export const MainDashboard = () => {
             <>
               {allHistories && allHistories?.length > 0 ? (
                 <>
-                  <div className='w-full h-96 max-h-[700px] flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
+                  <div className='w-full h-[370px] max-h-[700px] flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
                     <div className='w-full h-16 flex gap-2 py-2 items-center justify-around border-b border-zinc-200'>
-                      <span className='text-sm font-semibold w-36'>
+                      <span className='text-sm font-semibold w-40'>
                         Descrição
                       </span>
                       <span className='text-sm font-semibold w-36'>
@@ -361,9 +370,7 @@ export const MainDashboard = () => {
                       <span className='text-sm w-36 font-semibold'>Status</span>
                       <span className='text-sm w-36 font-semibold'>Tipo</span>
                       <span className='text-sm w-32 font-semibold'>Valor</span>
-                      <span className='text-sm w-40 font-semibold'>
-                        Data de pagamento
-                      </span>
+                      <span className='text-sm w-32 font-semibold'>Data</span>
                     </div>
                     {allHistories.map((history) => (
                       <>
@@ -371,7 +378,7 @@ export const MainDashboard = () => {
                           className='w-full h-10 flex gap-2 py-2 items-center justify-around border-b border-zinc-200'
                           key={history.id}
                         >
-                          <span className='text-sm font-semibold w-36'>
+                          <span className='text-sm font-semibold w-40'>
                             {history.name}
                           </span>
                           <span className='text-sm font-semibold w-36'>
@@ -399,11 +406,8 @@ export const MainDashboard = () => {
                           <span className='text-sm w-32'>
                             {getValueCurrencyFormatted(Number(history.value))}
                           </span>
-                          <span className='text-sm w-40'>
-                            {format(
-                              new Date(history.updateDate),
-                              "dd/MM/yyyy HH:mm"
-                            )}
+                          <span className='text-sm w-32'>
+                            {format(new Date(history.createDate), "dd/MM/yyyy")}
                           </span>
                         </div>
                       </>

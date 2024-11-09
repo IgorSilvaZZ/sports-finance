@@ -99,13 +99,13 @@ export const ModalCreateHistory = ({
 
       toast.success("Transação criada com sucesso!");
 
-      handleRefetch();
-
       setTimeout(() => {
         setModalOpen(false);
 
         reset();
       }, 2000);
+
+      handleRefetch();
     } catch (error) {
       console.log(error);
 
