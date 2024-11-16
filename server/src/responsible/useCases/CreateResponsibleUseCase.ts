@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { I18nContext, I18nService } from 'nestjs-i18n';
+import { hash } from 'bcrypt';
 
 import { CreateResponsibleDTO } from '../dtos/CreateResponsibleDTO';
 import { ResponsibleRepository } from '../repositories/ResponsibleRepository';
-import { hash } from 'bcrypt';
 
 @Injectable()
 export class CreateResponsibleUseCase {
-  constructor(private responsibleRepository: ResponsibleRepository) {}
+  constructor(
+    private i18nService: I18nService,
+    private responsibleRepository: ResponsibleRepository,
+  ) {}
 
   async execute({
     name,
@@ -19,7 +23,11 @@ export class CreateResponsibleUseCase {
       await this.responsibleRepository.findByEmail(email);
 
     if (participantAlreadyExists) {
-      throw new BadRequestException('Responsible already exists!');
+      throw new BadRequestException(
+        this.i18nService.t('events.RESPONSIBLE.ALREADYEXISTS', {
+          lang: I18nContext.current()?.lang || 'en',
+        }),
+      );
     }
 
     const passwordHash = await hash(password, 10);

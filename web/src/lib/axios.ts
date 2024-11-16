@@ -1,7 +1,9 @@
 import axios from "axios";
+import { toast } from "sonner";
+
 import { store } from "../store";
 
-export const api = axios.create({
+const api = axios.create({
   baseURL: "http://localhost:3333",
 });
 
@@ -19,3 +21,19 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const statusCode = error.response?.data?.statusCode;
+    const message = error.response?.data?.message;
+
+    if (statusCode === 400) {
+      toast.error(message);
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+export { api };

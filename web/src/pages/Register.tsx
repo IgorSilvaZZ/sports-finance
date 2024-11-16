@@ -50,8 +50,6 @@ export default function Register() {
       }, 1000);
     } catch (error) {
       console.log(error);
-
-      toast.error("Ocorreu um erro ao criar um novo responsável!");
     }
   }
 
