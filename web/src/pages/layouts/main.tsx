@@ -8,8 +8,8 @@ export default function Main() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className='h-screen w-screen'>
-        <main className='w-full px-12 h-full'>
+      <div className="h-screen w-screen">
+        <main className="w-full px-12 h-full">
           <ReactQueryDevtools />
           <Private />
         </main>

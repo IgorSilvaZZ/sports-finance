@@ -10,7 +10,7 @@ export const ItemNavBar = ({
   return (
     <>
       <span
-        className='text-lg text-zinc-500 font-semibold cursor-pointer transition-colors hover:text-skyBold'
+        className="text-lg text-zinc-500 font-semibold cursor-pointer transition-colors hover:text-skyBold"
         onClick={handleClick}
       >
         {title}

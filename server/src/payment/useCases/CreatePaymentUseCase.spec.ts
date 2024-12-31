@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { format } from 'date-fns';
+import { add, format } from 'date-fns';
 
 import { TypeEvent } from '@/event/enums/typeEvent.enums';
 
@@ -83,9 +83,11 @@ describe('Create Payment', () => {
   });
 
   it('should not be able create payment with future date', () => {
+    const dateFuture = add(new Date(), { days: 4 });
+
     expect(async () => {
       return createPaymentUseCase.execute({
-        datePayment: '2024-12-01',
+        datePayment: format(dateFuture, 'yyyy-MM-dd'),
         eventId: 'event-id',
         paymentRef: format(new Date(), 'yyyy-MM'),
         value: 500,

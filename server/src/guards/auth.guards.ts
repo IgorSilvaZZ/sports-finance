@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
+
 import { JWT } from '@/responsible/constants/auth.constant';
 
 @Injectable()

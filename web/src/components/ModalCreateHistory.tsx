@@ -115,7 +115,7 @@ export const ModalCreateHistory = ({
 
   return (
     <ModalBase
-      title='Criar nova transação'
+      title="Criar nova transação"
       isOpen={modalOpen}
       handleOpen={() => setModalOpen(!modalOpen)}
       handleClose={() => {
@@ -124,39 +124,39 @@ export const ModalCreateHistory = ({
         setModalOpen(false);
       }}
       trigger={() => (
-        <Button className='py-1 px-1 w-40 rounded-md'>Nova transação</Button>
+        <Button className="py-1 px-1 w-40 rounded-md">Nova transação</Button>
       )}
     >
       <FormModalBase
         onSubmit={handleSubmit(handleCreateNewHistory, handleErrors)}
       >
         <Select
-          label='Participante'
+          label="Participante"
           options={optionsParticipants}
           {...register("participantId")}
         />
         <TextInput
-          label='Descrição'
-          className='text-sm py-3 px-3'
+          label="Descrição"
+          className="text-sm py-3 px-3"
           {...register("name")}
         />
         <Controller
-          name='value'
+          name="value"
           control={control}
-          defaultValue='0'
+          defaultValue="0"
           render={({ field }) => (
             <NumericFormat
               {...field}
-              label='Valor'
-              className='text-sm py-3 px-3'
+              label="Valor"
+              className="text-sm py-3 px-3"
               value={field.value}
               customInput={TextInput}
-              prefix='R$'
+              prefix="R$"
               decimalScale={2}
-              thousandSeparator='.'
-              decimalSeparator=','
+              thousandSeparator="."
+              decimalSeparator=","
               allowNegative={false}
-              placeholder='R$ 0,00'
+              placeholder="R$ 0,00"
               fixedDecimalScale
               onValueChange={(value) => {
                 setValueParsed(Number(value.floatValue));
@@ -165,7 +165,7 @@ export const ModalCreateHistory = ({
           )}
         />
         <Select
-          label='Tipo'
+          label="Tipo"
           options={[
             { label: "Mensalista", value: TypeHistory.MONTHLY },
             { label: "Agregado", value: TypeHistory.AGGREGATE },
@@ -173,15 +173,15 @@ export const ModalCreateHistory = ({
           {...register("type")}
         />
         <TextInput
-          label='Data da Transação'
-          className='text-sm py-3 px-3'
-          type='date'
+          label="Data da Transação"
+          className="text-sm py-3 px-3"
+          type="date"
           min={format(startDate, "yyyy-MM-dd")}
           max={format(maxDate, "yyyy-MM-dd")}
           {...register("createDate")}
         />
-        <Button className='py-3 px-3'>
-          {isSubmitting ? <ClipLoader color='white' size={20} /> : "Criar"}
+        <Button className="py-3 px-3">
+          {isSubmitting ? <ClipLoader color="white" size={20} /> : "Criar"}
         </Button>
       </FormModalBase>
     </ModalBase>

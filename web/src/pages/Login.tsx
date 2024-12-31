@@ -45,7 +45,7 @@ export default function Login() {
     try {
       const { data: responseData } = await api.post(
         "/responsibles/login",
-        data
+        data,
       );
 
       const responsibleAuth = {
@@ -71,30 +71,30 @@ export default function Login() {
 
   return (
     <>
-      <div className='w-1/3 h-full flex flex-col gap-11'>
+      <div className="w-1/3 h-full flex flex-col gap-11">
         <HeaderAuth />
 
-        <div className='flex flex-col gap-2'>
-          <p className='text-2xl font-semibold'>Bem vindo de volta!</p>
-          <span className='text-zinc-500 font-semibold text-sm'>
+        <div className="flex flex-col gap-2">
+          <p className="text-2xl font-semibold">Bem vindo de volta!</p>
+          <span className="text-zinc-500 font-semibold text-sm">
             Faça login em sua conta
           </span>
         </div>
 
         <form
-          className='flex flex-col gap-7'
+          className="flex flex-col gap-7"
           onSubmit={handleSubmit(handleLogin, handleErrors)}
         >
-          <TextInput label='Email' {...register("email")} />
+          <TextInput label="Email" {...register("email")} />
           <TextInput
-            label='Senha'
-            type='password'
-            className='w-full px-4 py-4 outline-none bg-zinc-100 font-semibold'
+            label="Senha"
+            type="password"
+            className="w-full px-4 py-4 outline-none bg-zinc-100 font-semibold"
             {...register("password")}
           />
           <Button>
             {isSubmitting ? (
-              <ClipLoader color='white' size={20} />
+              <ClipLoader color="white" size={20} />
             ) : (
               <>
                 <ArrowRight size={22} />
@@ -103,21 +103,21 @@ export default function Login() {
             )}
           </Button>
         </form>
-        <span className='mx-auto text-zinc-500'>
+        <span className="mx-auto text-zinc-500">
           Não possui um cadastro?{" "}
           <Link
-            to='/register'
-            className='font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold'
+            to="/register"
+            className="font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold"
           >
             Crie a sua conta
           </Link>
         </span>
       </div>
-      <div className='w-2/4 h-full flex justify-center items-center'>
+      <div className="w-2/4 h-full flex justify-center items-center">
         <img
           src={loginImage}
-          alt='Login image ilustration'
-          className='w-[600px]'
+          alt="Login image ilustration"
+          className="w-[600px]"
         />
       </div>
     </>

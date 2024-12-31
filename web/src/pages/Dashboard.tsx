@@ -9,12 +9,12 @@ import { Payments } from "../components/dashboard/Payments";
 
 export default function Dashboard() {
   const [optionSelected, setOptionSelected] = useState<OptionsNavBar>(
-    OptionsNavBar.DASHBOARD
+    OptionsNavBar.DASHBOARD,
   );
 
   return (
     <>
-      <div className='h-full w-full flex gap-10 py-10'>
+      <div className="h-full w-full flex gap-10 py-10">
         <NavBar handleOption={setOptionSelected} />
 
         {optionSelected === OptionsNavBar.DASHBOARD && <MainDashboard />}

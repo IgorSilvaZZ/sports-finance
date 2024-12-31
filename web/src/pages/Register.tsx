@@ -57,16 +57,16 @@ export default function Register() {
 
   return (
     <>
-      <div className='w-1/3 h-full flex flex-col gap-6'>
+      <div className="w-1/3 h-full flex flex-col gap-6">
         <HeaderAuth />
 
-        <div className='flex flex-col gap-2'>
-          <p className='text-3xl font-semibold'>Crie uma conta!</p>
-          <span className='text-zinc-500 font-semibold text-sm'>
+        <div className="flex flex-col gap-2">
+          <p className="text-3xl font-semibold">Crie uma conta!</p>
+          <span className="text-zinc-500 font-semibold text-sm">
             Ja tem uma conta cadastrada?
             <Link
-              to='/'
-              className='font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold'
+              to="/"
+              className="font-semibold cursor-pointer transition-colors hover:text-skyBold hover:font-bold"
             >
               {" "}
               Faça login
@@ -75,33 +75,33 @@ export default function Register() {
         </div>
 
         <form
-          className='flex flex-col gap-2'
+          className="flex flex-col gap-2"
           onSubmit={handleSubmit(handleRegister, handleErrors)}
         >
-          <TextInput label='Nome' {...register("name")} />
-          <TextInput label='Email' {...register("email")} />
-          <TextInput label='Senha' type='password' {...register("password")} />
+          <TextInput label="Nome" {...register("name")} />
+          <TextInput label="Email" {...register("email")} />
+          <TextInput label="Senha" type="password" {...register("password")} />
           <InputMask
-            label='Telefone celular'
-            mask='(__) _____-____'
-            replacement='_'
+            label="Telefone celular"
+            mask="(__) _____-____"
+            replacement="_"
             component={TextInput}
             {...register("phoneNumber")}
           />
           <Button>
             {isSubmitting ? (
-              <ClipLoader color='white' size={20} />
+              <ClipLoader color="white" size={20} />
             ) : (
               "Criar Conta"
             )}
           </Button>
         </form>
       </div>
-      <div className='w-2/5 h-full flex justify-center items-center'>
+      <div className="w-2/5 h-full flex justify-center items-center">
         <img
           src={registerImage}
-          alt='Login image ilustration'
-          className='w-[400px]'
+          alt="Login image ilustration"
+          className="w-[400px]"
         />
       </div>
     </>
