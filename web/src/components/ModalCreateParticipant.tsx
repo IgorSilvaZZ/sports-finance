@@ -105,7 +105,7 @@ export const ModalCreateParticipant = ({
   return (
     <>
       <ModalBase
-        title='Criar novo participante'
+        title="Criar novo participante"
         isOpen={isOpen}
         handleOpen={handleOpen}
         handleClose={() => {
@@ -113,7 +113,7 @@ export const ModalCreateParticipant = ({
           handleClose();
         }}
         trigger={() => (
-          <Button className='py-1 px-1 w-40 rounded-md'>
+          <Button className="py-1 px-1 w-40 rounded-md">
             Novo participante
           </Button>
         )}
@@ -122,24 +122,24 @@ export const ModalCreateParticipant = ({
           onSubmit={handleSubmit(handleSubmitParticipant, handleErrors)}
         >
           <TextInput
-            label='Nome'
-            className='text-sm py-3 px-3'
+            label="Nome"
+            className="text-sm py-3 px-3"
             {...register("name")}
           />
           <TextInput
-            label='Email'
-            className='text-sm py-3 px-3'
+            label="Email"
+            className="text-sm py-3 px-3"
             {...register("email")}
           />
           <InputMask
-            label='Telefone celular'
-            mask='(__) _____-____'
-            replacement='_'
-            className='text-sm py-3 px-3'
+            label="Telefone celular"
+            mask="(__) _____-____"
+            replacement="_"
+            className="text-sm py-3 px-3"
             component={TextInput}
             {...register("phoneNumber")}
           />
-          <Button className='py-3 px-3'>
+          <Button className="py-3 px-3">
             {initialData ? "Atualizar" : "Criar"}
           </Button>
         </FormModalBase>

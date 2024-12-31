@@ -64,12 +64,12 @@ export const ModalCreatePayment = ({
   return (
     <>
       <ModalBase
-        title='Realizar pagamento?'
+        title="Realizar pagamento?"
         isOpen={modalOpen}
         handleOpen={() => setModalOpen(!modalOpen)}
         handleClose={() => setModalOpen(false)}
         trigger={() => (
-          <Button className='py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-600'>
+          <Button className="py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-600">
             Novo pagamento
           </Button>
         )}
@@ -87,26 +87,26 @@ export const ModalCreatePayment = ({
             <strong>{getValueCurrencyFormatted(valueMonthly)}</strong>
           </span>
           {remainingValue > 0 ? (
-            <span className='text-xs text-red-400 font-bold'>
+            <span className="text-xs text-red-400 font-bold">
               Faltam {getValueCurrencyFormatted(remainingValue)}, para o
               pagamento ser realizado corretamente
             </span>
           ) : (
-            <span className='text-xs text-green-400 font-bold'>
+            <span className="text-xs text-green-400 font-bold">
               Todo o valor foi arrecadado corretamente!
             </span>
           )}
-          <div className='w-full flex gap-2 items-center justify-between'>
+          <div className="w-full flex gap-2 items-center justify-between">
             <Button
-              className='py-1 px-1 w-40 rounded-md'
+              className="py-1 px-1 w-40 rounded-md"
               onClick={() => setModalOpen(false)}
             >
               Cancelar
             </Button>
 
             <Button
-              type='submit'
-              className='py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-700'
+              type="submit"
+              className="py-1 px-1 w-40 rounded-md bg-green-500 hover:bg-green-700"
             >
               Confirmar
             </Button>

@@ -19,5 +19,5 @@ export const FormModalBase = forwardRef<HTMLFormElement, FormModalBaseProps>(
         </form>
       </>
     );
-  }
+  },
 );

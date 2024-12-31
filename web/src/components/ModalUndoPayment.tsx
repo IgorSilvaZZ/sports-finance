@@ -55,12 +55,12 @@ export const ModalUndoPayment = ({
   return (
     <>
       <ModalBase
-        title='Desfazer o pagamento?'
+        title="Desfazer o pagamento?"
         isOpen={modalOpen}
         handleOpen={() => setModalOpen(!modalOpen)}
         handleClose={() => setModalOpen(false)}
         trigger={() => (
-          <Button className='py-1 px-1 w-48 rounded-md bg-skyLight hover:bg-skyBold'>
+          <Button className="py-1 px-1 w-48 rounded-md bg-skyLight hover:bg-skyBold">
             Desfazer pagamento
           </Button>
         )}
@@ -82,17 +82,17 @@ export const ModalUndoPayment = ({
             <strong>{getFormatDate(datePaymentParsed, "dd/MM/yyyy")}</strong>
           </span>
 
-          <div className='w-full flex gap-2 items-center justify-between'>
+          <div className="w-full flex gap-2 items-center justify-between">
             <Button
-              className='py-1 px-1 w-40 rounded-md'
+              className="py-1 px-1 w-40 rounded-md"
               onClick={() => setModalOpen(false)}
             >
               Cancelar
             </Button>
 
             <Button
-              type='submit'
-              className='py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold'
+              type="submit"
+              className="py-1 px-1 w-40 rounded-md bg-skyLight hover:bg-skyBold"
             >
               Desfazer
             </Button>

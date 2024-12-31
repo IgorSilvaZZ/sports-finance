@@ -32,7 +32,7 @@ const slice = createSlice({
   reducers: {
     changeEditingFilters(
       state,
-      { payload }: PayloadAction<TypeFieldFilters>
+      { payload }: PayloadAction<TypeFieldFilters>,
     ): void {
       state.editingFilters = {
         ...state.editingFilters,

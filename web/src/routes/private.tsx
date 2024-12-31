@@ -6,5 +6,5 @@ import { selectResponsible } from "../store/responsible/responsible.slice";
 export const Private = () => {
   const { token } = useSelector(selectResponsible);
 
-  return token !== "" ? <Outlet /> : <Navigate to='/' />;
+  return token !== "" ? <Outlet /> : <Navigate to="/" />;
 };
