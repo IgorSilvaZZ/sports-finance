@@ -6,11 +6,11 @@ interface EmptyListProps {
 
 export const EmptyList = ({ children }: EmptyListProps) => {
   return (
-    <div className="w-full flex flex-col flex-1 items-center justify-evenly">
+    <div className='w-full flex flex-col flex-1 items-center justify-center gap-5 leading-tight'>
       <img
         src={emptyImage}
-        alt="List empty events image"
-        className="w-[200px]"
+        alt='List empty events image'
+        className='w-[200px]'
       />
       {children}
     </div>
