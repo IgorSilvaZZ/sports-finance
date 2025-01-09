@@ -3,11 +3,10 @@ import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass, Receipt, ReceiptX } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ClipLoader } from "react-spinners";
 
 import { DashCard } from "./DashCard";
 import { ModalCreateHistory } from "../ModalCreateHistory";
@@ -120,11 +119,7 @@ export const MainDashboard = () => {
     };
 
     Object.keys(queryParams).forEach((key: string | number) => {
-      if (
-        queryParams[key] === "" ||
-        queryParams[key] === "all" ||
-        queryParams[key] === "select"
-      ) {
+      if (["", "all", "select"].includes(String(queryParams[key]))) {
         delete queryParams[key];
       }
 
@@ -234,22 +229,47 @@ export const MainDashboard = () => {
     {
       field: "status",
       label: "Status",
-      renderRow: (value: unknown) => (value ? "Pago" : "Não pago"),
+      renderValueFormatted: (value: unknown) => (value ? "Pago" : "Não pago"),
     },
     {
       field: "type",
       label: "Tipo",
-      renderRow: (value: string) => String(typeTranslate[value]),
+      renderValueFormatted: (value: string) => String(typeTranslate[value]),
     },
     {
       field: "value",
       label: "Valor",
-      renderRow: (value: string) => getValueCurrencyFormatted(Number(value)),
+      renderValueFormatted: (value: string) =>
+        getValueCurrencyFormatted(Number(value)),
     },
     {
       field: "createDate",
       label: "Data",
-      renderRow: (value: string) => format(new Date(value), "dd/MM/yyyy"),
+      renderValueFormatted: (value: string) =>
+        format(new Date(value), "dd/MM/yyyy"),
+    },
+    {
+      field: "actions",
+      label: "Ações",
+      renderRow: (rowValue: History) => {
+        const actionsList = [];
+
+        if (rowValue.status) {
+          actionsList.push(
+            <button title='Reverter Pagamento' className='text-red-600'>
+              <ReceiptX size={20} />
+            </button>
+          );
+        } else {
+          actionsList.push(
+            <button title='Realizar Pagamento' className='text-green-600'>
+              <Receipt size={20} />
+            </button>
+          );
+        }
+
+        return actionsList;
+      },
     },
   ];
 
@@ -383,15 +403,11 @@ export const MainDashboard = () => {
             />
           </div>
 
-          {!isLoading ? (
-            <>
-              <Table columns={columnsHistory} data={allHistories} />
-            </>
-          ) : (
-            <div className='w-full flex flex-1 items-center justify-center'>
-              <ClipLoader color='white' size={20} />
-            </div>
-          )}
+          <Table
+            columns={columnsHistory}
+            data={allHistories}
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </>
