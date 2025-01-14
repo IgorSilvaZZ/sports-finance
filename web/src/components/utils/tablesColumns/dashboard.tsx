@@ -24,34 +24,32 @@ export const getColumnsHistory = (props: ColumnsHistoryProps) => [
   {
     field: "status",
     label: "Status",
-    renderValueFormatted: (value: unknown) => (value ? "Pago" : "Não pago"),
+    renderRow: (value: unknown) => (value ? "Pago" : "Não pago"),
   },
   {
     field: "type",
     label: "Tipo",
-    renderValueFormatted: (value: string) => String(typeTranslate[value]),
+    renderRow: (value: string) => String(typeTranslate[value]),
   },
   {
     field: "value",
     label: "Valor",
-    renderValueFormatted: (value: string) =>
-      getValueCurrencyFormatted(Number(value)),
+    renderRow: (value: string) => getValueCurrencyFormatted(Number(value)),
   },
   {
     field: "createDate",
     label: "Data",
-    renderValueFormatted: (value: string) =>
-      format(new Date(value), "dd/MM/yyyy"),
+    renderRow: (value: string) => format(new Date(value), "dd/MM/yyyy"),
   },
-  historyActionsColumns(props),
+  getHistoryActionsColumns(props),
 ];
 
-const historyActionsColumns = ({
+const getHistoryActionsColumns = ({
   handleStatusHistory,
 }: ColumnsHistoryProps) => ({
   field: "actions",
   label: "Ações",
-  renderRow: (rowValue: History) => {
+  getActions: (rowValue: History) => {
     const actionsList = [];
 
     if (rowValue.status) {

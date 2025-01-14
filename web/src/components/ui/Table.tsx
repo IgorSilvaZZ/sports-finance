@@ -7,8 +7,8 @@ import { EmptyList } from "../EmptyList";
 export interface ColumnsFieldsTable {
   field: string;
   label: string;
-  renderValueFormatted?: (valueRow: any) => string | number | boolean;
-  renderRow?: (rowValues?: any) => JSX.Element[];
+  renderRow?: (valueRow?: any) => JSX.Element[] | string | number | boolean;
+  getActions?: (rowValues?: any) => JSX.Element[];
 }
 
 interface TableProps {
@@ -46,16 +46,14 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
                     {columns.map((column) => (
                       <>
                         <span className='text-sm w-40 text-zinc-500'>
-                          {column.field === "actions" && column.renderRow ? (
+                          {column.field === "actions" && column.getActions ? (
                             <span className='ml-3'>
-                              {column.renderRow(item)}
+                              {column.getActions(item)}
                             </span>
                           ) : (
                             <>
-                              {column.renderValueFormatted
-                                ? column.renderValueFormatted(
-                                    item[column.field]
-                                  )
+                              {column.renderRow
+                                ? column.renderRow(item[column.field] ?? "")
                                 : item[column.field] ?? ""}
                             </>
                           )}

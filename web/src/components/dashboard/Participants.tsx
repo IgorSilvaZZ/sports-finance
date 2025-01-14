@@ -1,20 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import {
-  CheckCircle,
-  PencilSimple,
-  UserCircle,
-  XCircle,
-} from "@phosphor-icons/react";
 import { toast } from "sonner";
 
-import { EmptyList } from "../EmptyList";
+import { Table } from "../ui/Table";
 import { ModalCreateParticipant } from "../ModalCreateParticipant";
 
 import { Participant } from "../../interfaces/Participant.interface";
 
 import { eventActions, selectEvent } from "../../store/events/event.slice";
 import { selectResponsible } from "../../store/responsible/responsible.slice";
+
+import { getParticipantsColumns } from "../utils/tablesColumns/participants";
 
 import { api } from "../../lib/axios";
 
@@ -27,8 +23,6 @@ export const Participants = () => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [participantSelected, setParticipantSelected] =
     useState<Participant | null>(null);
-
-  const isParticipantsEmpty = participants.length === 0;
 
   async function getParticipantsEvent() {
     try {
@@ -65,6 +59,11 @@ export const Participants = () => {
     setModalOpen(true);
   }
 
+  const participantsColumns = getParticipantsColumns({
+    handleSelectParticipant,
+    handleStatusParticipant,
+  });
+
   return (
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3'>
@@ -87,73 +86,8 @@ export const Participants = () => {
           />
         </div>
 
-        <div className='w-full h-full flex flex-col gap-2 py-1 shadow-md overflow-y-auto'>
-          <div className='w-full h-16 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-            <span className='text-sm font-semibold w-44'>Nome</span>
-            <span className='text-sm w-36 font-semibold'>Email</span>
-            <span className='text-sm w-32 font-semibold'>Status</span>
-            <span className='text-sm w-36 font-semibold'>Telefone</span>
-            <span className='text-sm w-40 font-semibold'>Ações</span>
-          </div>
-          {!isParticipantsEmpty ? (
-            <>
-              {participants.map((participant) => (
-                <div className='w-full h-10 flex gap-3 py-2 items-center justify-around border-b border-zinc-200'>
-                  <div className='flex gap-3 items-center w-44'>
-                    <UserCircle size={25} />
-                    <span className='text-sm font-semibold'>
-                      {participant.name}
-                    </span>
-                  </div>
-                  <span className='text-sm w-36 text-zinc-500'>
-                    {participant.email ?? "-"}
-                  </span>
-                  <span className='text-sm w-32 text-zinc-500'>
-                    {participant.status ? "Ativo" : "Inativo"}
-                  </span>
-                  <span className='text-sm w-36 text-zinc-500'>
-                    {participant.phoneNumber ?? "-"}
-                  </span>
-                  <div className='text-sm flex items-center w-40 gap-5 font-semibold'>
-                    <button
-                      title='Editar'
-                      onClick={() => handleSelectParticipant(participant)}
-                    >
-                      <PencilSimple size={20} />
-                    </button>
-                    {participant.status ? (
-                      <button
-                        title='Inativar'
-                        className='text-red-600'
-                        onClick={() =>
-                          handleStatusParticipant(participant.id, false)
-                        }
-                      >
-                        <XCircle size={20} />
-                      </button>
-                    ) : (
-                      <button
-                        title='Ativar'
-                        className='text-green-600'
-                        onClick={() =>
-                          handleStatusParticipant(participant.id, true)
-                        }
-                      >
-                        <CheckCircle size={20} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </>
-          ) : (
-            <EmptyList>
-              <span className='text-zinc-500 text-lg'>
-                O evento não contem nenhum participante
-              </span>
-            </EmptyList>
-          )}
-        </div>
+        <Table data={participants} columns={participantsColumns} />
+
         <div className='w-full flex justify-end px-1'>
           <span className='text-sm text-zinc-500 font-semibold'>
             Total de Participantes: {participants.length}
