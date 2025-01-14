@@ -26,8 +26,6 @@ export const ColumnCell = ({ text }: ColumnCellProps) => {
 };
 
 export const Table = ({ columns, isLoading, data }: TableProps) => {
-  console.log(columns);
-
   return (
     <>
       <div className='w-full h-full flex flex-col gap-2 py-1 shadow-md overflow-y-auto overflow-x-auto'>

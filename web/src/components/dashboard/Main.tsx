@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { MagnifyingGlass, Receipt, ReceiptX } from "@phosphor-icons/react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -18,7 +17,7 @@ import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 import { History } from "../../interfaces/History.interface";
 import { DashBoardFilters } from "../../interfaces/Dashboard.interface";
-import { ColumnsFieldsTable, Table } from "../ui/Table";
+import { Table } from "../ui/Table";
 
 import { selectResponsible } from "../../store/responsible/responsible.slice";
 import { eventActions, selectEvent } from "../../store/events/event.slice";
@@ -32,9 +31,9 @@ import {
   getYears,
   months,
   statusTranslate,
-  typeTranslate,
 } from "../../utils/history";
 import { getCurrentStatusEvent } from "../../utils/event";
+import { getColumnsHistory } from "../utils/tablesColumns/dashboard";
 
 import { api } from "../../lib/axios";
 
@@ -217,61 +216,7 @@ export const MainDashboard = () => {
     }
   }
 
-  const columnsHistory = [
-    {
-      field: "name",
-      label: "Descrição",
-    },
-    {
-      field: "name",
-      label: "Participante",
-    },
-    {
-      field: "status",
-      label: "Status",
-      renderValueFormatted: (value: unknown) => (value ? "Pago" : "Não pago"),
-    },
-    {
-      field: "type",
-      label: "Tipo",
-      renderValueFormatted: (value: string) => String(typeTranslate[value]),
-    },
-    {
-      field: "value",
-      label: "Valor",
-      renderValueFormatted: (value: string) =>
-        getValueCurrencyFormatted(Number(value)),
-    },
-    {
-      field: "createDate",
-      label: "Data",
-      renderValueFormatted: (value: string) =>
-        format(new Date(value), "dd/MM/yyyy"),
-    },
-    {
-      field: "actions",
-      label: "Ações",
-      renderRow: (rowValue: History) => {
-        const actionsList = [];
-
-        if (rowValue.status) {
-          actionsList.push(
-            <button title='Reverter Pagamento' className='text-red-600'>
-              <ReceiptX size={20} />
-            </button>
-          );
-        } else {
-          actionsList.push(
-            <button title='Realizar Pagamento' className='text-green-600'>
-              <Receipt size={20} />
-            </button>
-          );
-        }
-
-        return actionsList;
-      },
-    },
-  ];
+  const columnsHistory = getColumnsHistory({ handleStatusHistory });
 
   useEffect(() => {
     if (eventId) {
