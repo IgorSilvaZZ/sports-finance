@@ -47,7 +47,7 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
                       <>
                         <span className='text-sm w-40 text-zinc-500'>
                           {column.field === "actions" && column.getActions ? (
-                            <span className='ml-3'>
+                            <span className='flex gap-2'>
                               {column.getActions(item)}
                             </span>
                           ) : (
@@ -67,7 +67,7 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
               <>
                 <EmptyList>
                   <span className='text-zinc-500 text-lg'>
-                    Não foi encontrado nenhuma transação no momento!
+                    Não foi encontrado nenhum registro no momento!
                   </span>
                 </EmptyList>
               </>
