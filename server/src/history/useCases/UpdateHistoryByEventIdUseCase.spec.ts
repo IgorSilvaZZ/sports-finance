@@ -2,12 +2,12 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker/.';
 
 import { TypeEvent } from '@/event/enums/typeEvent.enums';
+import { TypeHistory } from '../enums/typeHistory.enum';
 
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { HistoryRepositoryInMemory } from '../../../test/repositories/HistoryRepositoryInMemory';
 
 import { UpdateHistoryByEventIdUseCase } from './UpdateHistoryByEventIdUseCase';
-import { TypeHistory } from '../enums/typeHistory.enum';
 
 let responsibleRepositoryInMemory: ResponsibleRepositoryInMemory;
 let historyRepositoryInMemory: HistoryRepositoryInMemory;

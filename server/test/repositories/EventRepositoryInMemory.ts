@@ -12,6 +12,7 @@ import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
 import { CreatePaymentDTO } from '@/payment/dtos/CreatePaymentDTO';
 
 import { EventRepository } from '@/event/repositories/EventRepository';
+import { UpdateEventDTO } from '@/event/dtos/UpdateEventDTO';
 
 export class EventRepositoryInMemory implements EventRepository {
   public events: EventPrisma[] = [];
@@ -133,6 +134,42 @@ export class EventRepositoryInMemory implements EventRepository {
     this.participants.push(newParticipantEvent);
 
     return newParticipantEvent;
+  }
+
+  async updateByEventResponsibleById(
+    id: string,
+    responsibleId: string,
+    { name, description, dayMonthly, valueMonthly }: UpdateEventDTO,
+  ): Promise<EventPrisma | null> {
+    const eventByResponsibleIndex = this.events.findIndex(
+      (item) => item.id === id && item.responsibleId === responsibleId,
+    );
+
+    if (eventByResponsibleIndex === -1) {
+      return null;
+    }
+
+    const eventByResponsible = this.events[eventByResponsibleIndex];
+
+    if (name) {
+      eventByResponsible.name = name;
+    }
+
+    if (description) {
+      eventByResponsible.description = description;
+    }
+
+    if (dayMonthly) {
+      eventByResponsible.dayMonthly = dayMonthly;
+    }
+
+    if (valueMonthly) {
+      eventByResponsible.valueMonthly = valueMonthly;
+    }
+
+    this.events[eventByResponsibleIndex] = eventByResponsible;
+
+    return eventByResponsible;
   }
 
   async createPaymentEvent({
