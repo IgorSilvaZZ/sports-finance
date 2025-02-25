@@ -5,10 +5,12 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 
 import { CreateEventDTO } from './dtos/CreateEventDTO';
+import { UpdateEventDTO } from './dtos/UpdateEventDTO';
 
 import { AuthGuard } from '@/guards/auth.guards';
 
@@ -16,6 +18,7 @@ import { CreateEventUseCase } from './useCases/CreateEventUseCase';
 import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByResponsibleIdUseCase';
 import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
 import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListParticipantsByEventResponsibleIdUseCase';
+import { UpdateEventByResponsibleIdUseCase } from './useCases/UpdateEventByResponsibleIdUseCase';
 import { FindEventByResponsibleIdUseCase } from './useCases/FindEventByResponsibleIdUseCase';
 
 @Controller('/events')
@@ -25,6 +28,7 @@ export class EventController {
     private listEventsByResponsibleIdUseCase: ListEventsByResponsibleIdUseCase,
     private listParticipantsByEventResponsibleIdUseCase: ListParticipantsByEventResponsibleIdUseCase,
     private findEventByResponsibleIdUseCase: FindEventByResponsibleIdUseCase,
+    private updateEventByResponsibleIdUseCase: UpdateEventByResponsibleIdUseCase,
     private deleteEventResponsibleByIdUseCase: DeleteEventResponsibleByIdUseCase,
   ) {}
 
@@ -72,6 +76,22 @@ export class EventController {
     const event = await this.createEventUseCase.execute(createEventDTO);
 
     return event;
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('/:eventId/responsible/:responsibleId')
+  async updateEventByResponsible(
+    @Param('eventId') eventId: string,
+    @Param('responsibleId') responsibleId: string,
+    @Body() updateEventDTO: UpdateEventDTO,
+  ) {
+    const eventUpdated = await this.updateEventByResponsibleIdUseCase.execute(
+      responsibleId,
+      eventId,
+      updateEventDTO,
+    );
+
+    return eventUpdated;
   }
 
   @UseGuards(AuthGuard)

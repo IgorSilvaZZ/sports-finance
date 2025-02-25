@@ -1,0 +1,19 @@
+@baseUrl = http://localhost:3333
+@responsibleId = fb2bc0a5-b8d6-4b6e-86b1-007fd617ae45
+@eventId = c2c3ee9e-b7bf-4525-a68a-3661a6ae0ba9
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYjJiYzBhNS1iOGQ2LTRiNmUtODZiMS0wMDdmZDYxN2FlNDUiLCJpYXQiOjE3NDA0NDc1OTcsImV4cCI6MTc0MDUzMzk5N30.hVNwuZOkSX9mT_JdmGpe1Yiau9QeUyj74I8V7onwg3w
+
+GET {{ baseUrl }}/events/responsible/{{ responsibleId }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
+PUT {{ baseUrl }}/events/{{ eventId }}/responsible/{{ responsibleId }} HTTP/1.1
+Authorization: Bearer {{ token }}
+Content-Type: application/json
+
+{
+    "valueMonthly": 600
+}
+
+

@@ -1,0 +1,10 @@
+@baseUrl = http://localhost:3333
+
+## Login Responsible
+POST {{ baseUrl }}/responsibles/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "test@dev.com",
+    "password": "senha"
+}
