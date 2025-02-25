@@ -3,7 +3,7 @@ import { TypeEvent } from '@/event/enums/typeEvent.enums';
 
 import { Override } from '../types/Override.type';
 
-export const makeEvent = (override: Override<CreateEventDTO>) => {
+export const makeEvent = (override: Override<CreateEventDTO> = {}) => {
   return {
     name: 'Event Test',
     type: TypeEvent.TENNIS,

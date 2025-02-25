@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto';
 import { parseISO } from 'date-fns';
 import {
+  Prisma,
   Event as EventPrisma,
   Participant as ParticipantPrisma,
   Payments as PaymentsPrisma,
-  Prisma,
 } from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
