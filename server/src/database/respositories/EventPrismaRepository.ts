@@ -5,6 +5,7 @@ import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
 import { EventRepository } from '@/event/repositories/EventRepository';
 
 import { DatabaseService } from '../database.service';
+import { UpdateEventDTO } from '@/event/dtos/UpdateEventDTO';
 
 @Injectable()
 export class EventPrismaRepository implements EventRepository {
@@ -113,6 +114,22 @@ export class EventPrismaRepository implements EventRepository {
     });
 
     return newEvent;
+  }
+
+  async updateByEventResponsibleById(
+    id: string,
+    responsibleId: string,
+    data: UpdateEventDTO,
+  ): Promise<Event | null> {
+    const eventUpdated = await this.prismaService.event.update({
+      where: {
+        id,
+        responsibleId,
+      },
+      data,
+    });
+
+    return eventUpdated;
   }
 
   async deleteEventResponsibleById(

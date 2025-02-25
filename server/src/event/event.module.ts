@@ -9,6 +9,7 @@ import { ListEventsByResponsibleIdUseCase } from './useCases/ListEventsByRespons
 import { DeleteEventResponsibleByIdUseCase } from './useCases/DeleteEventResponsibleByIdUseCase';
 import { ListParticipantsByEventResponsibleIdUseCase } from './useCases/ListParticipantsByEventResponsibleIdUseCase';
 import { FindEventByResponsibleIdUseCase } from './useCases/FindEventByResponsibleIdUseCase';
+import { UpdateEventByResponsibleIdUseCase } from './useCases/UpdateEventByResponsibleIdUseCase';
 
 @Module({
   imports: [DatabaseModule],
@@ -18,6 +19,7 @@ import { FindEventByResponsibleIdUseCase } from './useCases/FindEventByResponsib
     ListEventsByResponsibleIdUseCase,
     ListParticipantsByEventResponsibleIdUseCase,
     FindEventByResponsibleIdUseCase,
+    UpdateEventByResponsibleIdUseCase,
     DeleteEventResponsibleByIdUseCase,
   ],
 })
