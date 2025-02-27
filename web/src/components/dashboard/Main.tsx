@@ -74,8 +74,6 @@ export const MainDashboard = () => {
       if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
       if (!initialRemaining) setInitialRemaining(remaining);
 
-      console.log("isUpdating", isUpdating);
-
       if (isUpdating) {
         setInitialTotalPaid(calculatedTotalPaid);
         setInitialRemaining(remaining);
