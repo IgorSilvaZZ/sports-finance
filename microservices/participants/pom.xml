@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<org.mapstruct.version>1.6.3</org.mapstruct.version>
+		<org.junit.version>4.13.2</org.junit.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -81,6 +82,13 @@
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${org.mapstruct.version}</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${org.junit.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

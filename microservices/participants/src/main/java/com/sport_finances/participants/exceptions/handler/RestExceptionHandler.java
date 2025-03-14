@@ -1,5 +1,6 @@
 package com.sport_finances.participants.exceptions.handler;
 
+import com.sport_finances.participants.exceptions.ParticipantAlreadyExists;
 import com.sport_finances.participants.exceptions.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,20 @@ public class RestExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({
+            ParticipantAlreadyExists.class
+    })
+    public ResponseEntity<ApiError> conflictException(RuntimeException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .statusCode(HttpStatus.CONFLICT.value())
+                .typeError(HttpStatus.CONFLICT.name())
+                .errorMessage(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
     // Dizendo que as validações de request body que falharem vão ser coletadas aqui
