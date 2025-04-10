@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { SoccerBall, UserCircle } from "@phosphor-icons/react";
+
+import { UserCircle } from "@phosphor-icons/react";
 
 import { OptionsNavBar } from "../../enums/OptionsNavBar.enum";
 
 import { ItemNavBar } from "./ItemNavBar";
+import { IconSport } from "../IconSport";
 
 import { eventActions } from "../../store/events/event.slice";
 import { dashboardActions } from "../../store/dashboard/dashboard.slice";
@@ -29,7 +31,7 @@ export const NavBar = ({ handleOption }: NavBarProps) => {
   return (
     <>
       <div className='w-[14%] h-full flex flex-col gap-5 border-1 border-r border-zinc-300 px-3 py-3'>
-        <SoccerBall size={40} className='mb-8' />
+        <IconSport type='soccer' size={40} className='mb-8' />
 
         <div className='w-full flex flex-1 flex-col gap-3'>
           {optionsNavBar.map((optionNavBar) => (
