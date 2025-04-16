@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -53,8 +54,8 @@ export default function Events() {
 
   const responsible = useSelector(selectResponsible);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState<boolean>();
 
   function goToBack() {
     dispatch(dashboardActions.clearFilters());
@@ -63,13 +64,11 @@ export default function Events() {
   }
 
   function selectEvent(eventId: string) {
-    console.log(eventId);
-
     navigate(`/event/${eventId}`);
   }
 
   async function getEvents() {
-    setLoading(true);
+    setIsLoading(true);
 
     try {
       const { data } = await api.get(`/events/responsible/${responsible.id}`);
@@ -80,7 +79,7 @@ export default function Events() {
 
       toast.error("Ocorreu algum erro ao listar os eventos!");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   }
 
@@ -104,53 +103,51 @@ export default function Events() {
 
   return (
     <>
-      <div className="h-full w-full py-10 flex flex-col gap-10">
+      <div className='h-full w-full py-10 flex flex-col gap-10'>
         <span
-          className="flex gap-2 font-semibold text-zinc-500 text-sm cursor-pointer transition-all hover:text-skyBold"
+          className='flex gap-2 font-semibold text-zinc-500 text-sm cursor-pointer transition-all hover:text-skyBold'
           onClick={goToBack}
         >
           <ArrowLeft size={22} /> Voltar para pagina de login
         </span>
-        <div className="h-full w-full flex flex-col gap-5 items-center justify-center leading-tight">
-          <img src={eventsImage} alt="Events list image" className="w-[50px]" />
-          <p className="text-4xl font-medium">Meus Eventos</p>
+        <div className='h-full w-full flex flex-col gap-5 items-center justify-center leading-tight'>
+          <img src={eventsImage} alt='Events list image' className='w-[50px]' />
+          <p className='text-4xl font-medium'>Meus Eventos</p>
 
           <ModalCreateEvent getEvents={getEvents} />
 
-          {!loading ? (
+          {isLoading ? (
+            <div className='flex flex-1  items-center justify-center'>
+              <ClipLoader color='red' size={40} />
+            </div>
+          ) : (
             <>
               {events.length > 0 ? (
-                <div className="w-full flex flex-1 py-3 border-t border-zinc-300">
-                  <Slider className="w-full h-full" {...settingsSlider}>
-                    {events.map((eventItem) => (
-                      <>
-                        <Cards
-                          key={eventItem.id}
-                          event={eventItem}
-                          selectEvent={selectEvent}
-                          deleteEvent={deleteEvent}
-                        />
-                      </>
-                    ))}
-                  </Slider>
+                <div className='w-full flex flex-1 gap-5 flex-wrap py-3'>
+                  {events.map((eventItem) => (
+                    <>
+                      <Cards
+                        key={eventItem.id}
+                        event={eventItem}
+                        selectEvent={selectEvent}
+                        deleteEvent={deleteEvent}
+                      />
+                    </>
+                  ))}
                 </div>
               ) : (
-                <div className="w-full flex flex-col flex-1 items-center justify-evenly border-t border-zinc-300">
+                <div className='w-full flex flex-col flex-1 items-center justify-evenly'>
                   <img
                     src={emptyImage}
-                    alt="List empty events image"
-                    className="w-[200px]"
+                    alt='List empty events image'
+                    className='w-[200px]'
                   />
-                  <span className="text-zinc-500 text-base">
+                  <span className='text-zinc-500 text-base'>
                     Nenhum evento encontrado
                   </span>
                 </div>
               )}
             </>
-          ) : (
-            <div className="flex flex-1  items-center justify-center">
-              <ClipLoader color="red" size={40} />
-            </div>
           )}
         </div>
       </div>
