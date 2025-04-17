@@ -9,7 +9,7 @@ export default function Main() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className='h-screen w-screen'>
-        <main className='w-full h-full'>
+        <main className='w-full h-full overflow-y-hidden'>
           <ReactQueryDevtools />
           <Private />
         </main>
