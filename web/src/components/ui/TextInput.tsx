@@ -17,7 +17,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
             {...props}
             ref={forwardedRef}
             className={cn(
-              "w-full px-4 py-4 outline-none bg-zinc-100 font-semibold",
+              "w-full py-3 px-3 rounded-md outline-none bg-zinc-100 font-semibold",
               className
             )}
           />

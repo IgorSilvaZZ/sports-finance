@@ -10,7 +10,7 @@ interface NewCardsEventProps {
   onDeleteEvent: (eventId: string) => void;
 }
 
-export const NewCardsEvent = ({
+export const CardEvent = ({
   event,
   onViewDetails,
   onDeleteEvent,

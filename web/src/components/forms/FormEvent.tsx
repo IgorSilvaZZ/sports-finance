@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
 import { z } from "zod";
-import { NumericFormat } from "react-number-format";
+
+import { Select } from "../ui/Select";
 
 import { Button } from "../ui/Button";
 import { TextArea } from "../ui/TextArea";
 import { TextInput } from "../ui/TextInput";
-import { Select } from "../ui/Select";
 
 import { handleErrors } from "../../utils/handleErrorsZod";
 import { typesOptions } from "../../utils/optionsSports";
@@ -89,35 +91,32 @@ export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
   return (
     <>
       <form
-        className="w-full flex flex-col gap-4 mt-5"
+        className='w-full flex flex-col gap-4 mt-5'
         onSubmit={handleSubmit(handleCreateNewEvent, handleErrors)}
       >
-        <TextInput
-          label="Nome"
-          className="text-sm py-3 px-3"
-          {...register("name")}
-        />
+        <TextInput label='Nome' className='text-sm' {...register("name")} />
         <Select
           {...register("type")}
-          label="Tipo do Evento"
+          className='rounded-md'
+          label='Tipo do Evento'
           options={typesOptions}
         />
         <Controller
-          name="valueMonthly"
+          name='valueMonthly'
           control={control}
-          defaultValue="0"
+          defaultValue='0'
           render={({ field }) => (
             <NumericFormat
               {...field}
-              label="Valor da mensalidade"
+              label='Valor da mensalidade'
               value={field.value}
               customInput={TextInput}
-              prefix="R$"
+              prefix='R$'
               decimalScale={2}
-              thousandSeparator="."
-              decimalSeparator=","
+              thousandSeparator='.'
+              decimalSeparator=','
               allowNegative={false}
-              placeholder="R$ 0,00"
+              placeholder='R$ 0,00'
               fixedDecimalScale
               onValueChange={(value) => {
                 setValueMonthlyParsed(Number(value.floatValue));
@@ -127,12 +126,12 @@ export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
         />
         <Select
           {...register("dayMonthly")}
-          label="Dia de pagamento"
+          label='Dia do pagamento'
           options={days}
         />
-        <TextArea label="Descrição" {...register("description")} />
-        <Button className="py-3 px-3">
-          {isSubmitting ? <ClipLoader color="white" size={20} /> : "Criar"}
+        <TextArea label='Descrição' {...register("description")} />
+        <Button className='py-2.5 px-2.5 rounded-md'>
+          {isSubmitting ? <ClipLoader color='white' size={20} /> : "Criar"}
         </Button>
       </form>
     </>

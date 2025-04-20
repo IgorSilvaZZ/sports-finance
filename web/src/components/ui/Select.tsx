@@ -20,7 +20,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {...props}
             ref={forwardedRef}
             className={cn(
-              "px-4 py-4 outline-none bg-zinc-100 font-semibold",
+              "px-3 py-3 rounded-sm outline-none bg-zinc-100 font-semibold",
               className
             )}
             /* {...register("type")} */

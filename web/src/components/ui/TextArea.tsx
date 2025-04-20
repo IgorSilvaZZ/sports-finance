@@ -17,7 +17,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {...props}
             ref={forwardedRef}
             className={cn(
-              "w-full px-3 py-3 outline-none bg-zinc-100 font-semibold resize-none text-sm",
+              "w-full px-3 py-3 rounded-sm outline-none bg-zinc-100 font-semibold resize-none text-sm",
               className
             )}
           />

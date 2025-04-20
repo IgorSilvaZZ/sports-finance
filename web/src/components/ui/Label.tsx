@@ -8,7 +8,7 @@ interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {
 export const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ text, className, ...props }) => {
     return (
-      <label {...props} className={cn("text-sm font-semibold", className)}>
+      <label {...props} className={cn("text-sm font-medium", className)}>
         {text}
       </label>
     );
