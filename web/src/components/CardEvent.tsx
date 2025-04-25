@@ -4,7 +4,7 @@ import { Event } from "../interfaces/Event.interface";
 
 import { IconSport } from "./IconSport";
 
-interface NewCardsEventProps {
+interface CardsEventProps {
   event: Event;
   onEditEvent: (event: Event) => void;
   onViewDetails: (eventId: string) => void;
@@ -16,7 +16,7 @@ export const CardEvent = ({
   onEditEvent,
   onViewDetails,
   onDeleteEvent,
-}: NewCardsEventProps) => {
+}: CardsEventProps) => {
   return (
     <>
       <div className='w-full h-[160px] bg-white rounded-xl flex gap-3 items-center justify-evenly px-7 py-2 relative shadow-sm hover:shadow-md transition'>
