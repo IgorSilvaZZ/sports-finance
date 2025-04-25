@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
@@ -14,6 +14,8 @@ import { Button } from "../ui/Button";
 import { TextArea } from "../ui/TextArea";
 import { TextInput } from "../ui/TextInput";
 
+import { Event } from "../../interfaces/Event.interface";
+
 import { handleErrors } from "../../utils/handleErrorsZod";
 import { typesOptions } from "../../utils/optionsSports";
 
@@ -22,6 +24,7 @@ import { selectResponsible } from "../../store/responsible/responsible.slice";
 import { api } from "../../lib/axios";
 
 interface FormEventProps {
+  initialData?: Event | null;
   getEvents: () => void;
   handleCloseModal?: () => void;
 }
@@ -42,7 +45,11 @@ const createEventForm = z.object({
 
 type EventForm = z.infer<typeof createEventForm>;
 
-export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
+export const FormEvent = ({
+  initialData,
+  getEvents,
+  handleCloseModal,
+}: FormEventProps) => {
   const responsible = useSelector(selectResponsible);
 
   // Workaround para conseguir passar o valor da mensalidade como valor numerico
@@ -53,9 +60,12 @@ export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
     value: String(i + 1),
   }));
 
+  const textButtonSubmit = initialData ? "Editar" : "Criar";
+
   const {
     register,
     handleSubmit,
+    reset,
     control,
     formState: { isSubmitting },
   } = useForm<EventForm>({
@@ -88,11 +98,69 @@ export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
     }
   }
 
+  async function handleEditEvent(eventId: string, eventForm: EventForm) {
+    try {
+      const dataEditEvent = {
+        name: eventForm.name,
+        description: eventForm.description,
+        dayMonthly: eventForm.dayMonthly,
+        valueMonthly: valueMonthlyParsed,
+      };
+
+      await api.put(
+        `/events/${eventId}/responsible/${responsible.id}`,
+        dataEditEvent
+      );
+
+      getEvents();
+
+      if (handleCloseModal && !isSubmitting) {
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      }
+
+      toast.success("Evento editado com sucesso!");
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Erro ao editar um evento! Tente novamente!");
+    }
+  }
+
+  async function handleSubmitEvent(eventForm: EventForm) {
+    if (!initialData) {
+      await handleCreateNewEvent(eventForm);
+    } else {
+      await handleEditEvent(initialData.id, eventForm);
+    }
+  }
+
+  useEffect(() => {
+    const fieldsData = initialData
+      ? {
+          name: initialData.name,
+          type: initialData.type,
+          valueMonthly: String(initialData.valueMonthly),
+          dayMonthly: String(initialData.dayMonthly),
+          description: initialData.description,
+        }
+      : {
+          name: "",
+          type: "soccer",
+          valueMonthly: "",
+          dayMonthly: "",
+          description: "",
+        };
+
+    reset(fieldsData);
+  }, [initialData, reset]);
+
   return (
     <>
       <form
         className='w-full flex flex-col gap-4 mt-5'
-        onSubmit={handleSubmit(handleCreateNewEvent, handleErrors)}
+        onSubmit={handleSubmit(handleSubmitEvent, handleErrors)}
       >
         <TextInput label='Nome' className='text-sm' {...register("name")} />
         <Select
@@ -131,7 +199,11 @@ export const FormEvent = ({ getEvents, handleCloseModal }: FormEventProps) => {
         />
         <TextArea label='Descrição' {...register("description")} />
         <Button className='py-2.5 px-2.5 rounded-md'>
-          {isSubmitting ? <ClipLoader color='white' size={20} /> : "Criar"}
+          {isSubmitting ? (
+            <ClipLoader color='white' size={20} />
+          ) : (
+            textButtonSubmit
+          )}
         </Button>
       </form>
     </>

@@ -6,12 +6,14 @@ import { IconSport } from "./IconSport";
 
 interface NewCardsEventProps {
   event: Event;
+  onEditEvent: (event: Event) => void;
   onViewDetails: (eventId: string) => void;
   onDeleteEvent: (eventId: string) => void;
 }
 
 export const CardEvent = ({
   event,
+  onEditEvent,
   onViewDetails,
   onDeleteEvent,
 }: NewCardsEventProps) => {
@@ -22,6 +24,7 @@ export const CardEvent = ({
           <button
             title='Editar'
             className='text-gray-500 transition-colors hover:text-gray-600'
+            onClick={() => onEditEvent(event)}
           >
             <Pencil size={20} />
           </button>

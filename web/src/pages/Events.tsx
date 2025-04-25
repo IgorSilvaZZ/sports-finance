@@ -30,14 +30,36 @@ export default function Events() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [events, setEvents] = useState<Event[]>([]);
 
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const [eventSelected, setEventSelected] = useState<Event | null>(null);
+
   function goToBack() {
     dispatch(dashboardActions.clearFilters());
     dispatch(responsibleActions.clear());
     navigate("/");
   }
 
+  function onOpenModal() {
+    setEventSelected(null);
+
+    setModalOpen(!modalOpen);
+  }
+
+  function onCloseModal() {
+    setEventSelected(null);
+
+    setModalOpen(false);
+  }
+
   function onViewDetails(eventId: string) {
     navigate(`/event/${eventId}`);
+  }
+
+  function onEditEvent(event: Event) {
+    setEventSelected(event);
+
+    setModalOpen(true);
   }
 
   async function getEvents() {
@@ -91,7 +113,13 @@ export default function Events() {
 
             <div className='flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100'>
               <div className='w-full'>
-                <ModalCreateEvent getEvents={getEvents} />
+                <ModalCreateEvent
+                  modalOpen={modalOpen}
+                  initialData={eventSelected}
+                  onOpenModal={onOpenModal}
+                  onCloseModal={onCloseModal}
+                  getEvents={getEvents}
+                />
               </div>
 
               {isLoading ? (
@@ -107,6 +135,7 @@ export default function Events() {
                           <CardEvent
                             key={eventItem.id}
                             event={eventItem}
+                            onEditEvent={onEditEvent}
                             onViewDetails={onViewDetails}
                             onDeleteEvent={onDeleteEvent}
                           />
