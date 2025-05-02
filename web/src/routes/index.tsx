@@ -3,10 +3,10 @@ import { createBrowserRouter } from "react-router-dom";
 import { AuthLayout } from "../pages/layouts/auth";
 
 import Register from "../pages/Register";
-import Events from "../pages/Events";
 import Login from "../pages/Login";
 import Main from "../pages/layouts/main";
 import Dashboard from "../pages/Dashboard";
+import Events from "../pages/Events";
 
 export const router = createBrowserRouter([
   {

@@ -11,8 +11,9 @@ export default {
         backgroundLogin: "#fff9ef",
         skyLight: "#96cdef",
         skyBold: "#346e93",
+        backgroundEvents: "#e5eaf6",
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")],
 };

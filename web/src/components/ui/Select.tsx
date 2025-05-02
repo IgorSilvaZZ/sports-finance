@@ -3,6 +3,7 @@ import { forwardRef, SelectHTMLAttributes } from "react";
 import { cn } from "../../lib/mergeClasses";
 
 import { OptionsSelectType } from "../../utils/optionsSports";
+import { Label } from "./Label";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
@@ -13,14 +14,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, options, className, ...props }, forwardedRef) => {
     return (
       <>
-        <div className="flex flex-col gap-2">
-          <span className="text-sm font-semibold">{label}</span>
+        <div className='flex flex-col gap-2'>
+          <Label text={label} />
           <select
             {...props}
             ref={forwardedRef}
             className={cn(
-              "px-4 py-4 outline-none bg-zinc-100 font-semibold",
-              className,
+              "px-3 py-3 rounded-sm outline-none bg-zinc-100 font-semibold",
+              className
             )}
             /* {...register("type")} */
           >
@@ -33,5 +34,5 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </div>
       </>
     );
-  },
+  }
 );

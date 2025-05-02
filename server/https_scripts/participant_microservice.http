@@ -1,0 +1,10 @@
+@baseUrl = http://localhost:8080
+
+POST {{ baseUrl }}/participants HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Igor Silva",
+    "phoneNumber": "11984594189",
+    "eventId": "c2c3ee9e-b7bf-4525-a68a-3661a6ae0ba9"
+}
