@@ -1,10 +1,8 @@
-package com.sport_finances.participants.mappers;
+package com.sportfinances.participants.mappers;
 
-import com.sport_finances.participants.dtos.RecoveryParticipantsDTO;
-import com.sport_finances.participants.entities.Participant;
+import com.sportfinances.participants.dtos.RecoveryParticipantsDTO;
+import com.sportfinances.participants.entities.Participant;
 import org.mapstruct.Mapper;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ParticipantMapper {

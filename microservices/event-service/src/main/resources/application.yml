@@ -1,0 +1,8 @@
+spring.application.name=responsible-service
+spring.profiles.active=dev
+
+api.security.token.secret=${JWT_SECRET:my-secret-key}
+
+#custom messages
+spring.messages.basename=messages
+spring.messages.encoding=ISO-8859-1

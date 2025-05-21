@@ -1,4 +1,4 @@
-package com.sport_finances.participants.exceptions.model;
+package com.sportfinances.participants.exceptions.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;

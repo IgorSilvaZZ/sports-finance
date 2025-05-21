@@ -1,4 +1,4 @@
-package com.sport_finances.participants.entities;
+package com.sportfinances.participants.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

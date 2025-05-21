@@ -1,4 +1,4 @@
-package com.sport_finances.participants.dtos;
+package com.sportfinances.participants.dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

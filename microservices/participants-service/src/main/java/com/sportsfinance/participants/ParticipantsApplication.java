@@ -1,4 +1,4 @@
-package com.sport_finances.participants;
+package com.sportfinances.participants;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,11 +1,11 @@
-package com.sport_finances.participants.services;
+package com.sportfinances.participants.services;
 
-import com.sport_finances.participants.dtos.RecoveryParticipantsDTO;
-import com.sport_finances.participants.dtos.UpdateParticipantDTO;
-import com.sport_finances.participants.entities.Participant;
-import com.sport_finances.participants.exceptions.ParticipantNotFound;
-import com.sport_finances.participants.mappers.ParticipantMapper;
-import com.sport_finances.participants.repositories.ParticipantRepository;
+import com.sportfinances.participants.dtos.RecoveryParticipantsDTO;
+import com.sportfinances.participants.dtos.UpdateParticipantDTO;
+import com.sportfinances.participants.entities.Participant;
+import com.sportfinances.participants.exceptions.ParticipantNotFound;
+import com.sportfinances.participants.mappers.ParticipantMapper;
+import com.sportfinances.participants.repositories.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

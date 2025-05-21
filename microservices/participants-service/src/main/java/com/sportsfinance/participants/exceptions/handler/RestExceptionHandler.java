@@ -1,7 +1,7 @@
-package com.sport_finances.participants.exceptions.handler;
+package com.sportfinances.participants.exceptions.handler;
 
-import com.sport_finances.participants.exceptions.ParticipantAlreadyExists;
-import com.sport_finances.participants.exceptions.model.ApiError;
+import com.sportfinances.participants.exceptions.ParticipantAlreadyExists;
+import com.sportfinances.participants.exceptions.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 // RestControllerAdvice => Tratar as exceções de maneira global
 @RestControllerAdvice
