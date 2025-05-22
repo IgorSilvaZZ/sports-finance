@@ -1,7 +1,7 @@
-package com.sportfinances.participants.mappers;
+package com.sportsfinance.participants.mappers;
 
-import com.sportfinances.participants.dtos.RecoveryParticipantsDTO;
-import com.sportfinances.participants.entities.Participant;
+import com.sportsfinance.participants.dtos.RecoveryParticipantsDTO;
+import com.sportsfinance.participants.entities.Participant;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

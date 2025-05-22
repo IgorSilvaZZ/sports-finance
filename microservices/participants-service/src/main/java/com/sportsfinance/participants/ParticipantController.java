@@ -1,11 +1,11 @@
-package com.sportfinances.participants;
+package com.sportsfinance.participants;
 
-import com.sportfinances.participants.dtos.CreateParticipantDTO;
-import com.sportfinances.participants.dtos.RecoveryParticipantsDTO;
-import com.sportfinances.participants.dtos.UpdateParticipantDTO;
-import com.sportfinances.participants.mappers.ParticipantMapper;
-import com.sportfinances.participants.services.CreateParticipantService;
-import com.sportfinances.participants.services.UpdateParticipantService;
+import com.sportsfinance.participants.dtos.CreateParticipantDTO;
+import com.sportsfinance.participants.dtos.RecoveryParticipantsDTO;
+import com.sportsfinance.participants.dtos.UpdateParticipantDTO;
+import com.sportsfinance.participants.mappers.ParticipantMapper;
+import com.sportsfinance.participants.services.CreateParticipantService;
+import com.sportsfinance.participants.services.UpdateParticipantService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.sportfinances.participants.exceptions;
+package com.sportsfinance.participants.exceptions;
 
 public class ParticipantAlreadyExists extends RuntimeException {
     public ParticipantAlreadyExists() {

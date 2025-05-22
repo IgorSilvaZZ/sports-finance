@@ -1,4 +1,4 @@
-package com.sportfinances.participants.dtos;
+package com.sportsfinance.participants.dtos;
 
 import java.util.Date;
 

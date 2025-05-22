@@ -1,7 +1,7 @@
-package com.sportfinances.participants.exceptions.handler;
+package com.sportsfinance.participants.exceptions.handler;
 
-import com.sportfinances.participants.exceptions.ParticipantAlreadyExists;
-import com.sportfinances.participants.exceptions.model.ApiError;
+import com.sportsfinance.participants.exceptions.ParticipantAlreadyExists;
+import com.sportsfinance.participants.exceptions.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

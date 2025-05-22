@@ -1,4 +1,4 @@
-package com.sportfinances.participants.exceptions;
+package com.sportsfinance.participants.exceptions;
 
 public class ParticipantNotFound extends RuntimeException {
     public ParticipantNotFound() {
