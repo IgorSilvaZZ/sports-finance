@@ -6,7 +6,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3310/event_service?useTimezone=true&serverTimezone=UTC
-    username: root
+    username: dev
     password: admin123
   jackson:
     default-property-inclusion: non_null

@@ -1,12 +1,12 @@
 server:
-  port: 8100
+  port: 8200
 spring:
   application:
-    name: event-service
+    name: participants-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3310/event_service?useTimezone=true&serverTimezone=UTC
-    username: root
+    url: jdbc:mysql://localhost:3310/participants_service?useTimezone=true&serverTimezone=UTC
+    username: dev
     password: admin123
   jackson:
     default-property-inclusion: non_null
