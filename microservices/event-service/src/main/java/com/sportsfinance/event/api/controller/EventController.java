@@ -4,6 +4,7 @@ import com.sportsfinance.event.api.dto.CreateEventDTO;
 import com.sportsfinance.event.api.dto.EventResponseDTO;
 import com.sportsfinance.event.api.dto.EventUpdateDTO;
 import com.sportsfinance.event.domain.service.EventService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class EventController {
     private EventService eventService;
 
     @PostMapping("/")
-    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody CreateEventDTO createEventDTO){
+    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid CreateEventDTO createEventDTO){
         return ResponseEntity.ok(this.eventService.createEvent(createEventDTO));
     }
 
@@ -34,7 +35,7 @@ public class EventController {
 
     @PutMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent
-            (@PathVariable String eventId, @RequestBody EventUpdateDTO eventUpdateDTO){
+            (@PathVariable String eventId, @RequestBody @Valid EventUpdateDTO eventUpdateDTO){
         return ResponseEntity.ok(this.eventService.updateEvent(eventId, eventUpdateDTO));
     }
 

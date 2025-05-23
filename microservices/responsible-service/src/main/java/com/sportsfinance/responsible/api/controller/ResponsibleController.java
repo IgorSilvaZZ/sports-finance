@@ -30,7 +30,7 @@ public class ResponsibleController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<ResponsibleLoginDTO> authenticateResponsible(@RequestBody AuthenticateResponsibleDTO authResponsible) {
+    public ResponseEntity<ResponsibleLoginDTO> authenticateResponsible(@RequestBody @Valid AuthenticateResponsibleDTO authResponsible) {
         String token = this.tokenService.generateToken(this.service.authenticateResponsible(authResponsible));
         return ResponseEntity.ok(new ResponsibleLoginDTO(token));
     }
