@@ -28,7 +28,7 @@ export const ColumnCell = ({ text }: ColumnCellProps) => {
 export const Table = ({ columns, isLoading, data }: TableProps) => {
   return (
     <>
-      <div className='w-full h-full flex flex-col gap-2 py-1 shadow-md overflow-y-auto overflow-x-auto'>
+      <div className='w-full h-full flex flex-col gap-2 py-1 shadow-md overflow-y-auto overflow-x-auto bg-slate-100 border border-slate-200 rounded-md'>
         {isLoading ? (
           <ClipLoader color='white' size={20} />
         ) : (

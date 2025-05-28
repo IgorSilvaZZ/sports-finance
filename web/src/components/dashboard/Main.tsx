@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -259,7 +261,7 @@ export const MainDashboard = () => {
             )}
           </div>
         </div>
-        <form
+        {/* <form
           className='w-full h-[12%] flex items-center justify-around py-2 px-2 shadow-md mb-4'
           onSubmit={handleSearch}
         >
@@ -315,33 +317,28 @@ export const MainDashboard = () => {
           <button type='submit' title='Pesquisar'>
             <MagnifyingGlass size={25} />
           </button>
-        </form>
+        </form> */}
 
         <div className='h-full w-full flex flex-col'>
-          <div className='w-full h-40 flex gap-3 items-center mb-4'>
+          <div className='w-full flex flex-wrap justify-between gap-4 mb-4'>
             <DashCard
               label='Dia de Pagamento'
-              subTitle='(Dia do mês)'
               value={String(event?.dayMonthly).padStart(2, "0")}
             />
             <DashCard
               label='Total Pago'
-              subTitle='(Pagamentos feitos)'
               value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
             <DashCard
               label='Mensalidade'
-              subTitle='(Valor mensal)'
               value={getValueCurrencyFormatted(event?.valueMonthly)}
             />
             <DashCard
               label='Restante'
-              subTitle='(Falta pagar)'
               value={getValueCurrencyFormatted(initialRemaining)}
             />
             <DashCard
               label='Saldo'
-              subTitle='(Valor em caixa)'
               value={getValueCurrencyFormatted(amountCollected)}
             />
           </div>
