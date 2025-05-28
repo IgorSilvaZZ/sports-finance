@@ -5,7 +5,7 @@ spring:
     name: participants-service
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3310/participants_service?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3312/participants_service?useTimezone=true&serverTimezone=UTC
     username: dev
     password: admin123
   jackson:
