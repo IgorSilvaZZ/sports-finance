@@ -4,7 +4,13 @@ import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import {
+  Calendar,
+  CreditCard,
+  MagnifyingGlass,
+  MoneyWavy,
+  TrayArrowDown,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -323,22 +329,27 @@ export const MainDashboard = () => {
           <div className='w-full flex flex-wrap justify-between gap-4 mb-4'>
             <DashCard
               label='Dia de Pagamento'
+              icon={CreditCard}
               value={String(event?.dayMonthly).padStart(2, "0")}
             />
             <DashCard
               label='Total Pago'
+              icon={MoneyWavy}
               value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
             <DashCard
               label='Mensalidade'
+              icon={Calendar}
               value={getValueCurrencyFormatted(event?.valueMonthly)}
             />
             <DashCard
               label='Restante'
+              icon={TrayArrowDown}
               value={getValueCurrencyFormatted(initialRemaining)}
             />
             <DashCard
               label='Saldo'
+              icon={TrayArrowDown}
               value={getValueCurrencyFormatted(amountCollected)}
             />
           </div>
