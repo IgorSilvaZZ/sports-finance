@@ -2,6 +2,7 @@ package com.sportsfinance.event.api.dto;
 
 import com.sportsfinance.event.domain.model.EventTypeEnum;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,9 +16,9 @@ public class CreateEventDTO {
     private String name;
     @NotBlank(message="{desc.not.blank}")
     private String description;
-    @NotBlank(message="{type.not.blank}")
+    @NotNull(message="{type.not.null}")
     private EventTypeEnum type;
-    @NotBlank(message="{value.not.blank}")
+    @NotNull(message="{value.not.null}")
     private Double valueMonthly;
     @NotBlank(message="{day.not.blank}")
     private String dayMonthly;

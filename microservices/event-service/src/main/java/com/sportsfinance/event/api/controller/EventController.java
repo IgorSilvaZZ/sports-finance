@@ -35,7 +35,7 @@ public class EventController {
 
     @PutMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> updateEvent
-            (@PathVariable String eventId, @RequestBody @Valid EventUpdateDTO eventUpdateDTO){
+            (@PathVariable String eventId, @RequestBody EventUpdateDTO eventUpdateDTO){
         return ResponseEntity.ok(this.eventService.updateEvent(eventId, eventUpdateDTO));
     }
 
