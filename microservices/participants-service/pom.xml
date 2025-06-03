@@ -62,6 +62,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+            <version>1.18.34</version>
 			<optional>true</optional>
 		</dependency>
 
@@ -106,6 +107,7 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+                            <version>1.18.34</version>
 						</path>
 						<path>
 							<groupId>org.mapstruct</groupId>

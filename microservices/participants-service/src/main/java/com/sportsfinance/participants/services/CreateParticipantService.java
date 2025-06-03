@@ -9,6 +9,7 @@ import com.sportsfinance.participants.repositories.ParticipantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -40,8 +41,8 @@ public class CreateParticipantService {
                 .avatar(createParticipantDTO.avatar())
                 .eventId(createParticipantDTO.eventId())
                 .status(status)
-                .createDate(new Date())
-                .updateDate(new Date())
+                .createDate(LocalDate.now())
+                .updateDate(LocalDate.now())
                 .build();
 
         Participant participant = this.participantRepository.save(participantData);

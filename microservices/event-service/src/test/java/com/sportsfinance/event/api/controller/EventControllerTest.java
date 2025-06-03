@@ -361,7 +361,7 @@ class EventControllerTest {
     @Test
     void whenDeleteEventThenReturnSuccess() throws Exception {
         when(this.tokenService.validateToken(any())).thenReturn(true);
-        String responseContent = this.mockMvc.perform(delete("/event/1")
+        this.mockMvc.perform(delete("/event/1")
                         .header("Authorization", "Bearer " + this.token))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(1)).deleteEvent(anyString());

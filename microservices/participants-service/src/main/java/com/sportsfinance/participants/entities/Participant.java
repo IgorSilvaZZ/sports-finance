@@ -23,7 +23,7 @@ public class Participant {
     private String avatar;
     private String eventId;
     private Boolean status;
-    private LocalDate createDate = LocalDate.now();
-    private LocalDate updateDate = LocalDate.now();
+    private LocalDate createDate;
+    private LocalDate updateDate;
 
 }

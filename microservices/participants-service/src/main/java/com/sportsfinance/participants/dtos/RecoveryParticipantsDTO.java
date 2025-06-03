@@ -1,5 +1,6 @@
 package com.sportsfinance.participants.dtos;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public record RecoveryParticipantsDTO(
@@ -10,7 +11,7 @@ public record RecoveryParticipantsDTO(
         String avatar,
         String eventId,
         Boolean status,
-        Date createDate,
-        Date updateDate
+        LocalDate createDate,
+        LocalDate updateDate
 ) {
 }

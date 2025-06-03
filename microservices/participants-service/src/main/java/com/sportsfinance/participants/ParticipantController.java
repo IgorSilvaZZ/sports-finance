@@ -35,7 +35,7 @@ public class ParticipantController {
 
     @PutMapping("/{participantId}")
     public ResponseEntity<RecoveryParticipantsDTO> updateById(
-            @PathVariable String participantId, @RequestBody UpdateParticipantDTO updateParticipantDTO
+            @PathVariable String participantId, @RequestBody() @Valid UpdateParticipantDTO updateParticipantDTO
     ) {
         RecoveryParticipantsDTO participantUpdated = this.updateParticipantService.execute(
                 participantId,
