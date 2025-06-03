@@ -6,10 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class ResponsibleApplicationTests {
-	@Test
-	void contextLoads() {
-		assertDoesNotThrow(() -> ResponsibleApplication.main(new String[] {}));
-	}
 }

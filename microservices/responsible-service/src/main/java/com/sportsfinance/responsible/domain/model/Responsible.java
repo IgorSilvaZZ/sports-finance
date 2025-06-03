@@ -13,7 +13,7 @@ public class Responsible {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long responsibleId;
+    private String responsibleId;
 
     private String name;
     private String email;

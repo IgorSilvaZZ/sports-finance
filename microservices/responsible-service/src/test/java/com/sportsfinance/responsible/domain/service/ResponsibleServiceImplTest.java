@@ -22,6 +22,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 
 class ResponsibleServiceImplTest {
 
+    public static final String ID = "ID";
     public static final String NAME = "name";
     public static final String MAIL = "mail";
     public static final String PASSWORD_FAKE = "password";
@@ -117,7 +118,7 @@ class ResponsibleServiceImplTest {
     private void startDomains() {
         this.authenticateResponsibleDTO = new AuthenticateResponsibleDTO(MAIL,PASSWORD_FAKE);
         this.createResponsibleDTO = new CreateResponsibleDTO(NAME, MAIL, PASSWORD_FAKE, PHONE, AVATAR);
-        this.responsible = new Responsible(1L, NAME, MAIL, PASSWORD_ENCRYPT, PHONE, AVATAR, LocalDate.now(), LocalDate.now());
+        this.responsible = new Responsible(ID, NAME, MAIL, PASSWORD_ENCRYPT, PHONE, AVATAR, LocalDate.now(), LocalDate.now());
     }
 
 }

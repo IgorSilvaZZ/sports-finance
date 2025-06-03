@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -31,17 +32,18 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 class ResponsibleControllerTest {
 
+    public static final String ID = "ID";
     public static final String NAME = "name";
     public static final String MAIL = "mail@mail";
     public static final String PASSWORD_FAKE = "password";
     public static final String PASSWORD_ENCRYPT = PasswordEncrypt.encoder(PASSWORD_FAKE);
     public static final String PHONE = "phone";
     public static final String AVATAR = "avatar";
-    public static final long ID = 1L;
 
     private AuthenticateResponsibleDTO authenticateResponsibleDTO;
     private CreateResponsibleDTO createResponsibleDTO;
@@ -160,7 +162,7 @@ class ResponsibleControllerTest {
         when(this.responsibleService.authenticateResponsible(any())).thenReturn(this.authenticateResponsibleDTO);
         this.tokenService.setSecret("default");
         String userJson = this.objectMapper.writeValueAsString(this.authenticateResponsibleDTO);
-        String responseContent = mockMvc.perform(post("/responsible/login")
+        String responseContent = mockMvc.perform(post("/responsible/auth")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
