@@ -39,8 +39,4 @@ class TokenServiceTest {
             assertEquals("Error while generation token", ex.getMessage());
         }
     }
-
-    @Test
-    void setSecret(){
-    }
 }

@@ -13,6 +13,7 @@ import com.sportsfinance.event.domain.model.EventTypeEnum;
 import com.sportsfinance.event.domain.service.EventService;
 import com.sportsfinance.event.exception.EventNotFoundException;
 import com.sportsfinance.event.exception.handler.RestErrorMessage;
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -105,9 +106,9 @@ class EventControllerTest {
     }
 
     @Test
-    void whenCreateEventWithoutTokenThenReturnAnForbidden403Error() throws Exception {
+    void whenCreateEventWithoutTokenThenReturnAnUnauthorizedException() throws Exception {
         this.mockMvc.perform(post("/event/"))
-                .andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(0)).createEvent(any());
 
     }
@@ -250,9 +251,9 @@ class EventControllerTest {
     }
 
     @Test
-    void whenFindEventByIdThenReturnAnForbidden403Error() throws Exception {
+    void whenFindEventByIdThenReturnAnUnauthorizedException() throws Exception {
         this.mockMvc.perform(get("/event/1"))
-                .andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(0)).findEventById(any());
     }
 
@@ -291,9 +292,9 @@ class EventControllerTest {
     }
 
     @Test
-    void whenFindEventsByResponsibleThenReturnAn403ForbiddenError() throws Exception {
+    void whenFindEventsByResponsibleThenReturnAnUnauthorizedException() throws Exception {
         this.mockMvc.perform(get("/event/responsible/1"))
-                .andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(0)).findEventsByResponsibleId(any());
     }
 
@@ -332,9 +333,9 @@ class EventControllerTest {
     }
 
     @Test
-    void whenUpdateEventThenReturnAn403ForbiddenError() throws Exception {
+    void whenUpdateEventThenReturnAnUnauthorizedException() throws Exception {
         this.mockMvc.perform(get("/event/1"))
-                .andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(0)).updateEvent(anyString(), any());
     }
 
@@ -368,9 +369,18 @@ class EventControllerTest {
     }
 
     @Test
-    void whenDeleteEventThenReturnAn403ForbiddenError() throws Exception {
-        String responseContent = this.mockMvc.perform(delete("/event/1"))
-                .andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
+    void whenDeleteEventWithTokenInvalidThenThrowAnUnauthorizedException() throws Exception {
+        when(this.tokenService.validateToken(any())).thenReturn(false);
+        this.mockMvc.perform(delete("/event/1")
+                        .header("Auth", "Bearer " + this.token))
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
+        verify(this.service, times(0)).deleteEvent(anyString());
+    }
+
+    @Test
+    void whenDeleteEventThenReturnAnUnauthorizedException() throws Exception {
+        this.mockMvc.perform(delete("/event/1"))
+                .andExpect(status().isUnauthorized()).andReturn().getResponse().getContentAsString();
         verify(this.service, times(0)).deleteEvent(anyString());
     }
 

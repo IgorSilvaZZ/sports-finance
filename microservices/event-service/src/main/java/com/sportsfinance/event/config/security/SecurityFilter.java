@@ -26,14 +26,14 @@ public class SecurityFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(null, null, List.of());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else if (token != null) {
+        } else if (token == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
         filterChain.doFilter(request, response);
     }
 
-    public String recoverToken(HttpServletRequest request){
+    private String recoverToken(HttpServletRequest request){
         var authHeader = request.getHeader("Authorization");
         if(authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
