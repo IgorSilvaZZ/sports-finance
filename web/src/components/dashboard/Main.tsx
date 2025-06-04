@@ -129,6 +129,10 @@ export const MainDashboard = () => {
       }
 
       if (key === "month") {
+        queryParams[key] = "01";
+      }
+
+      if (key === "month") {
         queryParams[key] = String(queryParams[key]).padStart(2, "0");
       }
 

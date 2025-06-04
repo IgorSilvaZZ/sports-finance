@@ -1,4 +1,8 @@
+import { format } from "date-fns";
+
 import { Receipt, ReceiptX } from "@phosphor-icons/react";
+
+import { Chip } from "../../ui/Chip";
 
 import { History } from "../../../interfaces/History.interface";
 import { StatusHistory } from "../../../enums/StatusHistory.enum";
@@ -6,7 +10,6 @@ import {
   getValueCurrencyFormatted,
   typeTranslate,
 } from "../../../utils/history";
-import { format } from "date-fns";
 
 interface ColumnsHistoryProps {
   handleStatusHistory: (historyId: string, status: string) => void;
@@ -24,7 +27,7 @@ export const getColumnsHistory = (props: ColumnsHistoryProps) => [
   {
     field: "status",
     label: "Status",
-    renderRow: (value: unknown) => (value ? "Pago" : "Não pago"),
+    renderRow: (value: unknown) => <Chip>{value ? "Pago" : "Não pago"}</Chip>,
   },
   {
     field: "type",
