@@ -23,8 +23,29 @@ interface ColumnCellProps {
   text: string;
 }
 
+interface RowCellProps {
+  column: ColumnsFieldsTable;
+  item: any;
+}
+
 export const ColumnCell = ({ text }: ColumnCellProps) => {
   return <span className='text-sm text-center w-40 font-medium'>{text}</span>;
+};
+
+export const RowCell = ({ column, item }: RowCellProps) => {
+  return (
+    <span className='text-sm w-40 text-center flex justify-center items-center'>
+      {column.field === "actions" && column.getActions ? (
+        <>{column.getActions(item)}</>
+      ) : (
+        <>
+          {column.renderRow
+            ? column.renderRow(item[column.field] ?? "")
+            : item[column.field] ?? ""}
+        </>
+      )}
+    </span>
+  );
 };
 
 export const Table = ({ columns, isLoading, data }: TableProps) => {
@@ -47,19 +68,7 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
                   <>
                     <div className='w-full min-h-[52px] flex gap-3 py-3 px-4 items-center justify-between rounded-md shadow-md'>
                       {columns.map((column) => (
-                        <span className='text-sm w-40 text-center'>
-                          {column.field === "actions" && column.getActions ? (
-                            <span className='flex items-center justify-center gap-2'>
-                              {column.getActions(item)}
-                            </span>
-                          ) : (
-                            <>
-                              {column.renderRow
-                                ? column.renderRow(item[column.field] ?? "")
-                                : item[column.field] ?? ""}
-                            </>
-                          )}
-                        </span>
+                        <RowCell item={item} column={column} />
                       ))}
                     </div>
                   </>

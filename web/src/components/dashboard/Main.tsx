@@ -272,15 +272,17 @@ export const MainDashboard = () => {
           </div>
         </div>
         {/* <form
-          className='w-full h-[12%] flex items-center justify-around py-2 px-2 shadow-md mb-4'
+          className='w-full flex items-center mb-4 border border-blue-500 py-3.5'
           onSubmit={handleSearch}
         >
-          <input
-            className='w-2/6 h-full outline-none'
-            placeholder='Nome ou email do participante'
-            value={editingFilters.textParticipant}
-            onChange={(e) => handleFilters("textParticipant", e.target.value)}
-          />
+          <div>
+            <input
+              className='outline-none p-0.5 rounded-sm '
+              placeholder='Nome ou email do participante'
+              value={editingFilters.textParticipant}
+              onChange={(e) => handleFilters("textParticipant", e.target.value)}
+            />
+          </div>
           <select
             className='w-36 h-full outline-none'
             value={editingFilters.status}
@@ -330,7 +332,7 @@ export const MainDashboard = () => {
         </form> */}
 
         <div className='h-full w-full flex flex-col'>
-          <div className='w-full flex flex-wrap justify-between gap-4 mb-4'>
+          <div className='w-full flex flex-wrap justify-between gap-4 mb-3'>
             <DashCard
               label='Dia de Pagamento'
               icon={CreditCard}
@@ -356,6 +358,39 @@ export const MainDashboard = () => {
               icon={TrayArrowDown}
               value={getValueCurrencyFormatted(amountCollected)}
             />
+          </div>
+
+          <div className='w-full flex flex-col gap-3 md:flex-row md:items:center md:gap-4 py-3'>
+            <input
+              type='text'
+              className='flex-1 p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              placeholder='Nome ou email do participante'
+            />
+            <select
+              className='flex-1 md:max-w-[200px] p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              // value={editingFilters.type}
+              defaultValue='select'
+              // onChange={(e) => handleFilters("type", e.target.value)}
+            >
+              <option value='select'>Status</option>
+              <option value='all'>Todos</option>
+              <option value={StatusHistory.PAID}>Pago</option>
+              <option value={StatusHistory.NOT_PAID}>Não Pago</option>
+            </select>
+            <select
+              className='flex-1 md:max-w-[200px] p-1 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              // value={editingFilters.status}
+              defaultValue='select'
+              // onChange={(e) => handleFilters("status", e.target.value)}
+            >
+              <option value='select'>Tipo</option>
+              <option value='all'>Todos</option>
+              <option value={TypeHistory.MONTHLY}>Mensalista</option>
+              <option value={TypeHistory.AGGREGATE}>Agregado</option>
+            </select>
+            <button className='w-full md:w-auto px-4 py-1 bg-skyLight text-white rounded-md'>
+              <MagnifyingGlass size={22} />
+            </button>
           </div>
 
           <Table

@@ -27,7 +27,15 @@ export const getColumnsHistory = (props: ColumnsHistoryProps) => [
   {
     field: "status",
     label: "Status",
-    renderRow: (value: unknown) => <Chip>{value ? "Pago" : "Não pago"}</Chip>,
+    renderRow: (status: boolean) => {
+      const bgColorChip = status ? "bg-green-500" : "bg-red-500";
+
+      return (
+        <Chip className={`${bgColorChip} text-white`}>
+          {status ? "Pago" : "Não pago"}
+        </Chip>
+      );
+    },
   },
   {
     field: "type",
