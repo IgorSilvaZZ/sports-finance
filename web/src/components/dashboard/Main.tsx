@@ -4,8 +4,10 @@ import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
+import dayjs from "dayjs";
 import {
   Calendar,
+  CalendarCheck,
   CreditCard,
   MagnifyingGlass,
   MoneyWavy,
@@ -14,6 +16,10 @@ import {
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
+import { DatesProvider, MonthPicker, MonthPickerInput } from "@mantine/dates";
+
+import "dayjs/locale/pt-br";
 
 import { DashCard } from "./DashCard";
 import { ModalCreateHistory } from "../ModalCreateHistory";
@@ -45,6 +51,8 @@ import { getColumnsHistory } from "../utils/tablesColumns/dashboard";
 
 import { api } from "../../lib/axios";
 
+dayjs.locale("pt-br");
+
 export const MainDashboard = () => {
   const { eventId } = useParams();
 
@@ -54,6 +62,8 @@ export const MainDashboard = () => {
   const event = useSelector(selectEvent);
   const { id: responsibleId } = useSelector(selectResponsible);
   const { editingFilters, appliedFilters } = useSelector(selectDashboard);
+
+  const [valueMonthPicker, setValueMonthPicker] = useState<string | null>(null);
 
   const [isUpdating, setIsUpdating] = useState<boolean>(false); // Flag de controle de atualização dos valores abaixo
   const [initialTotalPaid, setInitialTotalPaid] = useState<number>(0); // Valor pago (Sem filtros)
@@ -238,26 +248,29 @@ export const MainDashboard = () => {
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3 overflow-hidden'>
         <div className='w-full flex items-center justify-between'>
-          <div className='flex gap-2 items-center'>
+          <div className='flex gap-x-2 items-center'>
             <span className='font-semibold text-xl'>{event.name}</span>
-            <span className='text-zinc-700'>
-              {format(
-                new Date(`${appliedFilters.year}-${appliedFilters.month}-02`),
-                "LLLL",
-                {
-                  locale: ptBR,
-                }
-              )}
-              {" - "}
-            </span>
             <span className={`font-semibold ${colorStatusPayment}`}>
               {currentPaymentEvent
                 ? "Pagamento Efetuado"
                 : "Pagamento Pendente"}
             </span>
+            <DatesProvider settings={{ locale: "ptBR" }}>
+              <MonthPickerInput
+                placeholder=''
+                variant='filled'
+                className='font-medium text-center bg-slate-100 border border-slate-200 rounded-md hover:ring-1'
+                value={
+                  new Date(`${appliedFilters.year}-${appliedFilters.month}-02`)
+                }
+                leftSection={<Calendar />}
+                withAsterisk
+              />
+            </DatesProvider>
           </div>
-          <div className='flex gap-5'>
+          <div className='flex gap-x-5'>
             <ModalCreateHistory handleUpdating={() => setIsUpdating(true)} />
+
             {currentPaymentEvent ? (
               <ModalUndoPayment
                 getPaymentsEvent={getPaymentsEvent}
@@ -345,7 +358,7 @@ export const MainDashboard = () => {
             />
             <DashCard
               label='Mensalidade'
-              icon={Calendar}
+              icon={CalendarCheck}
               value={getValueCurrencyFormatted(event?.valueMonthly)}
             />
             <DashCard
