@@ -14,7 +14,7 @@ import {
   TrayArrowDown,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { format, getMonth, getYear, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import { DatesProvider, MonthPicker, MonthPickerInput } from "@mantine/dates";
@@ -42,8 +42,6 @@ import {
 
 import {
   getValueCurrencyFormatted,
-  getYears,
-  months,
   statusTranslate,
 } from "../../utils/history";
 import { getCurrentStatusEvent } from "../../utils/event";
@@ -100,8 +98,6 @@ export const MainDashboard = () => {
     },
   });
 
-  const years = getYears();
-
   const getDifferenceValue = (primaryValue: number, subValue: number) => {
     const result = primaryValue - subValue;
 
@@ -136,10 +132,6 @@ export const MainDashboard = () => {
     Object.keys(queryParams).forEach((key: string | number) => {
       if (["", "all", "select"].includes(String(queryParams[key]))) {
         delete queryParams[key];
-      }
-
-      if (key === "month") {
-        queryParams[key] = "01";
       }
 
       if (key === "month") {
@@ -201,13 +193,7 @@ export const MainDashboard = () => {
     }
   }
 
-  function handleFilters(key: string, value: string | number) {
-    dispatch(dashboardActions.changeEditingFilters({ key, value }));
-  }
-
-  function handleSearch(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
+  function handleRefetchSearch() {
     if (
       editingFilters.month !== appliedFilters.month ||
       editingFilters.year !== appliedFilters.year
@@ -216,6 +202,37 @@ export const MainDashboard = () => {
     }
 
     refetch();
+  }
+
+  function handleFilters(key: string, value: string | number) {
+    dispatch(dashboardActions.changeEditingFilters({ key, value }));
+  }
+
+  function handleSearch(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    handleRefetchSearch();
+  }
+
+  async function handleChangeYearMonth(value: string | undefined | null) {
+    if (!value) {
+      return;
+    }
+
+    const valueDateParsed = parseISO(value);
+
+    const yearToDateParsed = getYear(valueDateParsed);
+    const monthToDateParsed = getMonth(valueDateParsed) + 1;
+
+    dispatch(
+      dashboardActions.changeApplyFilters({
+        year: String(yearToDateParsed),
+        month: monthToDateParsed,
+      })
+    );
+
+    // Pesquisando a cada mudança de mes e/ou ano selecionado
+    handleRefetchSearch();
   }
 
   async function handleStatusHistory(historyId: string, status: string) {
@@ -259,10 +276,11 @@ export const MainDashboard = () => {
               <MonthPickerInput
                 placeholder=''
                 variant='filled'
-                className='font-medium text-center bg-slate-100 border border-slate-200 rounded-md hover:ring-1'
+                className='font-medium text-center bg-slate-100 ring-0 border border-slate-200 rounded-md hover:ring-1'
                 value={
                   new Date(`${appliedFilters.year}-${appliedFilters.month}-02`)
                 }
+                onChange={handleChangeYearMonth}
                 leftSection={<Calendar />}
                 withAsterisk
               />
