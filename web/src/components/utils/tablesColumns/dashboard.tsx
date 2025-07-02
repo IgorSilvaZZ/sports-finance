@@ -10,6 +10,7 @@ import {
   getValueCurrencyFormatted,
   typeTranslate,
 } from "../../../utils/history";
+import { TypeHistory } from "../../../enums/TypeHistory.enum";
 
 interface ColumnsHistoryProps {
   handleStatusHistory: (historyId: string, status: string) => void;
@@ -40,7 +41,16 @@ export const getColumnsHistory = (props: ColumnsHistoryProps) => [
   {
     field: "type",
     label: "Tipo",
-    renderRow: (value: string) => String(typeTranslate[value]),
+    renderRow: (value: string) => {
+      const styledChip =
+        value === TypeHistory.MONTHLY
+          ? "bg-blue-100 text-blue-800"
+          : "bg-orange-100 text-orange-700";
+
+      const typeParsed = String(typeTranslate[value]);
+
+      return <Chip className={`${styledChip}`}>{typeParsed}</Chip>;
+    },
   },
   {
     field: "value",

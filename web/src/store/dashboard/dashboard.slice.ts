@@ -6,7 +6,6 @@ import {
 } from "../../interfaces/Dashboard.interface";
 import { AppState } from "..";
 
-// Criar estado para guardar o filtro de pesquisa
 const initialState: Dashboard = {
   appliedFilters: {
     textParticipant: "",
@@ -40,7 +39,7 @@ const slice = createSlice({
     ): void {
       state.editingFilters = {
         ...state.editingFilters,
-        ...payload,
+        [payload.key]: payload.value,
       };
     },
     changeApplyFilters(
@@ -48,17 +47,17 @@ const slice = createSlice({
       { payload }: PayloadAction<PartialDashBoardFilters>
     ) {
       state.appliedFilters = {
-        ...state.appliedFilters,
+        ...state.editingFilters,
         ...payload,
       };
-    },
-    applyFilters(state) {
+
       state.editingFilters = {
-        ...state.editingFilters,
+        ...state.appliedFilters,
         year: state.appliedFilters.year,
         month: state.appliedFilters.month,
       };
-
+    },
+    applyFilters(state) {
       state.appliedFilters = {
         ...state.editingFilters,
       };

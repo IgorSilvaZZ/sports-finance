@@ -66,7 +66,7 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
               <>
                 {data.map((item) => (
                   <>
-                    <div className='w-full min-h-[52px] flex gap-3 py-3 px-4 items-center justify-between rounded-md shadow-md'>
+                    <div className='w-full min-h-[52px] flex gap-3 py-3 px-4 items-center justify-between rounded-md border-b-2'>
                       {columns.map((column) => (
                         <RowCell item={item} column={column} />
                       ))}

@@ -61,8 +61,6 @@ export const MainDashboard = () => {
   const { id: responsibleId } = useSelector(selectResponsible);
   const { editingFilters, appliedFilters } = useSelector(selectDashboard);
 
-  const [valueMonthPicker, setValueMonthPicker] = useState<string | null>(null);
-
   const [isUpdating, setIsUpdating] = useState<boolean>(false); // Flag de controle de atualização dos valores abaixo
   const [initialTotalPaid, setInitialTotalPaid] = useState<number>(0); // Valor pago (Sem filtros)
   const [initialRemaining, setInitialRemaining] = useState<number>(0); // Valor restante (Sem filtros)
@@ -71,32 +69,36 @@ export const MainDashboard = () => {
     data: allHistories,
     isLoading,
     refetch,
-  } = useQuery<History[]>(["getHistories"], () => getHistories(), {
-    refetchOnWindowFocus: false,
-    enabled: event.id !== "",
-    onSuccess: (data) => {
-      const paidHistories = data?.filter((history) => history.status);
+  } = useQuery<History[]>(
+    ["getHistories", appliedFilters.year, appliedFilters.month],
+    () => getHistories(),
+    {
+      refetchOnWindowFocus: false,
+      enabled: event.id !== "",
+      onSuccess: (data) => {
+        const paidHistories = data?.filter((history) => history.status);
 
-      // Valor total do historico (Apenas pagos)
-      const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
-        return acc + Number(history.value);
-      }, 0);
+        // Valor total do historico (Apenas pagos)
+        const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
+          return acc + Number(history.value);
+        }, 0);
 
-      const remaining = getDifferenceValue(
-        Number(event.valueMonthly),
-        calculatedTotalPaid
-      );
+        const remaining = getDifferenceValue(
+          Number(event.valueMonthly),
+          calculatedTotalPaid
+        );
 
-      if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
-      if (!initialRemaining) setInitialRemaining(remaining);
+        if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
+        if (!initialRemaining) setInitialRemaining(remaining);
 
-      if (isUpdating) {
-        setInitialTotalPaid(calculatedTotalPaid);
-        setInitialRemaining(remaining);
-        setIsUpdating(false);
-      }
-    },
-  });
+        if (isUpdating) {
+          setInitialTotalPaid(calculatedTotalPaid);
+          setInitialRemaining(remaining);
+          setIsUpdating(false);
+        }
+      },
+    }
+  );
 
   const getDifferenceValue = (primaryValue: number, subValue: number) => {
     const result = primaryValue - subValue;
@@ -166,8 +168,13 @@ export const MainDashboard = () => {
     try {
       dispatch(dashboardActions.applyFilters());
 
+      const params = {
+        eventId,
+        ...getQueryParams(editingFilters),
+      };
+
       const { data } = await api.get("/history", {
-        params: { ...getQueryParams(editingFilters), eventId },
+        params,
       });
 
       return data;
@@ -194,12 +201,7 @@ export const MainDashboard = () => {
   }
 
   function handleRefetchSearch() {
-    if (
-      editingFilters.month !== appliedFilters.month ||
-      editingFilters.year !== appliedFilters.year
-    ) {
-      setIsUpdating(true);
-    }
+    setIsUpdating(true);
 
     refetch();
   }
@@ -282,6 +284,7 @@ export const MainDashboard = () => {
                 }
                 onChange={handleChangeYearMonth}
                 leftSection={<Calendar />}
+                maxDate={new Date()}
                 withAsterisk
               />
             </DatesProvider>
@@ -302,65 +305,6 @@ export const MainDashboard = () => {
             )}
           </div>
         </div>
-        {/* <form
-          className='w-full flex items-center mb-4 border border-blue-500 py-3.5'
-          onSubmit={handleSearch}
-        >
-          <div>
-            <input
-              className='outline-none p-0.5 rounded-sm '
-              placeholder='Nome ou email do participante'
-              value={editingFilters.textParticipant}
-              onChange={(e) => handleFilters("textParticipant", e.target.value)}
-            />
-          </div>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.status}
-            defaultValue='select'
-            onChange={(e) => handleFilters("status", e.target.value)}
-          >
-            <option value='select'>Status</option>
-            <option value='all'>Todos</option>
-            <option value={StatusHistory.PAID}>Pago</option>
-            <option value={StatusHistory.NOT_PAID}>Não Pago</option>
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.type}
-            defaultValue='select'
-            onChange={(e) => handleFilters("type", e.target.value)}
-          >
-            <option value='select'>Tipo</option>
-            <option value='all'>Todos</option>
-            <option value={TypeHistory.MONTHLY}>Mensalista</option>
-            <option value={TypeHistory.AGGREGATE}>Agregado</option>
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.month}
-            defaultValue={editingFilters.month}
-            onChange={(e) => handleFilters("month", Number(e.target.value))}
-          >
-            <option value='all'>Mês</option>
-            {months.map((item, index) => (
-              <option value={index + 1}>{item}</option>
-            ))}
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.year}
-            defaultValue={editingFilters.year}
-            onChange={(e) => handleFilters("year", e.target.value)}
-          >
-            {years.map((year) => (
-              <option value={year}>{year}</option>
-            ))}
-          </select>
-          <button type='submit' title='Pesquisar'>
-            <MagnifyingGlass size={25} />
-          </button>
-        </form> */}
 
         <div className='h-full w-full flex flex-col'>
           <div className='w-full flex flex-wrap justify-between gap-4 mb-3'>
@@ -391,17 +335,21 @@ export const MainDashboard = () => {
             />
           </div>
 
-          <div className='w-full flex flex-col gap-3 md:flex-row md:items:center md:gap-4 py-3'>
+          <form
+            className='w-full flex flex-col gap-3 md:flex-row md:items:center md:gap-4 py-3'
+            onSubmit={handleSearch}
+          >
             <input
-              type='text'
               className='flex-1 p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              value={editingFilters.textParticipant}
               placeholder='Nome ou email do participante'
+              onChange={(e) => handleFilters("textParticipant", e.target.value)}
             />
             <select
               className='flex-1 md:max-w-[200px] p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
-              // value={editingFilters.type}
+              value={editingFilters.status}
               defaultValue='select'
-              // onChange={(e) => handleFilters("type", e.target.value)}
+              onChange={(e) => handleFilters("status", e.target.value)}
             >
               <option value='select'>Status</option>
               <option value='all'>Todos</option>
@@ -410,19 +358,22 @@ export const MainDashboard = () => {
             </select>
             <select
               className='flex-1 md:max-w-[200px] p-1 bg-slate-100 border border-slate-200 rounded-md outline-none'
-              // value={editingFilters.status}
+              value={editingFilters.type}
               defaultValue='select'
-              // onChange={(e) => handleFilters("status", e.target.value)}
+              onChange={(e) => handleFilters("type", e.target.value)}
             >
               <option value='select'>Tipo</option>
               <option value='all'>Todos</option>
               <option value={TypeHistory.MONTHLY}>Mensalista</option>
               <option value={TypeHistory.AGGREGATE}>Agregado</option>
             </select>
-            <button className='w-full md:w-auto px-4 py-1 bg-skyLight text-white rounded-md'>
+            <button
+              type='submit'
+              className='w-full md:w-auto px-4 py-1 bg-skyLight text-white rounded-md'
+            >
               <MagnifyingGlass size={22} />
             </button>
-          </div>
+          </form>
 
           <Table
             columns={columnsHistory}
