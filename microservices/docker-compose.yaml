@@ -1,0 +1,103 @@
+services:
+  db-responsible:
+    image: mysql:8.0.33
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: responsible_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    networks:
+      - sports-finance-network
+
+  db-event:
+    image: mysql:8.0.33
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: admin123
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: admin123
+      MYSQL_DATABASE: event_service
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3310
+    ports:
+      - "3310:3310"
+    networks:
+      - sports-finance-network
+#
+#  db-participants:
+#    image: mysql:8.0.33
+#    command: --default-authentication-plugin=mysql_native_password
+#    restart: always
+#    environment:
+#      TZ: America/Sao_Paulo
+#      MYSQL_ROOT_PASSWORD: admin123
+#      MYSQL_USER: dev
+#      MYSQL_PASSWORD: admin123
+#      MYSQL_DATABASE: participants_service
+#      MYSQL_ROOT_HOST: '%'
+#      MYSQL_TCP_PORT: 3312
+#    ports:
+#      - "3312:3312"
+#    networks:
+#      - sports-finance-network
+
+  responsible-service:
+    image: responsible-service
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db-responsible
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.APPLICATION.NAME: responsible-service
+      SPRING.DATASOURCE.URL: jdbc:mysql://db-responsible:3308/responsible_service?useSSL=false&use&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: dev
+      SPRING.DATASOURCE.PASSWORD: admin123
+    networks:
+      - sports-finance-network
+
+  event-service:
+    image: event-service
+    restart: always
+    ports:
+      - "8100:8100"
+    depends_on:
+      - db-event
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING.APPLICATION.NAME: event-service
+      SPRING.DATASOURCE.URL: jdbc:mysql://db-event:3310/event_service?useSSL=false&use&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+      SPRING.DATASOURCE.USERNAME: dev
+      SPRING.DATASOURCE.PASSWORD: admin123
+    networks:
+      - sports-finance-network
+#
+#  participants-service:
+#    image: participants-service
+#    restart: always
+#    ports:
+#      - "8200:8200"
+#    depends_on:
+#      - db-participants
+#    environment:
+#      TZ: America/Sao_Paulo
+#      SPRING.APPLICATION.NAME: participants-service
+#      SPRING.DATASOURCE.URL: jdbc:mysql://db-participants:3312/participants_service?useSSL=false&use&serverTimezone=UTC&enabledTLSProtocols=TLSv1.2
+#      SPRING.DATASOURCE.USERNAME: dev
+#      SPRING.DATASOURCE.PASSWORD: admin123
+#    networks:
+#      - sports-finance-network
+
+networks:
+  sports-finance-network:
+    driver: bridge
