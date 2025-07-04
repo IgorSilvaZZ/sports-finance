@@ -29,12 +29,12 @@ interface RowCellProps {
 }
 
 export const ColumnCell = ({ text }: ColumnCellProps) => {
-  return <span className='text-sm text-center w-40 font-medium'>{text}</span>;
+  return <span className='text-sm text-center font-medium'>{text}</span>;
 };
 
 export const RowCell = ({ column, item }: RowCellProps) => {
   return (
-    <span className='text-sm w-40 text-center flex justify-center items-center'>
+    <span className='text-sm text-center flex justify-center'>
       {column.field === "actions" && column.getActions ? (
         <>{column.getActions(item)}</>
       ) : (
@@ -56,7 +56,11 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
           <ClipLoader color='white' size={20} />
         ) : (
           <>
-            <div className='w-full h-12 flex gap-2 py-2 px-1.5 items-center justify-around border-b border-zinc-300 bg-slate-100'>
+            {/* Colunas */}
+            <div
+              className='w-full grid py-2 px-1.5 items-center border-b border-zinc-300 bg-slate-100'
+              style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}
+            >
               {columns.map((column) => (
                 <ColumnCell text={column.label} />
               ))}
@@ -66,7 +70,12 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
               <>
                 {data.map((item) => (
                   <>
-                    <div className='w-full min-h-[52px] flex gap-3 py-3 px-4 items-center justify-between rounded-md border-b-2'>
+                    <div
+                      className='w-full min-h-[52px] grid items-center py-3 px-4 rounded-md border-b-2'
+                      style={{
+                        gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+                      }}
+                    >
                       {columns.map((column) => (
                         <RowCell item={item} column={column} />
                       ))}
