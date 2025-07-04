@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Dashboard } from "../../interfaces/Dashboard.interface";
+import {
+  Dashboard,
+  DashBoardFilters,
+} from "../../interfaces/Dashboard.interface";
 import { AppState } from "..";
 
-// Criar estado para guardar o filtro de pesquisa
 const initialState: Dashboard = {
   appliedFilters: {
     textParticipant: "",
@@ -21,10 +23,11 @@ const initialState: Dashboard = {
   },
 };
 
-export type TypeFieldFilters = {
-  key: string;
-  value: string | number;
-};
+export interface TypeFieldFilters {
+  [key: string]: string | number;
+}
+
+type PartialDashBoardFilters = Partial<DashBoardFilters>;
 
 const slice = createSlice({
   name: "dashboard",
@@ -32,15 +35,32 @@ const slice = createSlice({
   reducers: {
     changeEditingFilters(
       state,
-      { payload }: PayloadAction<TypeFieldFilters>,
+      { payload }: PayloadAction<TypeFieldFilters>
     ): void {
       state.editingFilters = {
         ...state.editingFilters,
         [payload.key]: payload.value,
       };
     },
+    changeApplyFilters(
+      state,
+      { payload }: PayloadAction<PartialDashBoardFilters>
+    ) {
+      state.appliedFilters = {
+        ...state.editingFilters,
+        ...payload,
+      };
+
+      state.editingFilters = {
+        ...state.appliedFilters,
+        year: state.appliedFilters.year,
+        month: state.appliedFilters.month,
+      };
+    },
     applyFilters(state) {
-      state.appliedFilters = { ...state.editingFilters };
+      state.appliedFilters = {
+        ...state.editingFilters,
+      };
     },
     clearFilters(state): void {
       state.appliedFilters = initialState.appliedFilters;

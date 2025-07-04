@@ -1,18 +1,18 @@
+import { ElementType } from "react";
+
 interface DashCardProps {
   label: string;
   value: number | string;
-  subTitle?: string;
+  icon?: ElementType;
 }
 
-export const DashCard = ({ label, subTitle, value }: DashCardProps) => {
+export const DashCard = ({ label, value, icon: Icon }: DashCardProps) => {
   return (
     <>
-      <div className="flex flex-col items-center justify-center py-3 px-3 gap-3 h-full w-64 rounded-lg shadow-lg">
-        <div className="w-full h-14 flex flex-col gap-1 items-center justify-center">
-          <span className="text-lg font-semibold text-skyLight">{label}</span>
-          <span className="text-[11px] text-zinc-400">{subTitle ?? ""}</span>
-        </div>
-        <span className="text-base">{value}</span>
+      <div className='w-40 flex flex-col items-center justify-center p-4 gap-2 flex-1 bg-slate-100 border border-slate-200 rounded-lg shadow-sm relative transition-shadow hover:shadow-md'>
+        <div className='absolute top-2 right-2'>{Icon && <Icon />}</div>
+        <span className='text-sm text-gray-500'>{label}</span>
+        <span className='text-xl font-semibold text-gray-900'>{value}</span>
       </div>
     </>
   );

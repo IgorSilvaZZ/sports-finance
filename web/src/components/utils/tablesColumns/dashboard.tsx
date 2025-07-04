@@ -1,4 +1,8 @@
+import { format } from "date-fns";
+
 import { Receipt, ReceiptX } from "@phosphor-icons/react";
+
+import { Chip } from "../../ui/Chip";
 
 import { History } from "../../../interfaces/History.interface";
 import { StatusHistory } from "../../../enums/StatusHistory.enum";
@@ -6,7 +10,7 @@ import {
   getValueCurrencyFormatted,
   typeTranslate,
 } from "../../../utils/history";
-import { format } from "date-fns";
+import { TypeHistory } from "../../../enums/TypeHistory.enum";
 
 interface ColumnsHistoryProps {
   handleStatusHistory: (historyId: string, status: string) => void;
@@ -24,12 +28,29 @@ export const getColumnsHistory = (props: ColumnsHistoryProps) => [
   {
     field: "status",
     label: "Status",
-    renderRow: (value: unknown) => (value ? "Pago" : "Não pago"),
+    renderRow: (status: boolean) => {
+      const bgColorChip = status ? "bg-green-500" : "bg-red-500";
+
+      return (
+        <Chip className={`${bgColorChip} text-white`}>
+          {status ? "Pago" : "Não pago"}
+        </Chip>
+      );
+    },
   },
   {
     field: "type",
     label: "Tipo",
-    renderRow: (value: string) => String(typeTranslate[value]),
+    renderRow: (value: string) => {
+      const styledChip =
+        value === TypeHistory.MONTHLY
+          ? "bg-blue-100 text-blue-800"
+          : "bg-orange-100 text-orange-700";
+
+      const typeParsed = String(typeTranslate[value]);
+
+      return <Chip className={`${styledChip}`}>{typeParsed}</Chip>;
+    },
   },
   {
     field: "value",
