@@ -36,7 +36,7 @@ export const RowCell = ({ column, item }: RowCellProps) => {
   return (
     <span className='text-sm text-center flex justify-center'>
       {column.field === "actions" && column.getActions ? (
-        <>{column.getActions(item)}</>
+        <div className='flex gap-1'>{column.getActions(item)}</div>
       ) : (
         <>
           {column.renderRow
@@ -59,13 +59,16 @@ export const Table = ({ columns, isLoading, data }: TableProps) => {
             {/* Colunas */}
             <div
               className='w-full grid py-2 px-1.5 items-center border-b border-zinc-300 bg-slate-100'
-              style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}
+              style={{
+                gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+              }}
             >
               {columns.map((column) => (
                 <ColumnCell text={column.label} />
               ))}
             </div>
 
+            {/* Linhas */}
             {data && data?.length > 0 ? (
               <>
                 {data.map((item) => (
