@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,14 +12,13 @@ import {
   TrayArrowDown,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { format, getMonth, getYear, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { getMonth, getYear, parseISO } from "date-fns";
 
-import { DatesProvider, MonthPicker, MonthPickerInput } from "@mantine/dates";
+import { DatesProvider, MonthPickerInput } from "@mantine/dates";
 
 import "dayjs/locale/pt-br";
 
-import { DashCard } from "./DashCard";
+import { Card } from "../Card";
 import { ModalCreateHistory } from "../ModalCreateHistory";
 import { ModalCreatePayment } from "../ModalCreatePayment";
 import { ModalUndoPayment } from "../ModalUndoPayment";
@@ -261,11 +258,13 @@ export const MainDashboard = () => {
     if (eventId) {
       getEvent();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3 overflow-hidden'>
+        {/* Header */}
         <div className='w-full flex items-center justify-between'>
           <div className='flex gap-x-2 items-center'>
             <span className='font-semibold text-xl'>{event.name}</span>
@@ -308,27 +307,28 @@ export const MainDashboard = () => {
 
         <div className='h-full w-full flex flex-col'>
           <div className='w-full flex flex-wrap justify-between gap-4 mb-3'>
-            <DashCard
+            <Card
               label='Dia de Pagamento'
               icon={CreditCard}
+              titleSize='extraLarge'
               value={String(event?.dayMonthly).padStart(2, "0")}
             />
-            <DashCard
+            <Card
               label='Total Pago'
               icon={MoneyWavy}
               value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
-            <DashCard
+            <Card
               label='Mensalidade'
               icon={CalendarCheck}
               value={getValueCurrencyFormatted(event?.valueMonthly)}
             />
-            <DashCard
+            <Card
               label='Restante'
               icon={TrayArrowDown}
               value={getValueCurrencyFormatted(initialRemaining)}
             />
-            <DashCard
+            <Card
               label='Saldo'
               icon={TrayArrowDown}
               value={getValueCurrencyFormatted(amountCollected)}

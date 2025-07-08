@@ -13,6 +13,7 @@ import { selectResponsible } from "../../store/responsible/responsible.slice";
 import { getParticipantsColumns } from "../utils/tablesColumns/participants";
 
 import { api } from "../../lib/axios";
+import { Card } from "../Card";
 
 export const Participants = () => {
   const dispatch = useDispatch();
@@ -67,8 +68,10 @@ export const Participants = () => {
   return (
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3'>
+        {/* Header */}
         <div className=' w-full flex items-center justify-between'>
           <span className='font-semibold text-xl'>{name}</span>
+
           <ModalCreateParticipant
             initialData={participantSelected}
             isOpen={modalOpen}
@@ -86,13 +89,20 @@ export const Participants = () => {
           />
         </div>
 
+        <div className='w-full flex flex-wrap justify-evenly gap-4 mb-3'>
+          <Card label='Total' value={participants.length} />
+          <Card label='Mensalistas' value='3' />
+          <Card label='Agregados' value='1' />
+          <Card label='Ativos' value='4' />
+        </div>
+
         <Table data={participants} columns={participantsColumns} />
 
-        <div className='w-full flex justify-end px-1'>
+        {/* <div className='w-full flex justify-end px-1'>
           <span className='text-sm text-zinc-500 font-semibold'>
             Total de Participantes: {participants.length}
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );
