@@ -41,6 +41,7 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
     avatar,
     eventId,
     status,
+    role,
   }: CreateParticipantDTO): Promise<ParticipantPrisma> {
     const dataParticipant = {
       id: randomUUID(),
@@ -49,6 +50,7 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
       phoneNumber,
       avatar,
       eventId,
+      role,
       status: status ?? true,
       createDate: new Date(),
       updateDate: new Date(),
@@ -88,6 +90,10 @@ export class ParticipantRepositoryInMemory implements ParticipantRepository {
 
       if (data.status !== undefined) {
         currentParticipant.status = data.status;
+      }
+
+      if (data.role) {
+        currentParticipant.role = data.role;
       }
 
       this.participants[participantIndex] = currentParticipant;
