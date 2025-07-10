@@ -16,10 +16,9 @@ import {
   selectResponsible,
 } from "../store/responsible/responsible.slice";
 
-import { deleteEventById, getEventsByResponsible } from "../services/event";
-
 import emptyImage from "../assets/list-event-empty.png";
 import { ModalCreateEvent } from "../components/ModalCreateEvent";
+import { EventService } from "../services/Event";
 
 export default function Events() {
   const dispatch = useDispatch();
@@ -66,7 +65,7 @@ export default function Events() {
     setIsLoading(true);
 
     try {
-      const events = await getEventsByResponsible(responsible.id);
+      const events = await EventService.getEventsByResponsible(responsible.id);
 
       setEvents(events);
     } catch (error) {
@@ -80,7 +79,7 @@ export default function Events() {
 
   async function onDeleteEvent(eventId: string) {
     try {
-      await deleteEventById(eventId, responsible.id);
+      await EventService.deleteEventById(eventId, responsible.id);
 
       toast.success("Evento deletado com sucesso!");
 
