@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 
 import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
+import { RoleParticipant } from '../enums/role.enum';
+
 import { ParticipantRepository } from '@/participant/repositories/ParticipantRepository';
 import { EventRepository } from '@/event/repositories/EventRepository';
 
@@ -22,6 +24,7 @@ export class CreateParticipantUseCase {
     avatar,
     email,
     status,
+    role,
   }: CreateParticipantDTO) {
     const eventAlreadyExists = await this.eventRepository.findById(eventId);
 
@@ -43,6 +46,7 @@ export class CreateParticipantUseCase {
       avatar,
       email,
       status: status ?? true,
+      role: role ?? RoleParticipant.MONTHLY,
     });
 
     return participant;
