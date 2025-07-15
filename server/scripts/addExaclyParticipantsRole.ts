@@ -4,16 +4,17 @@ console.log('Iniciando script de criação de role para todos os participantes')
 
 const CHUNK_SIZE = 10;
 
-export const prisma = new PrismaClient({
-  log: ['query'],
-});
+export const prisma = new PrismaClient();
 
-async function getParticipantByName(participantId: string, name: string) {
-  const participants = await prisma.participant.findFirst({
-    where: { id: participantId, name },
+async function getParticipantByNameAndRole(
+  name: string,
+  role: 'monthly' | 'aggregate',
+) {
+  const participant = await prisma.participant.findFirst({
+    where: { name, role, status: true },
   });
 
-  return participants;
+  return participant;
 }
 
 async function processChunks(skip = 0) {
@@ -40,13 +41,13 @@ async function processChunks(skip = 0) {
   let countProcessedAggregate = 0;
 
   for (const history of histories) {
-    const participantAlreadyExists = await getParticipantByName(
-      history.participantId,
-      history.participant.name,
-    );
-
     if (history.type === 'monthly') {
       console.log('Processando Mensalista');
+
+      const participantAlreadyExists = await getParticipantByNameAndRole(
+        history.participant.name,
+        'monthly',
+      );
 
       if (!participantAlreadyExists) {
         console.log('Criando novo participante como mensalista');
@@ -60,7 +61,7 @@ async function processChunks(skip = 0) {
           },
         });
       } else {
-        console.log('Atualizando participante para role mensalista');
+        console.log('Atualizando participante para role de mensalista');
 
         await prisma.participant.update({
           where: { id: participantAlreadyExists.id },
@@ -73,13 +74,33 @@ async function processChunks(skip = 0) {
       countProcessedMonthly++;
     }
 
-    if (history.type === 'aggregate' && !participantAlreadyExists) {
-      await prisma.participant.create({
+    if (history.type === 'aggregate') {
+      console.log('Criando participante como agregado');
+
+      const participantAlreadyExists = await getParticipantByNameAndRole(
+        history.name,
+        'aggregate',
+      );
+
+      let participantId = participantAlreadyExists?.id;
+
+      if (!participantAlreadyExists) {
+        const { id: idNewParticipant } = await prisma.participant.create({
+          data: {
+            name: history.name,
+            role: 'aggregate',
+            status: true,
+            eventId: history.eventId,
+          },
+        });
+
+        participantId = idNewParticipant;
+      }
+
+      await prisma.history.update({
+        where: { id: history.id },
         data: {
-          name: history.name,
-          role: 'aggregate',
-          status: true,
-          eventId: history.eventId,
+          participantId,
         },
       });
 
