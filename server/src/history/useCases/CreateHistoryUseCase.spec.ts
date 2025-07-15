@@ -49,7 +49,7 @@ describe('Create history', () => {
       value: 30,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     expect(historyRepositoryInMemory.histories).toHaveLength(1);
@@ -77,7 +77,7 @@ describe('Create history', () => {
       value: 30,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     expect(history.name).not.toBeNull();
@@ -91,7 +91,7 @@ describe('Create history', () => {
         value: 30,
         eventId: 'event-id-not-found',
         participantId: 'participant-id',
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
       });
     }).rejects.toEqual(new NotFoundException('Event not found!'));
   });
@@ -112,7 +112,7 @@ describe('Create history', () => {
         value: 30,
         eventId: event.id,
         participantId: 'participant-not-found',
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
       });
     }).rejects.toEqual(new NotFoundException('Participant not found!'));
   });
@@ -148,7 +148,7 @@ describe('Create history', () => {
         value: 30,
         eventId: event.id,
         participantId: participantNotEventOne.id,
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
       });
     }).rejects.toEqual(
       new NotFoundException('The participant is not active at the event!'),
@@ -177,7 +177,7 @@ describe('Create history', () => {
         value: -1,
         eventId: event.id,
         participantId: participant.id,
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
       });
     }).rejects.toEqual(
       new BadRequestException('The value cannot be less than zero!'),
@@ -204,7 +204,7 @@ describe('Create history', () => {
       value: 30,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
       createDate: '2024-10-19', // É possivel enviar datas passadas para complementar historicos antigos
     });
 
@@ -219,7 +219,7 @@ describe('Create history', () => {
         value: 50,
         eventId: 'event-id',
         participantId: 'participant-id',
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
         createDate: '2024-15-19',
       });
     }).rejects.toEqual(
@@ -240,7 +240,7 @@ describe('Create history', () => {
         value: 50,
         eventId: 'event-id',
         participantId: 'participant-id',
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
         createDate: futureCreateDate,
       });
     }).rejects.toEqual(

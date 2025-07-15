@@ -52,7 +52,7 @@ describe('List histories by filters', () => {
       value: 35,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     await historyRepositoryInMemory.create({
@@ -60,7 +60,7 @@ describe('List histories by filters', () => {
       value: 15,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     const listHistoryByEvent = await listHistoryByFiltersUseCase.execute({
@@ -104,7 +104,7 @@ describe('List histories by filters', () => {
       value: 50,
       eventId: event.id,
       participantId: participant1.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     await historyRepositoryInMemory.create({
@@ -112,7 +112,7 @@ describe('List histories by filters', () => {
       value: 50,
       eventId: event.id,
       participantId: participant2.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     const listHistoryByNameParticipant =
@@ -153,7 +153,7 @@ describe('List histories by filters', () => {
       value: 30,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
       createDate: new Date('2024-03-15'),
     });
 
@@ -190,7 +190,7 @@ describe('List histories by filters', () => {
         value: 90,
         eventId: event.id,
         participantId: participant.id,
-        type: TypeHistory.MONTHLY,
+        type: TypeHistory.SUBSCRIPTION,
         createDate: new Date(`${currentYear}-01-15`),
       });
     }
@@ -231,7 +231,7 @@ describe('List histories by filters', () => {
       value: 40,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     await historyRepositoryInMemory.create({
@@ -239,7 +239,7 @@ describe('List histories by filters', () => {
       value: 40,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     await historyRepositoryInMemory.create({
@@ -247,18 +247,18 @@ describe('List histories by filters', () => {
       value: 40,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     const listHistoryByTypeAggregate =
       await listHistoryByFiltersUseCase.execute({
         eventId: event.id,
-        type: TypeHistory.AGGREGATE,
+        type: TypeHistory.INVITED,
       });
 
     const listHistoryByTypeMonthly = await listHistoryByFiltersUseCase.execute({
       eventId: event.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     expect(listHistoryByTypeAggregate).toHaveLength(3);
@@ -287,7 +287,7 @@ describe('List histories by filters', () => {
       value: 35,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
       status: false,
       createDate: new Date('2024-03-02'),
     });
@@ -297,7 +297,7 @@ describe('List histories by filters', () => {
       value: 35,
       eventId: event.id,
       participantId: participant.id,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
       status: false,
       createDate: new Date('2024-04-02'),
     });
