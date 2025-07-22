@@ -9,6 +9,7 @@ import { EventRepositoryInMemory } from '../../../test/repositories/EventReposit
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 
 import { CreateParticipantUseCase } from './CreateParticipantUseCase';
+import { RoleParticipant } from '../enums/role.enum';
 
 let participantRepositoryInMemory: ParticipantRepositoryInMemory;
 let eventRepositoryInMemory: EventRepositoryInMemory;
@@ -49,6 +50,7 @@ describe('Create Participant', () => {
       name,
       phoneNumber: faker.phone.number(),
       eventId: event.id,
+      role: RoleParticipant.MONTHLY,
     };
 
     const newParticipant =
@@ -79,12 +81,14 @@ describe('Create Participant', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     await createParticipantUseCase.execute({
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
     });
 
     expect(participantRepositoryInMemory.participants).toHaveLength(2);
@@ -123,6 +127,7 @@ describe('Create Participant', () => {
       name: name,
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
     });
 
     expect(async () => {
@@ -130,6 +135,7 @@ describe('Create Participant', () => {
         name: name,
         eventId: event.id,
         phoneNumber: faker.phone.number(),
+        role: RoleParticipant.MONTHLY,
       });
     }).rejects.toEqual(
       new BadRequestException('Participant already exists in event!'),

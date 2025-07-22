@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { toast } from "sonner";
 
 import { Table } from "../ui/Table";
 import { ModalCreateParticipant } from "../ModalCreateParticipant";
@@ -12,7 +11,9 @@ import { selectResponsible } from "../../store/responsible/responsible.slice";
 
 import { getParticipantsColumns } from "../utils/tablesColumns/participants";
 
-import { api } from "../../lib/axios";
+import { Card } from "../Card";
+import { EventService } from "../../services/Event";
+import { ParticipantsService } from "../../services/Participants";
 
 export const Participants = () => {
   const dispatch = useDispatch();
@@ -25,33 +26,21 @@ export const Participants = () => {
     useState<Participant | null>(null);
 
   async function getParticipantsEvent() {
-    try {
-      const { data: paymentsEvent } = await api.get(
-        `events/${eventId}/responsible/${responsibleId}/participants`
-      );
+    const participants = await EventService.getParticipantsByEventId(
+      eventId,
+      responsibleId
+    );
 
-      dispatch(eventActions.setParticipants(paymentsEvent));
-    } catch (error) {
-      console.log(error);
-
-      toast.error("Erro ao coletar participantes de um evento!");
-    }
+    dispatch(eventActions.setParticipants(participants));
   }
 
   async function handleStatusParticipant(
     participantId: string,
     status: boolean
   ) {
-    try {
-      await api.put(`/participants/${participantId}`, { status });
+    await ParticipantsService.handleStatusParticipant(participantId, status);
 
-      toast.success("Status atualizado com sucesso!");
-
-      getParticipantsEvent();
-    } catch (error) {
-      console.log(error);
-      toast.error("Erro em atualizar os status do participante!");
-    }
+    getParticipantsEvent();
   }
 
   function handleSelectParticipant(participant: Participant) {
@@ -67,8 +56,10 @@ export const Participants = () => {
   return (
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3'>
+        {/* Header */}
         <div className=' w-full flex items-center justify-between'>
           <span className='font-semibold text-xl'>{name}</span>
+
           <ModalCreateParticipant
             initialData={participantSelected}
             isOpen={modalOpen}
@@ -86,13 +77,13 @@ export const Participants = () => {
           />
         </div>
 
-        <Table data={participants} columns={participantsColumns} />
-
-        <div className='w-full flex justify-end px-1'>
-          <span className='text-sm text-zinc-500 font-semibold'>
-            Total de Participantes: {participants.length}
-          </span>
+        {/* Cards */}
+        <div className='w-full flex flex-wrap justify-evenly gap-4 mb-3'>
+          <Card label='Total' value={participants.length} />
+          <Card label='Mensalistas' value='3' />
         </div>
+
+        <Table data={participants} columns={participantsColumns} />
       </div>
     </>
   );

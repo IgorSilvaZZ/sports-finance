@@ -1,3 +1,5 @@
+import { RoleParticipant } from '../enums/role.enum';
+
 export interface CreateParticipantDTO {
   name: string;
   email?: string;
@@ -5,4 +7,5 @@ export interface CreateParticipantDTO {
   avatar?: string;
   eventId: string;
   status?: boolean;
+  role?: RoleParticipant;
 }

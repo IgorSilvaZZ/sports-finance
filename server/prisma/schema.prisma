@@ -35,6 +35,7 @@ model Participant {
   avatar      String?
   eventId     String
   status      Boolean?  @default(true)
+  role        String?   @default("monthly")
   event       Event     @relation(fields: [eventId], references: [id])
   createDate  DateTime? @default(now())
   updateDate  DateTime? @default(now())
@@ -57,7 +58,7 @@ model Event {
   id            String    @id @default(uuid())
   name          String
   description   String
-  type          String
+  type          String // TODO: Mudar para ENUM posteriormente
   valueMonthly  Float
   dayMonthly    String
   responsibleId String

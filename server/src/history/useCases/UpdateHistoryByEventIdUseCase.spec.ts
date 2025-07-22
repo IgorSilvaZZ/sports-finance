@@ -59,7 +59,7 @@ describe('Update history', () => {
       value: 30,
       eventId,
       participantId,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     const newNameHistory = 'Name History updated';
@@ -79,7 +79,7 @@ describe('Update history', () => {
       value: 15,
       eventId,
       participantId,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     const historyUpdated = await updateHistoryByEventIdUseCase.execute(
@@ -103,7 +103,7 @@ describe('Update history', () => {
       value: oldValueHistory,
       eventId,
       participantId,
-      type: TypeHistory.AGGREGATE,
+      type: TypeHistory.INVITED,
     });
 
     const newValueHistory = 20;
@@ -134,7 +134,7 @@ describe('Update history', () => {
       value: 50,
       eventId,
       participantId,
-      type: TypeHistory.MONTHLY,
+      type: TypeHistory.SUBSCRIPTION,
     });
 
     expect(() => {

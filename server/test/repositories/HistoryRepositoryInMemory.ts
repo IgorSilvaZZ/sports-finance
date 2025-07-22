@@ -13,6 +13,7 @@ import { CreateParticipantDTO } from '@/participant/dtos/CreateParticipantDTO';
 import { UpdateHistoryDTO } from '@/history/dtos/UpdateHistoryDTO';
 
 import { HistoryRepository } from '@/history/repositories/HistoryRepository';
+import { RoleParticipant } from '@/participant/enums/role.enum';
 
 export class HistoryRepositoryInMemory implements HistoryRepository {
   public histories: HistoryPrisma[] = [];
@@ -153,6 +154,7 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
     avatar,
     status,
     eventId,
+    role,
   }: CreateParticipantDTO) {
     const newParticipantEvent = {
       id: randomUUID(),
@@ -162,6 +164,7 @@ export class HistoryRepositoryInMemory implements HistoryRepository {
       avatar,
       status: status ?? true,
       eventId,
+      role: role ?? RoleParticipant.AGGREGATE,
       createDate: new Date(),
       updateDate: new Date(),
     };
