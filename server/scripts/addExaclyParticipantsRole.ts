@@ -4,7 +4,7 @@ console.log('Iniciando script de criação de role para todos os participantes')
 
 const CHUNK_SIZE = 10;
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 async function getParticipantByNameAndRole(
   name: string,
