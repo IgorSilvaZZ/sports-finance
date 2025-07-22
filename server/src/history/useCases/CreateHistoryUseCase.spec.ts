@@ -10,6 +10,7 @@ import { ParticipantRepositoryInMemory } from '../../../test/repositories/Partic
 
 import { CreateHistoryUseCase } from './CreateHistoryUseCase';
 import { TypeHistory } from '../enums/typeHistory.enum';
+import { RoleParticipant } from '@/participant/enums/role.enum';
 
 let historyRepositoryInMemory: HistoryRepositoryInMemory;
 let eventRespositoryInMemory: EventRepositoryInMemory;
@@ -42,6 +43,7 @@ describe('Create history', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     const history = await createHistoryUseCase.execute({
@@ -70,6 +72,7 @@ describe('Create history', () => {
     const participant = await participantRepositoryInMemory.create({
       name: faker.person.fullName(),
       eventId: event.id,
+      role: RoleParticipant.MONTHLY,
       phoneNumber: faker.phone.number(),
     });
 
@@ -168,6 +171,7 @@ describe('Create history', () => {
     const participant = await participantRepositoryInMemory.create({
       name: faker.person.fullName(),
       eventId: event.id,
+      role: RoleParticipant.MONTHLY,
       phoneNumber: faker.phone.number(),
     });
 
@@ -198,6 +202,7 @@ describe('Create history', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
     });
 
     const history = await createHistoryUseCase.execute({

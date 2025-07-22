@@ -1,0 +1,11 @@
+
+POST {{ baseUrl }}/participants
+Authorization: Bearer {{ token }}
+Content-Type: application/json
+
+{
+    "name": "Fernando",
+    "eventId": "b81272da-f38a-4989-8f4f-7e267a72838a", 
+    "phoneNumber": "11982721063",
+    "role": "monthly"
+}

@@ -1,0 +1,19 @@
+
+
+POST {{ baseUrl }}/history
+Authorization: Bearer {{ token }}
+Content-Type: application/json
+
+{
+    "name": "Pagamento mensalidade",
+    "value": 60,
+    "eventId": "b81272da-f38a-4989-8f4f-7e267a72838a",
+    "participantId": "20f4f0a4-6995-4234-b9c0-6936eaadec58",
+    "type": "subscription"
+}
+
+###
+
+GET {{ baseUrl }}/history?eventId=b81272da-f38a-4989-8f4f-7e267a72838a
+Authorization: Bearer {{ token }}
+

@@ -1,9 +1,10 @@
 import { Body, Controller, Param, Post, Put } from '@nestjs/common';
 
-import { CreateParticipantUseCase } from './useCases/CreateParticipantUseCase';
-import { CreateParticipantDTO } from './dtos/CreateParticipantDTO';
-import { UpdateParticipantUseCase } from './useCases/UpdateParticipantUseCase';
 import { UpdateParticipantDTO } from './dtos/UpdateParticipantDTO';
+import { CreateParticipantDTO } from './dtos/CreateParticipantDTO';
+
+import { CreateParticipantUseCase } from './useCases/CreateParticipantUseCase';
+import { UpdateParticipantUseCase } from './useCases/UpdateParticipantUseCase';
 
 @Controller('/participants')
 export class ParticipantController {

@@ -6,6 +6,7 @@ import { TypeEvent } from '../enums/typeEvent.enums';
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ListParticipantsByEventResponsibleIdUseCase } from './ListParticipantsByEventResponsibleIdUseCase';
+import { RoleParticipant } from '@/participant/enums/role.enum';
 
 let responsibleRepositoryInMemory: ResponsibleRepositoryInMemory;
 let eventRepositoryInMemory: EventRepositoryInMemory;
@@ -43,18 +44,21 @@ describe('List participants in event by responsible', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
     });
 
     eventRepositoryInMemory.createParticipantEvent({
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
     });
 
     eventRepositoryInMemory.createParticipantEvent({
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     const participantsInEvent =
@@ -65,6 +69,16 @@ describe('List participants in event by responsible', () => {
 
     expect(participantsInEvent).toHaveLength(3);
     expect(participantsInEvent).not.toBeNull();
+    expect(
+      participantsInEvent.filter(
+        (item) => item.role === RoleParticipant.MONTHLY,
+      ),
+    ).toHaveLength(2);
+    expect(
+      participantsInEvent.filter(
+        (item) => item.role === RoleParticipant.AGGREGATE,
+      ),
+    ).toHaveLength(1);
   });
 
   it('should not be able list participants in event responsible not exists', async () => {
