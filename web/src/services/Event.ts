@@ -5,6 +5,17 @@ import { Participant } from "../interfaces/Participant.interface";
 import { Event } from "../interfaces/Event.interface";
 
 export class EventService {
+  static async getEventByResponsibleId(
+    eventId: string,
+    responsibleId: string
+  ): Promise<Event | null> {
+    const { data } = await api.get(
+      `/events/${eventId}/responsible/${responsibleId}`
+    );
+
+    return data;
+  }
+
   static async getEventsByResponsible(responsibleId: string): Promise<Event[]> {
     const { data } = await api.get<Event[]>(
       `/events/responsible/${responsibleId}`

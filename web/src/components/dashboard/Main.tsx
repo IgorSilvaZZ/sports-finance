@@ -23,11 +23,9 @@ import { ModalCreateHistory } from "../ModalCreateHistory";
 import { ModalCreatePayment } from "../ModalCreatePayment";
 import { ModalUndoPayment } from "../ModalUndoPayment";
 
-import { TypeHistory } from "../../enums/TypeHistory.enum";
 import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 import { History } from "../../interfaces/History.interface";
-import { DashBoardFilters } from "../../interfaces/Dashboard.interface";
 import { Table } from "../ui/Table";
 
 import { selectResponsible } from "../../store/responsible/responsible.slice";
@@ -39,10 +37,14 @@ import {
 
 import {
   getValueCurrencyFormatted,
-  statusTranslate,
+  selectTypeHistory,
 } from "../../utils/history";
 import { getCurrentStatusEvent } from "../../utils/event";
 import { getColumnsHistory } from "../utils/tablesColumns/dashboard";
+
+import { HistoryService } from "../../services/History";
+import { EventService } from "../../services/Event";
+import { Event } from "../../interfaces/Event.interface";
 
 import { api } from "../../lib/axios";
 
@@ -123,35 +125,14 @@ export const MainDashboard = () => {
     ? "text-green-500"
     : "text-red-500";
 
-  function getQueryParams(filtersSearch: DashBoardFilters) {
-    const queryParams: { [key: string]: string | number | boolean } = {
-      ...filtersSearch,
-    };
-
-    Object.keys(queryParams).forEach((key: string | number) => {
-      if (["", "all", "select"].includes(String(queryParams[key]))) {
-        delete queryParams[key];
-      }
-
-      if (key === "month") {
-        queryParams[key] = String(queryParams[key]).padStart(2, "0");
-      }
-
-      if (key === "status") {
-        queryParams[key] = statusTranslate[String(queryParams[key])];
-      }
-    });
-
-    return queryParams;
-  }
-
   async function getEvent() {
     try {
-      const { data } = await api.get(
-        `/events/${eventId}/responsible/${responsibleId}`
+      const event = await EventService.getEventByResponsibleId(
+        String(eventId),
+        responsibleId
       );
 
-      dispatch(eventActions.setEvent(data));
+      dispatch(eventActions.setEvent(event as Event));
     } catch (error) {
       toast.error("Erro ao carregar informações de eventos!");
       console.log(error);
@@ -165,16 +146,12 @@ export const MainDashboard = () => {
     try {
       dispatch(dashboardActions.applyFilters());
 
-      const params = {
-        eventId,
-        ...getQueryParams(editingFilters),
-      };
+      const histories = HistoryService.getHistories(
+        String(eventId),
+        editingFilters
+      );
 
-      const { data } = await api.get("/history", {
-        params,
-      });
-
-      return data;
+      return histories;
     } catch (error) {
       console.log(error);
       toast.error("Erro ao coletar o historico!");
@@ -364,8 +341,9 @@ export const MainDashboard = () => {
             >
               <option value='select'>Tipo</option>
               <option value='all'>Todos</option>
-              <option value={TypeHistory.MONTHLY}>Mensalista</option>
-              <option value={TypeHistory.AGGREGATE}>Agregado</option>
+              {selectTypeHistory.map((item) => (
+                <option value={item.value}>{item.value}</option>
+              ))}
             </select>
             <button
               type='submit'

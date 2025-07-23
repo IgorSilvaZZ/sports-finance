@@ -15,9 +15,8 @@ import { FormModalBase } from "./ui/FormModalBase";
 import { TextInput } from "./ui/TextInput";
 import { Select } from "./ui/Select";
 
-import { TypeHistory.MONTHLY } from "../enums/TypeHistory.MONTHLY.enum";
-
 import { handleErrors } from "../utils/handleErrorsZod";
+import { selectTypeHistory } from "../utils/history";
 
 import { selectEvent } from "../store/events/event.slice";
 import { selectDashboard } from "../store/dashboard/dashboard.slice";
@@ -166,10 +165,7 @@ export const ModalCreateHistory = ({
         />
         <Select
           label='Tipo'
-          options={[
-            { label: "Mensalista", value: TypeHistory.MONTHLY.MONTHLY },
-            { label: "Agregado", value: TypeHistory.MONTHLY.AGGREGATE },
-          ]}
+          options={selectTypeHistory}
           {...register("type")}
         />
         <TextInput

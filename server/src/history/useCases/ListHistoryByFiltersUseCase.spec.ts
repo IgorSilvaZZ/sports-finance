@@ -56,7 +56,7 @@ describe('List histories by filters', () => {
     });
 
     await historyRepositoryInMemory.create({
-      name: 'Pagamento Agregado',
+      name: 'Pagamento Convidado',
       value: 15,
       eventId: event.id,
       participantId: participant.id,
@@ -227,7 +227,7 @@ describe('List histories by filters', () => {
       });
 
     await historyRepositoryInMemory.create({
-      name: 'Pagamento Agregado',
+      name: 'Pagamento Convidado',
       value: 40,
       eventId: event.id,
       participantId: participant.id,
@@ -235,7 +235,7 @@ describe('List histories by filters', () => {
     });
 
     await historyRepositoryInMemory.create({
-      name: 'Pagamento Agregado',
+      name: 'Pagamento Convidado',
       value: 40,
       eventId: event.id,
       participantId: participant.id,
@@ -243,7 +243,7 @@ describe('List histories by filters', () => {
     });
 
     await historyRepositoryInMemory.create({
-      name: 'Pagamento Agregado',
+      name: 'Pagamento Convidado',
       value: 40,
       eventId: event.id,
       participantId: participant.id,
@@ -293,7 +293,7 @@ describe('List histories by filters', () => {
     });
 
     await historyRepositoryInMemory.create({
-      name: 'Pagamento Agregado',
+      name: 'Pagamento Convidado',
       value: 35,
       eventId: event.id,
       participantId: participant.id,
