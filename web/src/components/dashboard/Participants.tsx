@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { Table } from "../ui/Table";
 import { ModalCreateParticipant } from "../ModalCreateParticipant";
+import { Card } from "../Card";
 
 import { Participant } from "../../interfaces/Participant.interface";
 
@@ -11,7 +12,6 @@ import { selectResponsible } from "../../store/responsible/responsible.slice";
 
 import { getParticipantsColumns } from "../utils/tablesColumns/participants";
 
-import { Card } from "../Card";
 import { EventService } from "../../services/Event";
 import { ParticipantsService } from "../../services/Participants";
 
@@ -19,7 +19,15 @@ export const Participants = () => {
   const dispatch = useDispatch();
 
   const { id: responsibleId } = useSelector(selectResponsible);
-  const { id: eventId, name, participants } = useSelector(selectEvent);
+  const {
+    id: eventId,
+    name,
+    participants,
+    participantsCount,
+    participantsActiveCount,
+    participantsMonthlyCount,
+    participantsAggregateCount,
+  } = useSelector(selectEvent);
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [participantSelected, setParticipantSelected] =
@@ -79,8 +87,10 @@ export const Participants = () => {
 
         {/* Cards */}
         <div className='w-full flex flex-wrap justify-evenly gap-4 mb-3'>
-          <Card label='Total' value={participants.length} />
-          <Card label='Mensalistas' value='3' />
+          <Card label='Total' value={participantsCount} />
+          <Card label='Mensalistas' value={participantsMonthlyCount} />
+          <Card label='Agregados' value={participantsAggregateCount} />
+          <Card label='Ativos' value={participantsActiveCount} />
         </div>
 
         <Table data={participants} columns={participantsColumns} />

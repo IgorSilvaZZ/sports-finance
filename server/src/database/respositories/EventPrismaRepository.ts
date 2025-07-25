@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Event, Participant, Payments } from '@prisma/client';
+import { Event, Participant } from '@prisma/client';
 
 import { CreateEventDTO } from '@/event/dtos/CreateEventDTO';
+import { UpdateEventDTO } from '@/event/dtos/UpdateEventDTO';
+
+import { RoleParticipant } from '@/participant/enums/role.enum';
+
+import {
+  EventWithoutPaymentsOutput,
+  EventWithPaymentsOutput,
+} from '@/event/interfaces/Event.interface';
+
 import { EventRepository } from '@/event/repositories/EventRepository';
 
 import { DatabaseService } from '../database.service';
-import { UpdateEventDTO } from '@/event/dtos/UpdateEventDTO';
 
 @Injectable()
 export class EventPrismaRepository implements EventRepository {
@@ -39,9 +47,7 @@ export class EventPrismaRepository implements EventRepository {
 
   async findByResponsibleId(
     responsibleId: string,
-  ): Promise<
-    (Event & { participantsCount: number; participants: Participant[] })[]
-  > {
+  ): Promise<EventWithoutPaymentsOutput[]> {
     const events = await this.prismaService.event.findMany({
       where: {
         responsibleId,
@@ -77,9 +83,7 @@ export class EventPrismaRepository implements EventRepository {
   async findOneEventByResponsibleId(
     id: string,
     responsibleId: string,
-  ): Promise<
-    (Event & { participants: Participant[]; payments: Payments[] }) | null
-  > {
+  ): Promise<EventWithPaymentsOutput | null> {
     const event = await this.prismaService.event.findFirst({
       where: {
         id,
@@ -88,24 +92,65 @@ export class EventPrismaRepository implements EventRepository {
       include: {
         Participant: true,
         Payments: true,
+        _count: {
+          select: {
+            Participant: true,
+            Payments: true,
+          },
+        },
       },
     });
 
-    if (event) {
-      const participants = event.Participant;
-      const payments = event.Payments;
-
-      delete event.Participant;
-      delete event.Payments;
-
-      return {
-        ...event,
-        participants,
-        payments,
-      };
+    if (!event) {
+      return null;
     }
 
-    return null;
+    const participants = event.Participant;
+    const payments = event.Payments;
+    const participantsCount = event._count.Participant;
+    const paymentsCount = event._count.Payments;
+
+    delete event.Participant;
+    delete event.Payments;
+    delete event._count;
+
+    const [
+      participantsActiveCount,
+      participantsMonthlyCount,
+      participantsAggregateCount,
+    ] = await Promise.all([
+      this.prismaService.participant.count({
+        where: {
+          eventId: event.id,
+          status: true,
+        },
+      }),
+
+      this.prismaService.participant.count({
+        where: {
+          eventId: event.id,
+          role: RoleParticipant.MONTHLY,
+        },
+      }),
+
+      this.prismaService.participant.count({
+        where: {
+          eventId: event.id,
+          role: RoleParticipant.AGGREGATE,
+        },
+      }),
+    ]);
+
+    return {
+      ...event,
+      participants,
+      payments,
+      participantsCount,
+      participantsActiveCount,
+      participantsMonthlyCount,
+      participantsAggregateCount,
+      paymentsCount,
+    };
   }
 
   async create(data: CreateEventDTO): Promise<Event> {

@@ -1,10 +1,9 @@
 import { StatusHistory } from "../enums/StatusHistory.enum";
 import { TypeHistory } from "../enums/TypeHistory.enum";
-import { DashBoardFilters } from "../interfaces/Dashboard.interface";
 
-type FieldsType = {
-  [key: string]: string | boolean;
-};
+import { FieldsType } from "../types/FieldsType";
+
+import { DashBoardFilters } from "../interfaces/Dashboard.interface";
 
 export const typeTranslate: FieldsType = {
   [TypeHistory.SUBSCRIPTION]: "Mensalista",
@@ -16,6 +15,13 @@ export const typeTranslate: FieldsType = {
 export const statusTranslate: FieldsType = {
   [StatusHistory.PAID]: true,
   [StatusHistory.NOT_PAID]: false,
+};
+
+export const typeHistoryChipColors: FieldsType = {
+  [TypeHistory.SUBSCRIPTION]: "bg-blue-200",
+  [TypeHistory.INVITED]: "bg-emerald-200",
+  [TypeHistory.BALANCE_MONTH]: "bg-yellow-200",
+  [TypeHistory.DONATION]: "bg-zinc-200",
 };
 
 export const getValueCurrencyFormatted = (value: number) =>
