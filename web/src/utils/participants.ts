@@ -11,3 +11,8 @@ export const roleColors = {
   [RoleParticipantEnum.MONTHLY]: "bg-blue-100 text-blue-800",
   [RoleParticipantEnum.AGGREGATE]: "bg-yellow-100 text-yellow-800",
 };
+
+export const optionsRoleParticipants: { label: string; value: string }[] = [
+  { label: "Mensalista", value: RoleParticipantEnum.MONTHLY },
+  { label: "Agregado", value: RoleParticipantEnum.AGGREGATE },
+];

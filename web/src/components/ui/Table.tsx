@@ -19,8 +19,8 @@ export const RowCell = ({ column, item }: RowCellProps) => {
       ) : (
         <>
           {column.renderRow
-            ? column.renderRow(item[column.field] ?? "")
-            : item[column.field] ?? ""}
+            ? column.renderRow(item[column.field] || "-")
+            : item[column.field] || "-"}
         </>
       )}
     </span>
