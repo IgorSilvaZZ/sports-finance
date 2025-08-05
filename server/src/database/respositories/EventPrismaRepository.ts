@@ -91,7 +91,11 @@ export class EventPrismaRepository implements EventRepository {
       },
       include: {
         Participant: true,
-        Payments: true,
+        Payments: {
+          orderBy: {
+            createDate: 'desc',
+          },
+        },
         _count: {
           select: {
             Participant: true,

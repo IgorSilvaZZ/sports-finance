@@ -6,6 +6,11 @@ Authorization: Bearer {{ token }}
 
 ###
 
+GET {{ baseUrl }}/events/{{ eventId }}/responsible/{{ responsibleId }} HTTP/1.1
+Authorization: Bearer {{ token }}
+
+###
+
 POST {{baseUrl}}/events HTTP/1.1
 Authorization: Bearer {{ token }}
 Content-Type: application/json
