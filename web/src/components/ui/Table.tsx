@@ -1,32 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { ClipLoader } from "react-spinners";
 
 import { EmptyList } from "../EmptyList";
-
-export interface ColumnsFieldsTable {
-  field: string;
-  label: string;
-  renderRow?: (
-    valueRow?: any
-  ) => JSX.Element | JSX.Element[] | string | number | boolean;
-  getActions?: (rowValues?: any) => JSX.Element | JSX.Element[];
-}
-
-interface TableProps {
-  columns: ColumnsFieldsTable[];
-  isLoading?: boolean;
-  data?: any[];
-}
-
-interface ColumnCellProps {
-  text: string;
-}
-
-interface RowCellProps {
-  column: ColumnsFieldsTable;
-  item: any;
-}
+import {
+  ColumnCellProps,
+  RowCellProps,
+  TableProps,
+} from "../../interfaces/Table.interface";
 
 export const ColumnCell = ({ text }: ColumnCellProps) => {
   return <span className='text-sm text-center font-medium'>{text}</span>;
@@ -40,8 +19,8 @@ export const RowCell = ({ column, item }: RowCellProps) => {
       ) : (
         <>
           {column.renderRow
-            ? column.renderRow(item[column.field] ?? "")
-            : item[column.field] ?? ""}
+            ? column.renderRow(item[column.field] || "-")
+            : item[column.field] || "-"}
         </>
       )}
     </span>

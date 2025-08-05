@@ -2,7 +2,8 @@ import { forwardRef, SelectHTMLAttributes } from "react";
 
 import { cn } from "../../lib/mergeClasses";
 
-import { OptionsSelectType } from "../../utils/optionsSports";
+import { OptionsSelectType } from "../../types/FieldsType";
+
 import { Label } from "./Label";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
@@ -20,10 +21,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {...props}
             ref={forwardedRef}
             className={cn(
-              "px-3 py-3 rounded-sm outline-none bg-zinc-100 font-semibold",
+              "px-3 py-3 rounded-md outline-none bg-zinc-100 font-semibold",
               className
             )}
-            /* {...register("type")} */
           >
             {options.map(({ label, value }, index) => (
               <option key={index} value={value}>

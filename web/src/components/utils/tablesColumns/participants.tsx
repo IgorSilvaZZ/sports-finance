@@ -1,12 +1,21 @@
 import { CheckCircle, PencilSimple, XCircle } from "@phosphor-icons/react";
+
+import { Chip } from "../../ui/Chip";
+
 import { Participant } from "../../../interfaces/Participant.interface";
+import { ColumnsFieldsTable } from "../../../interfaces/Table.interface";
+import { RoleParticipantEnum } from "../../../enums/RoleParticipant.enum";
+
+import { roleColors, roleTranslate } from "../../../utils/participants";
 
 interface ParticipantsColumns {
   handleSelectParticipant: (participant: Participant) => void;
   handleStatusParticipant: (participantId: string, status: boolean) => void;
 }
 
-export const getParticipantsColumns = (props: ParticipantsColumns) => [
+export const getParticipantsColumns = (
+  props: ParticipantsColumns
+): ColumnsFieldsTable[] => [
   {
     field: "name",
     label: "Nome",
@@ -16,21 +25,39 @@ export const getParticipantsColumns = (props: ParticipantsColumns) => [
     label: "Email",
   },
   {
+    field: "role",
+    label: "Tipo",
+    renderRow: (role: RoleParticipantEnum) => {
+      const roleTranslated = roleTranslate[role];
+      const styledChipRole = roleColors[role];
+
+      return <Chip className={`${styledChipRole}`}>{roleTranslated}</Chip>;
+    },
+  },
+  {
     field: "status",
     label: "Status",
-    renderRow: (value: boolean) => (value ? "Ativo" : "Inativo"),
+    renderRow: (value: boolean) => {
+      const styledChipStatus = value ? "bg-green-500" : "bg-red-500";
+
+      return (
+        <Chip className={`${styledChipStatus} text-white`}>
+          {value ? "Ativo" : "Inativo"}
+        </Chip>
+      );
+    },
   },
   {
     field: "phoneNumber",
     label: "Telefone",
   },
-  getParcipantsActions(props),
+  getParticipantsActions(props),
 ];
 
-const getParcipantsActions = ({
+const getParticipantsActions = ({
   handleSelectParticipant,
   handleStatusParticipant,
-}: ParticipantsColumns) => ({
+}: ParticipantsColumns): ColumnsFieldsTable => ({
   field: "actions",
   label: "Ações",
   getActions: (rowValue: Participant) => {
