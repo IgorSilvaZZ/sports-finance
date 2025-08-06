@@ -1,12 +1,16 @@
 import { useSelector } from "react-redux";
-import { format } from "date-fns";
 
 import { Card } from "../Card";
 import { Table } from "../ui/Table";
 
+import { Payment } from "../../interfaces/Payment.interface";
+
 import { selectEvent } from "../../store/events/event.slice";
 
 import { getPaymentsColumns } from "../utils/tablesColumns/payments";
+import { getMonthPaymentRef } from "../../utils/payment";
+import { capitalizeFirstLetter } from "../../utils/string";
+import { getValueCurrencyFormatted } from "../../utils/history";
 
 export const Payments = () => {
   const { name, payments, paymentsCount } = useSelector(selectEvent);
@@ -21,11 +25,11 @@ export const Payments = () => {
       new Date(recentPayment.datePayment)
       ? currPayment
       : recentPayment;
-  }, payments[0]);
+  }, payments[0]) as Payment;
 
-  const dateRefLastPayment = new Date(lastPayment.datePayment);
-
-  const monthRefLastPayment = format(dateRefLastPayment, "MMMM");
+  const monthRefLastPayment = capitalizeFirstLetter(
+    getMonthPaymentRef(lastPayment.paymentRef)
+  );
 
   const paymentsColumns = getPaymentsColumns();
 
@@ -40,16 +44,16 @@ export const Payments = () => {
         <div className="className='w-full flex flex-wrap justify-evenly gap-4 mb-3">
           <Card
             label='Valor total de pagamentos'
-            value={`R$ ${totalValuesPayments.toFixed(2)}`}
+            value={getValueCurrencyFormatted(totalValuesPayments)}
           />
           <Card label='Quantidade de pagamentos' value={paymentsCount} />
           <Card
             label='Valor último Pagamento'
-            value={`R$ ${Number(lastPayment.value).toFixed(2)}`}
+            value={getValueCurrencyFormatted(Number(lastPayment.value))}
           />
           <Card
             label='Mês referência do último Pagamento'
-            value={`${monthRefLastPayment}`}
+            value={monthRefLastPayment}
           />
         </div>
 
