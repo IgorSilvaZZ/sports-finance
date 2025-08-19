@@ -13,6 +13,7 @@ import { CreatePaymentDTO } from '@/payment/dtos/CreatePaymentDTO';
 
 import { EventRepository } from '@/event/repositories/EventRepository';
 import { UpdateEventDTO } from '@/event/dtos/UpdateEventDTO';
+import { RoleParticipant } from '@/participant/enums/role.enum';
 
 export class EventRepositoryInMemory implements EventRepository {
   public events: EventPrisma[] = [];
@@ -118,6 +119,7 @@ export class EventRepositoryInMemory implements EventRepository {
     avatar,
     eventId,
     status,
+    role,
   }: CreateParticipantDTO) {
     const newParticipantEvent = {
       id: randomUUID(),
@@ -127,6 +129,7 @@ export class EventRepositoryInMemory implements EventRepository {
       avatar,
       eventId,
       status: status ?? true,
+      role: role ?? RoleParticipant.MONTHLY,
       createDate: new Date(),
       updateDate: new Date(),
     };

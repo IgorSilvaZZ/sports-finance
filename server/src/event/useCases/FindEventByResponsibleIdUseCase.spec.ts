@@ -6,6 +6,7 @@ import { ResponsibleRepositoryInMemory } from '../../../test/repositories/Respon
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { FindEventByResponsibleIdUseCase } from './FindEventByResponsibleIdUseCase';
 import { NotFoundException } from '@nestjs/common';
+import { RoleParticipant } from '@/participant/enums/role.enum';
 
 let responsibleRepositoryInMemory: ResponsibleRepositoryInMemory;
 let eventRepositoryInMemory: EventRepositoryInMemory;
@@ -70,18 +71,21 @@ describe('Find event by responsible id', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     eventRepositoryInMemory.createParticipantEvent({
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     eventRepositoryInMemory.createParticipantEvent({
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     const findEventResponsible = await findEventByResponsibleIdUseCase.execute(
@@ -92,6 +96,11 @@ describe('Find event by responsible id', () => {
     expect(findEventResponsible.responsibleId).toEqual(responsible.id);
     expect(findEventResponsible).toHaveProperty('participants');
     expect(findEventResponsible.participants).toHaveLength(3);
+    expect(
+      findEventResponsible.participants.filter(
+        (item) => item.role === RoleParticipant.AGGREGATE,
+      ),
+    ).toHaveLength(3);
   });
 
   it('should be able get event by responsible with payments', async () => {
@@ -115,6 +124,7 @@ describe('Find event by responsible id', () => {
       name: faker.person.fullName(),
       eventId: event.id,
       phoneNumber: faker.phone.number(),
+      role: RoleParticipant.AGGREGATE,
     });
 
     await eventRepositoryInMemory.createPaymentEvent({

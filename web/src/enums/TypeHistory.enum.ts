@@ -1,4 +1,6 @@
 export enum TypeHistory {
-  MONTHLY = "monthly",
-  AGGREGATE = "aggregate",
+  SUBSCRIPTION = "subscription",
+  INVITED = "aggregate",
+  DONATION = "donation",
+  BALANCE_MONTH = "balanceMonth",
 }

@@ -17,8 +17,12 @@ export interface Event {
   valueMonthly: number;
   dayMonthly: number;
   responsibleId: string;
-  participantsCount: number;
   participants: Participant[];
+  participantsCount: number;
+  participantsActiveCount: number;
+  participantsMonthlyCount: number;
+  participantsAggregateCount: number;
+  paymentsCount: number;
   payments: Payment[];
   createDate: string;
   updateDate: string;

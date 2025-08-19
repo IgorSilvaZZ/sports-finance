@@ -1,7 +1,4 @@
-export type OptionsSelectType = {
-  label: string;
-  value: string;
-};
+import { OptionsSelectType } from "../types/FieldsType";
 
 export const typesOptions: OptionsSelectType[] = [
   { label: "Futebol", value: "soccer" },

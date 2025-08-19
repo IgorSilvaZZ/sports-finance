@@ -2,21 +2,30 @@ import { FormEvent, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useQuery } from "react-query";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import dayjs from "dayjs";
+import {
+  Calendar,
+  CalendarCheck,
+  CreditCard,
+  MagnifyingGlass,
+  MoneyWavy,
+  TrayArrowDown,
+} from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import { getMonth, getYear, parseISO } from "date-fns";
 
-import { DashCard } from "./DashCard";
+import { DatesProvider, MonthPickerInput } from "@mantine/dates";
+
+import "dayjs/locale/pt-br";
+
+import { Card } from "../Card";
 import { ModalCreateHistory } from "../ModalCreateHistory";
 import { ModalCreatePayment } from "../ModalCreatePayment";
 import { ModalUndoPayment } from "../ModalUndoPayment";
 
-import { TypeHistory } from "../../enums/TypeHistory.enum";
 import { StatusHistory } from "../../enums/StatusHistory.enum";
 
 import { History } from "../../interfaces/History.interface";
-import { DashBoardFilters } from "../../interfaces/Dashboard.interface";
 import { Table } from "../ui/Table";
 
 import { selectResponsible } from "../../store/responsible/responsible.slice";
@@ -28,14 +37,18 @@ import {
 
 import {
   getValueCurrencyFormatted,
-  getYears,
-  months,
-  statusTranslate,
+  selectTypeHistory,
 } from "../../utils/history";
 import { getCurrentStatusEvent } from "../../utils/event";
 import { getColumnsHistory } from "../utils/tablesColumns/dashboard";
 
+import { HistoryService } from "../../services/History";
+import { EventService } from "../../services/Event";
+import { Event } from "../../interfaces/Event.interface";
+
 import { api } from "../../lib/axios";
+
+dayjs.locale("pt-br");
 
 export const MainDashboard = () => {
   const { eventId } = useParams();
@@ -55,34 +68,36 @@ export const MainDashboard = () => {
     data: allHistories,
     isLoading,
     refetch,
-  } = useQuery<History[]>(["getHistories"], () => getHistories(), {
-    refetchOnWindowFocus: false,
-    enabled: event.id !== "",
-    onSuccess: (data) => {
-      const paidHistories = data?.filter((history) => history.status);
+  } = useQuery<History[]>(
+    ["getHistories", appliedFilters.year, appliedFilters.month],
+    () => getHistories(),
+    {
+      refetchOnWindowFocus: false,
+      enabled: event.id !== "",
+      onSuccess: (data) => {
+        const paidHistories = data?.filter((history) => history.status);
 
-      // Valor total do historico (Apenas pagos)
-      const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
-        return acc + Number(history.value);
-      }, 0);
+        // Valor total do historico (Apenas pagos)
+        const calculatedTotalPaid = paidHistories?.reduce((acc, history) => {
+          return acc + Number(history.value);
+        }, 0);
 
-      const remaining = getDifferenceValue(
-        Number(event.valueMonthly),
-        calculatedTotalPaid
-      );
+        const remaining = getDifferenceValue(
+          Number(event.valueMonthly),
+          calculatedTotalPaid
+        );
 
-      if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
-      if (!initialRemaining) setInitialRemaining(remaining);
+        if (!initialTotalPaid) setInitialTotalPaid(calculatedTotalPaid);
+        if (!initialRemaining) setInitialRemaining(remaining);
 
-      if (isUpdating) {
-        setInitialTotalPaid(calculatedTotalPaid);
-        setInitialRemaining(remaining);
-        setIsUpdating(false);
-      }
-    },
-  });
-
-  const years = getYears();
+        if (isUpdating) {
+          setInitialTotalPaid(calculatedTotalPaid);
+          setInitialRemaining(remaining);
+          setIsUpdating(false);
+        }
+      },
+    }
+  );
 
   const getDifferenceValue = (primaryValue: number, subValue: number) => {
     const result = primaryValue - subValue;
@@ -110,35 +125,14 @@ export const MainDashboard = () => {
     ? "text-green-500"
     : "text-red-500";
 
-  function getQueryParams(filtersSearch: DashBoardFilters) {
-    const queryParams: { [key: string]: string | number | boolean } = {
-      ...filtersSearch,
-    };
-
-    Object.keys(queryParams).forEach((key: string | number) => {
-      if (["", "all", "select"].includes(String(queryParams[key]))) {
-        delete queryParams[key];
-      }
-
-      if (key === "month") {
-        queryParams[key] = String(queryParams[key]).padStart(2, "0");
-      }
-
-      if (key === "status") {
-        queryParams[key] = statusTranslate[String(queryParams[key])];
-      }
-    });
-
-    return queryParams;
-  }
-
   async function getEvent() {
     try {
-      const { data } = await api.get(
-        `/events/${eventId}/responsible/${responsibleId}`
+      const event = await EventService.getEventByResponsibleId(
+        String(eventId),
+        responsibleId
       );
 
-      dispatch(eventActions.setEvent(data));
+      dispatch(eventActions.setEvent(event as Event));
     } catch (error) {
       toast.error("Erro ao carregar informações de eventos!");
       console.log(error);
@@ -152,11 +146,12 @@ export const MainDashboard = () => {
     try {
       dispatch(dashboardActions.applyFilters());
 
-      const { data } = await api.get("/history", {
-        params: { ...getQueryParams(editingFilters), eventId },
-      });
+      const histories = HistoryService.getHistories(
+        String(eventId),
+        editingFilters
+      );
 
-      return data;
+      return histories;
     } catch (error) {
       console.log(error);
       toast.error("Erro ao coletar o historico!");
@@ -179,6 +174,12 @@ export const MainDashboard = () => {
     }
   }
 
+  function handleRefetchSearch() {
+    setIsUpdating(true);
+
+    refetch();
+  }
+
   function handleFilters(key: string, value: string | number) {
     dispatch(dashboardActions.changeEditingFilters({ key, value }));
   }
@@ -186,14 +187,28 @@ export const MainDashboard = () => {
   function handleSearch(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (
-      editingFilters.month !== appliedFilters.month ||
-      editingFilters.year !== appliedFilters.year
-    ) {
-      setIsUpdating(true);
+    handleRefetchSearch();
+  }
+
+  async function handleChangeYearMonth(value: string | undefined | null) {
+    if (!value) {
+      return;
     }
 
-    refetch();
+    const valueDateParsed = parseISO(value);
+
+    const yearToDateParsed = getYear(valueDateParsed);
+    const monthToDateParsed = getMonth(valueDateParsed) + 1;
+
+    dispatch(
+      dashboardActions.changeApplyFilters({
+        year: String(yearToDateParsed),
+        month: monthToDateParsed,
+      })
+    );
+
+    // Pesquisando a cada mudança de mes e/ou ano selecionado
+    handleRefetchSearch();
   }
 
   async function handleStatusHistory(historyId: string, status: string) {
@@ -220,32 +235,39 @@ export const MainDashboard = () => {
     if (eventId) {
       getEvent();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <div className='w-4/5 h-full flex flex-col gap-4 px-3 py-3 overflow-hidden'>
+        {/* Header */}
         <div className='w-full flex items-center justify-between'>
-          <div className='flex gap-2 items-center'>
+          <div className='flex gap-x-2 items-center'>
             <span className='font-semibold text-xl'>{event.name}</span>
-            <span className='text-zinc-700'>
-              {format(
-                new Date(`${appliedFilters.year}-${appliedFilters.month}-02`),
-                "LLLL",
-                {
-                  locale: ptBR,
-                }
-              )}
-              {" - "}
-            </span>
             <span className={`font-semibold ${colorStatusPayment}`}>
               {currentPaymentEvent
                 ? "Pagamento Efetuado"
                 : "Pagamento Pendente"}
             </span>
+            <DatesProvider settings={{ locale: "ptBR" }}>
+              <MonthPickerInput
+                placeholder=''
+                variant='filled'
+                className='font-medium text-center bg-slate-100 ring-0 border border-slate-200 rounded-md hover:ring-1'
+                value={
+                  new Date(`${appliedFilters.year}-${appliedFilters.month}-02`)
+                }
+                onChange={handleChangeYearMonth}
+                leftSection={<Calendar />}
+                maxDate={new Date()}
+                withAsterisk
+              />
+            </DatesProvider>
           </div>
-          <div className='flex gap-5'>
+          <div className='flex gap-x-5'>
             <ModalCreateHistory handleUpdating={() => setIsUpdating(true)} />
+
             {currentPaymentEvent ? (
               <ModalUndoPayment
                 getPaymentsEvent={getPaymentsEvent}
@@ -259,92 +281,77 @@ export const MainDashboard = () => {
             )}
           </div>
         </div>
-        <form
-          className='w-full h-[12%] flex items-center justify-around py-2 px-2 shadow-md mb-4'
-          onSubmit={handleSearch}
-        >
-          <input
-            className='w-2/6 h-full outline-none'
-            placeholder='Nome ou email do participante'
-            value={editingFilters.textParticipant}
-            onChange={(e) => handleFilters("textParticipant", e.target.value)}
-          />
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.status}
-            defaultValue='select'
-            onChange={(e) => handleFilters("status", e.target.value)}
-          >
-            <option value='select'>Status</option>
-            <option value='all'>Todos</option>
-            <option value={StatusHistory.PAID}>Pago</option>
-            <option value={StatusHistory.NOT_PAID}>Não Pago</option>
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.type}
-            defaultValue='select'
-            onChange={(e) => handleFilters("type", e.target.value)}
-          >
-            <option value='select'>Tipo</option>
-            <option value='all'>Todos</option>
-            <option value={TypeHistory.MONTHLY}>Mensalista</option>
-            <option value={TypeHistory.AGGREGATE}>Agregado</option>
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.month}
-            defaultValue={editingFilters.month}
-            onChange={(e) => handleFilters("month", Number(e.target.value))}
-          >
-            <option value='all'>Mês</option>
-            {months.map((item, index) => (
-              <option value={index + 1}>{item}</option>
-            ))}
-          </select>
-          <select
-            className='w-36 h-full outline-none'
-            value={editingFilters.year}
-            defaultValue={editingFilters.year}
-            onChange={(e) => handleFilters("year", e.target.value)}
-          >
-            {years.map((year) => (
-              <option value={year}>{year}</option>
-            ))}
-          </select>
-          <button type='submit' title='Pesquisar'>
-            <MagnifyingGlass size={25} />
-          </button>
-        </form>
 
         <div className='h-full w-full flex flex-col'>
-          <div className='w-full h-40 flex gap-3 items-center mb-4'>
-            <DashCard
+          <div className='w-full flex flex-wrap justify-between gap-4 mb-3'>
+            <Card
               label='Dia de Pagamento'
-              subTitle='(Dia do mês)'
+              icon={CreditCard}
+              titleSize='extraLarge'
               value={String(event?.dayMonthly).padStart(2, "0")}
             />
-            <DashCard
+            <Card
               label='Total Pago'
-              subTitle='(Pagamentos feitos)'
+              icon={MoneyWavy}
               value={getValueCurrencyFormatted(Number(initialTotalPaid))}
             />
-            <DashCard
+            <Card
               label='Mensalidade'
-              subTitle='(Valor mensal)'
+              icon={CalendarCheck}
               value={getValueCurrencyFormatted(event?.valueMonthly)}
             />
-            <DashCard
+            <Card
               label='Restante'
-              subTitle='(Falta pagar)'
+              icon={TrayArrowDown}
               value={getValueCurrencyFormatted(initialRemaining)}
             />
-            <DashCard
+            <Card
               label='Saldo'
-              subTitle='(Valor em caixa)'
+              icon={TrayArrowDown}
               value={getValueCurrencyFormatted(amountCollected)}
             />
           </div>
+
+          <form
+            className='w-full flex flex-col gap-3 md:flex-row md:items:center md:gap-4 py-3'
+            onSubmit={handleSearch}
+          >
+            <input
+              className='flex-1 p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              value={editingFilters.textParticipant}
+              placeholder='Nome ou email do participante'
+              onChange={(e) => handleFilters("textParticipant", e.target.value)}
+            />
+            <select
+              className='flex-1 md:max-w-[200px] p-2 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              value={editingFilters.status}
+              defaultValue='select'
+              onChange={(e) => handleFilters("status", e.target.value)}
+            >
+              <option value='select'>Status</option>
+              <option value='all'>Todos</option>
+              <option value={StatusHistory.PAID}>Pago</option>
+              <option value={StatusHistory.NOT_PAID}>Não Pago</option>
+            </select>
+            <select
+              className='flex-1 md:max-w-[200px] p-1 bg-slate-100 border border-slate-200 rounded-md outline-none'
+              value={editingFilters.type}
+              defaultValue='select'
+              onChange={(e) => handleFilters("type", e.target.value)}
+            >
+              <option value='select'>Tipo</option>
+              <option value='all'>Todos</option>
+              {selectTypeHistory.map((item) => (
+                <option value={item.value}>{item.value}</option>
+              ))}
+            </select>
+            <button
+              type='submit'
+              className='w-full md:w-auto px-4 py-1 bg-skyLight text-white rounded-md'
+            >
+              <MagnifyingGlass size={22} />
+            </button>
+          </form>
 
           <Table
             columns={columnsHistory}

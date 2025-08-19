@@ -10,13 +10,17 @@ const initialState: Event = {
   id: "",
   name: "",
   description: "",
-  type: "",
-  participantsCount: 0,
+  type: "other",
   dayMonthly: 0,
   valueMonthly: 0,
   responsibleId: "",
   participants: [],
   payments: [],
+  participantsCount: 0,
+  participantsActiveCount: 0,
+  participantsMonthlyCount: 0,
+  participantsAggregateCount: 0,
+  paymentsCount: 0,
   createDate: "",
   updateDate: "",
 };
@@ -34,6 +38,11 @@ const slice = createSlice({
       state.valueMonthly = payload.valueMonthly;
       state.responsibleId = payload.responsibleId;
       state.participants = payload.participants;
+      state.participantsCount = payload.participantsCount;
+      state.participantsActiveCount = payload.participantsActiveCount;
+      state.participantsMonthlyCount = payload.participantsMonthlyCount;
+      state.participantsAggregateCount = payload.participantsAggregateCount;
+      state.paymentsCount = payload.paymentsCount;
       state.payments = payload.payments;
       state.createDate = payload.createDate;
       state.updateDate = payload.updateDate;
@@ -48,13 +57,17 @@ const slice = createSlice({
       state.id = "";
       state.name = "";
       state.description = "";
-      state.type = "";
-      state.participantsCount = 0;
+      state.type = "other";
       state.dayMonthly = 0;
       state.valueMonthly = 0;
       state.responsibleId = "";
       state.participants = [];
       state.payments = [];
+      state.participantsCount = 0;
+      state.participantsActiveCount = 0;
+      state.participantsMonthlyCount = 0;
+      state.participantsAggregateCount = 0;
+      state.paymentsCount = 0;
       state.createDate = "";
       state.updateDate = "";
     },

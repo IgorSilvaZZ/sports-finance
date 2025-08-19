@@ -6,6 +6,7 @@ import { ParticipantRepositoryInMemory } from '../../../test/repositories/Partic
 import { EventRepositoryInMemory } from '../../../test/repositories/EventRepositoryInMemory';
 import { ResponsibleRepositoryInMemory } from '../../../test/repositories/ResponsibleRepositoryInMemory';
 import { UpdateParticipantUseCase } from './UpdateParticipantUseCase';
+import { RoleParticipant } from '../enums/role.enum';
 
 let participantRepositoryInMemory: ParticipantRepositoryInMemory;
 let eventRepositoryInMemory: EventRepositoryInMemory;
@@ -186,5 +187,24 @@ describe('Update Participant', () => {
       ]),
     );
     expect(participantStatus).toHaveLength(1);
+  });
+
+  it('should be able update role monthly to aggregate a participant', async () => {
+    const participant = await participantRepositoryInMemory.create({
+      name: faker.person.fullName(),
+      eventId: eventId,
+      phoneNumber: faker.phone.number(),
+      role: RoleParticipant.MONTHLY,
+    });
+
+    const newRoleParticipant = RoleParticipant.AGGREGATE;
+
+    const participantUpdated = await updateParticipantUseCase.execute(
+      participant.id,
+      { role: newRoleParticipant },
+    );
+
+    expect(participantUpdated.role).toEqual(newRoleParticipant);
+    expect(participantUpdated.name).not.toEqual(RoleParticipant.MONTHLY);
   });
 });

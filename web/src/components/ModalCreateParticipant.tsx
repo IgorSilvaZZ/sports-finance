@@ -1,20 +1,26 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { z } from "zod";
 import { InputMask } from "@react-input/mask";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 
 import { Button } from "./ui/Button";
 import { FormModalBase } from "./ui/FormModalBase";
 import { ModalBase } from "./ui/ModalBase";
 import { TextInput } from "./ui/TextInput";
+import { Select } from "./ui/Select";
 
-import { handleErrors } from "../utils/handleErrorsZod";
-import { selectEvent } from "../store/events/event.slice";
+import { RoleParticipantEnum } from "../enums/RoleParticipant.enum";
 import { Participant } from "../interfaces/Participant.interface";
-import { useEffect } from "react";
+
+import { selectEvent } from "../store/events/event.slice";
+
+import { optionsRoleParticipants } from "../utils/participants";
+import { handleErrors } from "../utils/handleErrorsZod";
+
 import { api } from "../lib/axios";
-import { toast } from "sonner";
 
 interface ModalCreateParticipantProps {
   initialData: Participant | null;
@@ -27,6 +33,12 @@ interface ModalCreateParticipantProps {
 const participantForm = z.object({
   name: z.string().min(1, "Insira o nome do participante para continuar!"),
   email: z.optional(z.string()),
+  role: z.enum(
+    Object.values(RoleParticipantEnum) as [
+      RoleParticipantEnum,
+      ...RoleParticipantEnum[]
+    ]
+  ),
   phoneNumber: z.optional(z.string()),
 });
 
@@ -60,6 +72,7 @@ export const ModalCreateParticipant = ({
         await api.put(`/participants/${initialData.id}`, {
           name: dataParticipant.name,
           email: dataParticipant.email,
+          role: dataParticipant.role,
           phoneNumber: dataParticipant.phoneNumber,
         });
       } else {
@@ -89,14 +102,16 @@ export const ModalCreateParticipant = ({
   useEffect(() => {
     if (initialData) {
       reset({
-        name: initialData.name ?? "",
+        name: initialData.name || "",
         email: initialData.email ? initialData.email : "",
-        phoneNumber: initialData.phoneNumber ?? "",
+        role: initialData.role || RoleParticipantEnum.MONTHLY,
+        phoneNumber: initialData.phoneNumber || "",
       });
     } else {
       reset({
         name: "",
         email: "",
+        role: RoleParticipantEnum.MONTHLY,
         phoneNumber: "",
       });
     }
@@ -105,7 +120,7 @@ export const ModalCreateParticipant = ({
   return (
     <>
       <ModalBase
-        title="Criar novo participante"
+        title='Criar novo participante'
         isOpen={isOpen}
         handleOpen={handleOpen}
         handleClose={() => {
@@ -113,7 +128,7 @@ export const ModalCreateParticipant = ({
           handleClose();
         }}
         trigger={() => (
-          <Button className="py-1 px-1 w-40 rounded-md">
+          <Button className='py-1 px-1 w-40 rounded-md'>
             Novo participante
           </Button>
         )}
@@ -122,24 +137,29 @@ export const ModalCreateParticipant = ({
           onSubmit={handleSubmit(handleSubmitParticipant, handleErrors)}
         >
           <TextInput
-            label="Nome"
-            className="text-sm py-3 px-3"
+            label='Nome'
+            className='text-sm py-3 px-3'
             {...register("name")}
           />
           <TextInput
-            label="Email"
-            className="text-sm py-3 px-3"
+            label='Email'
+            className='text-sm py-3 px-3'
             {...register("email")}
           />
+          <Select
+            label='Tipo'
+            options={optionsRoleParticipants}
+            {...register("role")}
+          />
           <InputMask
-            label="Telefone celular"
-            mask="(__) _____-____"
-            replacement="_"
-            className="text-sm py-3 px-3"
+            label='Telefone celular'
+            mask='(__) _____-____'
+            replacement='_'
+            className='text-sm py-3 px-3'
             component={TextInput}
             {...register("phoneNumber")}
           />
-          <Button className="py-3 px-3">
+          <Button className='py-3 px-3'>
             {initialData ? "Atualizar" : "Criar"}
           </Button>
         </FormModalBase>
